@@ -6,6 +6,7 @@
     "price": 42000,
     "thumbnail": "./Fuente.webp",
     "code": "abc123",
+    "status": true,
     "stock": 10
   },
   {
@@ -15,6 +16,7 @@
     "price": 13500,
     "thumbnail": "./RAM.webp",
     "code": "abc124",
+    "status": true,
     "stock": 60
   },
   {
@@ -24,6 +26,7 @@
     "price": 43500,
     "thumbnail": "./HDD.webp",
     "code": "abc125",
+    "status": true,
     "stock": 10
   },
   {
@@ -33,6 +36,7 @@
     "price": 12500,
     "thumbnail": "./webcam.webp",
     "code": "abc126",
+    "status": true,
     "stock": 5
   },
   {
@@ -42,6 +46,7 @@
     "price": 160000,
     "thumbnail": "./mother.webp",
     "code": "abc127",
+    "status": true,
     "stock": 10
   },
   {
@@ -51,6 +56,7 @@
     "price": 165000,
     "thumbnail": "./procesador.webp",
     "code": "abc128",
+    "status": true,
     "stock": 5
   },
   {
@@ -60,6 +66,7 @@
     "price": 32000,
     "thumbnail": "./m21tb.webp",
     "code": "abc129",
+    "status": true,
     "stock": 10
   },
   {
@@ -69,6 +76,7 @@
     "price": 9700,
     "thumbnail": "./ssd120.webp",
     "code": "abc130",
+    "status": true,
     "stock": 30
   },
   {
@@ -78,6 +86,7 @@
     "price": 13000,
     "thumbnail": "./ssd240.webp",
     "code": "abc131",
+    "status": true,
     "stock": 20
   },
   {
@@ -87,6 +96,7 @@
     "price": 200000,
     "thumbnail": "./gtx1630.webp",
     "code": "abc132",
+    "status": true,
     "stock": 5
   }
 ]

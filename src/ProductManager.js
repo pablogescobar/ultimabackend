@@ -38,8 +38,8 @@ class ProductManager {
         return this.#lastProductId++;
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock) {
-        if (!title || !description || !thumbnail || !code) {
+    async addProduct(title, description, price, thumbnail, code, status, stock) {
+        if (!title || !description || !thumbnail || !code || !status) {
             console.error('Debe completar todos los campos');
             return;
         }
