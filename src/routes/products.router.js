@@ -49,4 +49,24 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.put('/:pid', async (req, res) => {
+    try {
+        const productId = parseInt(req.params.pid);
+        await manager.updateProduct(productId, req.body);
+        res.status(200).json({ message: 'Producto actualizado' });
+    } catch {
+        res.status(500).json({ error: 'Error al actualizar el producto' });
+    }
+});
+
+router.delete('/:pid', async (req, res) => {
+    try {
+        const productId = parseInt(req.params.pid);
+        await manager.deleteProduct(productId);
+        res.status(200).json({ message: 'Producto eliminado' });
+    } catch {
+        res.status(500).json({ error: 'Error al eliminar el producto' });
+    }
+});
+
 module.exports = router;

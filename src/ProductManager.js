@@ -101,20 +101,18 @@ class ProductManager {
             const { id: updatedId, stock, price } = updatedProduct;
 
             if (stock <= 0 || price <= 0) {
-                console.error('Asegúrese de que stock y price sean valores de tipo "number" superiores a 0');
-                return;
+                throw new Error('Asegúrese de que stock y price sean valores de tipo "number" superiores a 0');
             }
 
             if (updatedId && updatedId !== id) {
-                console.error('No se permite modificar el ID del producto');
-                return;
+                throw new Error('No se permite modificar el ID del producto');
             }
 
             this.#products[indexToUpdate] = { ...this.#products[indexToUpdate], ...updatedProduct, id };
             await this.#saveFile();
             console.log('Producto actualizado correctamente');
         } else {
-            console.error('Not found: El ID solicitado no existe');
+            throw new Error('Not found: El ID solicitado no existe');
         }
     }
 
