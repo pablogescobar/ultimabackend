@@ -98,15 +98,5 @@
     "code": "abc132",
     "status": true,
     "stock": 5
-  },
-  {
-    "id": 11,
-    "title": "Test",
-    "description": "Descripcion de testeo",
-    "price": 200,
-    "thumbnail": "Sin imagen",
-    "code": "zxbv321",
-    "status": true,
-    "stock": 50
   }
 ]

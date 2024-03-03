@@ -39,8 +39,20 @@ class ProductManager {
     }
 
     async addProduct(title, description, price, thumbnail, code, status, stock) {
-        if (!title || !description || !thumbnail || !code || !status) {
+        if (!title || !description || !code) {
             throw new Error('Debe completar todos los campos');
+        }
+
+        if (typeof status === 'undefined' || status === true) {
+            status = true;
+        } else {
+            status = false;
+        }
+
+        if (!thumbnail) {
+            thumbnail = 'Sin Imagen';
+        } else {
+            thumbnail;
         }
 
         if (stock <= 0 && price <= 0) {
