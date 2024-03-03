@@ -40,25 +40,23 @@ class ProductManager {
 
     async addProduct(title, description, price, thumbnail, code, status, stock) {
         if (!title || !description || !thumbnail || !code || !status) {
-            console.error('Debe completar todos los campos');
-            return;
+            throw new Error('Debe completar todos los campos');
         }
 
         if (stock <= 0 && price <= 0) {
-            console.error('Asegurese de que stock y price sean valores de tipo "number" superiores o iguales a 0');
-            return;
+            throw new Error('Asegúrese de que stock y price sean valores de tipo "number" superiores o iguales a 0');
         }
 
         const existingProduct = await this.getProducts();
         const findProductCode = existingProduct.find(field => field.code === code)
 
         if (!findProductCode) {
-            const product = { id: this.#getNewId(), title, description, price, thumbnail, code, stock };
+            const product = { id: this.#getNewId(), title, description, price, thumbnail, code, status, stock };
             this.#products.push(product);
             await this.#saveFile();
             console.log('Agregado Correctamente');
         } else {
-            console.error('El código de producto ya existe');
+            throw new Error('El código de producto ya existe');
         }
     }
 

@@ -105,7 +105,8 @@
     "description": "Descripcion de testeo",
     "price": 200,
     "thumbnail": "Sin imagen",
-    "code": "zxc321",
+    "code": "zxbv321",
+    "status": true,
     "stock": 50
   }
 ]
