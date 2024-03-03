@@ -30,9 +30,22 @@ router.get('/:pid', async (req, res) => {
     try {
         const productId = parseInt(req.params.pid);
         const product = await manager.getProductById(productId);
-        product ? res.json(product) : res.json('El producto no existe');
+        product ? res.status(200).json(product) : res.status(400).json('El producto no existe');
     } catch {
-        res.json({ Error: 'Error al buscar el id' });
+        res.status(500).json({ Error: 'Error al cargar los productos' });
+    }
+});
+
+router.post('/', async (req, res) => {
+    try {
+        const { title, description, price, thumbnail, code, status, stock } = req.body;
+
+        await manager.addProduct(title, description, price, thumbnail, code, status, stock);
+
+        res.status(201).json({ message: 'Producto agregado correctamente' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });
 
