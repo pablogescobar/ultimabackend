@@ -1,16 +1,15 @@
-# Desafio 3 - Coderhouse Backend
+# Pre Entrega 1 - Coderhouse Backend
 
 Este producto se encuentra en construcción.
 
-Este proyecto fue creado con el fin de cumplir con los requisitos del desafío entregable número 3 del curso de backend de CoderHouse.
+Este proyecto fue creado con el fin de cumplir con los requisitos de la pre entrega número 1 del curso de backend de CoderHouse.
 
 ## Correr de manera local
 ```bash
-git clone https://github.com/Fede-Diiorio/desafio3_Di-Iorio.git
-cd desafio3_Di-Iorio
+git clone https://github.com/Fede-Diiorio/backend_preEntrega1_Di-Iorio.git
+cd backend_preEntrega1_Di-Iorio
 npm install
-cd src
-nodemon app
+nodemon src/app
 ```
 
 ## Construido usando
