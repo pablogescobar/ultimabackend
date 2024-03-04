@@ -1,8 +1,16 @@
+const CartManager = require('../CartManager');
 const { Router } = require('express');
 const router = Router();
 
-router.get('/', (req, res) => {
-    res.status(200).json({ message: 'Desde cart.router' });
+const manager = new CartManager(`${__dirname}/../../assets/cart.json`);
+
+router.get('/', async (_, res) => {
+    try {
+        const carts = await manager.getCarts();
+        res.status(200).json(carts);
+    } catch {
+        res.status(500).json({ error: 'No se pudo conectar con los carritos' });
+    }
 });
 
 module.exports = router;
