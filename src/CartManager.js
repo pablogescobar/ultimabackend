@@ -32,8 +32,14 @@ class CartManager {
     }
 
     async #saveFile() {
-        await fs.promises.writeFile(this.path, JSON.stringify(this.#carts, null, 2), 'utf-8');
+        try {
+            await fs.promises.writeFile(this.path, JSON.stringify(this.#carts, null, 2), 'utf-8');
+        } catch (error) {
+            console.error('Error al guardar el archivo:', error);
+            throw error;
+        }
     }
+
 
     #getNewId() {
         return this.#lastCartId++;
@@ -51,7 +57,7 @@ class CartManager {
 
     async addCart() {
         try {
-            const cart = { id: this.#getNewId() }
+            const cart = { id: this.#getNewId(), products: [] }
             this.#carts.push(cart);
             await this.#saveFile();
             console.log('Nuevo carrito creado')
@@ -71,11 +77,38 @@ class CartManager {
     }
 
     async addProductToCart(productId, cartId) {
-        const product = manager.getProductById(productId);
-        const cart = this.getCartById(cartId);
-        const productToAdd = { id: product.id, quantity: 1 }
-        cart.push(productToAdd);
+        try {
+            const product = await manager.getProductById(productId);
+            const cart = await this.getCartById(cartId);
+
+            const existingProduct = cart.products.find(p => p.id === productId);
+
+            if (existingProduct) {
+                existingProduct.quantity += 1;
+            } else {
+                const productToAdd = { id: product.id, quantity: 1 };
+                cart.products.push(productToAdd);
+            }
+
+            const updatedCarts = await this.getCarts();
+            const indexToUpdate = updatedCarts.findIndex(c => c.id === cartId);
+            if (indexToUpdate !== -1) {
+                updatedCarts[indexToUpdate] = cart;
+                this.#carts = updatedCarts;
+                await this.#saveFile();
+                console.log('Producto agregado al carrito correctamente');
+                return cart;
+            } else {
+                throw new Error('No se encontró el carrito para actualizar');
+            }
+
+        } catch (error) {
+            console.error('Error en addProductToCart:', error);
+            throw new Error('Error al cargar el producto al archivo');
+        }
     }
+
+
 };
 
 module.exports = CartManager;

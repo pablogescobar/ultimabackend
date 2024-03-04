@@ -1,8 +1,10 @@
 const CartManager = require('../CartManager');
+const ProductManager = require('../ProductManager');
 const { Router } = require('express');
 const router = Router();
 
 const manager = new CartManager(`${__dirname}/../../assets/cart.json`);
+const prodManager = new ProductManager(`${__dirname}/../../assets/products.json`);
 
 router.get('/', async (_, res) => {
     try {
@@ -30,6 +32,18 @@ router.get('/:cid', async (req, res) => {
         cart ? res.status(200).json(cart) : res.status(400).json('El ID de carrito no existe');
     } catch {
         res.status(500).json({ error: 'Hubo un problema al conectar con el servidor' });
+    }
+});
+
+router.post('/:cid/product/:pid', async (req, res) => {
+    try {
+        const cartId = parseInt(req.params.cid);
+        const productId = parseInt(req.params.pid);
+        const updatedCart = await manager.addProductToCart(productId, cartId);
+        res.status(200).json(updatedCart);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Hubo un problema' });
     }
 });
 
