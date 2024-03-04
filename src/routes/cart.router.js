@@ -16,10 +16,20 @@ router.get('/', async (_, res) => {
 router.post('/', async (_, res) => {
     try {
         const cart = await manager.addCart();
-        res.status(200).json({ message: 'Carrito creado con exito' });
+        res.status(200).json({ message: 'Carrito creado con exito', cart });
     } catch {
         res.status(500).json({ error: 'No se pudo crear el carrito' });
 
+    }
+});
+
+router.get('/:cid', async (req, res) => {
+    try {
+        const cartId = parseInt(req.params.cid);
+        const cart = await manager.getCartById(cartId)
+        cart ? res.status(200).json(cart) : res.status(400).json('El ID de carrito no existe');
+    } catch {
+        res.status(500).json({ error: 'Hubo un problema al conectar con el servidor' });
     }
 });
 

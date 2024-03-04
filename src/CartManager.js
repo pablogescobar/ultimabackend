@@ -1,4 +1,6 @@
 const fs = require('fs');
+const ProductManager = require('./ProductManager');
+const manager = new ProductManager(`${__dirname}/../assets/products.json`);
 
 class CartManager {
     #carts;
@@ -56,6 +58,23 @@ class CartManager {
         } catch {
             throw new Error('Hubo un error al generar el carrito');
         }
+    }
+
+    async getCartById(cartId) {
+        const existingCart = await this.getCarts();
+        const filterCartById = existingCart.find(c => c.id === cartId);
+        if (filterCartById) {
+            return filterCartById;
+        } else {
+            throw new Error('Not Found: No existe el ID de carrito');
+        }
+    }
+
+    async addProductToCart(productId, cartId) {
+        const product = manager.getProductById(productId);
+        const cart = this.getCartById(cartId);
+        const productToAdd = { id: product.id, quantity: 1 }
+        cart.push(productToAdd);
     }
 };
 
