@@ -39,9 +39,7 @@ router.get('/:pid', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { title, description, price, thumbnail, code, status, stock } = req.body;
-
         await manager.addProduct(title, description, price, thumbnail, code, status, stock);
-
         res.status(201).json({ message: 'Producto agregado correctamente' });
     } catch (error) {
         console.error(error);

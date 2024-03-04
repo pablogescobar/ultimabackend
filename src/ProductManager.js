@@ -86,11 +86,9 @@ class ProductManager {
         const existingProducts = await this.getProducts();
         const filterProductById = existingProducts.find(el => el.id === id);
         if (filterProductById) {
-            console.log('Producto filtrado por ID: ↓');
-            console.log(filterProductById);
             return filterProductById;
         } else {
-            console.error('Not Found: El ID solicitado no existe.');
+            throw new Error('Not Found: El ID solicitado no existe.');
         }
     }
 
@@ -123,7 +121,7 @@ class ProductManager {
             await this.#saveFile();
             console.log('Producto eliminado correctamente');
         } else {
-            console.error('Not found: El ID solicitado no existe');
+            throw new Error('Not found: El ID solicitado no existe');
         }
     }
 }
