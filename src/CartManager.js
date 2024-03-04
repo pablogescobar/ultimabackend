@@ -1,12 +1,12 @@
 const fs = require('fs');
 
 class CartManager {
-    #cart;
+    #carts;
     #lastCartId;
     path;
 
     constructor(path) {
-        this.#cart = [];
+        this.#carts = [];
         this.path = path;
         this.#lastCartId = 1;
         this.#readFile();
@@ -15,7 +15,7 @@ class CartManager {
     async #readFile() {
         try {
             const fileData = await fs.readFile(this.path, 'utf-8');
-            this.#cart = JSON.parse(fileData);
+            this.#carts = JSON.parse(fileData);
             this.#updateLastCartId();
         } catch (error) {
             await this.#saveFile();
@@ -23,14 +23,14 @@ class CartManager {
     }
 
     #updateLastCartId() {
-        const lastCart = this.#cart[this.#cart.length - 1];
+        const lastCart = this.#carts[this.#carts.length - 1];
         if (lastProduct) {
             this.#lastCartId = lastCart.id + 1;
         }
     }
 
     async #saveFile() {
-        await fs.promises.writeFile(this.path, JSON.stringify(this.#cart, null, 2), 'utf-8');
+        await fs.promises.writeFile(this.path, JSON.stringify(this.#carts, null, 2), 'utf-8');
     }
 
     #getNewId() {
@@ -44,6 +44,17 @@ class CartManager {
             return existingCart
         } catch (err) {
             return [];
+        }
+    }
+
+    async addCart() {
+        try {
+            const cart = { id: this.#getNewId() }
+            this.#carts.push(cart);
+            await this.#saveFile();
+            console.log('Nuevo carrito creado')
+        } catch {
+            throw new Error('Hubo un error al generar el carrito');
         }
     }
 };
