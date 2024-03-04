@@ -16,7 +16,7 @@ router.get('/', async (_, res) => {
 router.post('/', async (_, res) => {
     try {
         const cart = await manager.addCart();
-        res.status(200).json(cart);
+        res.status(200).json({ message: 'Carrito creado con exito' });
     } catch {
         res.status(500).json({ error: 'No se pudo crear el carrito' });
 

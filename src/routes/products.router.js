@@ -42,7 +42,6 @@ router.post('/', async (req, res) => {
         await manager.addProduct(title, description, price, thumbnail, code, status, stock);
         res.status(201).json({ message: 'Producto agregado correctamente' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({ error: 'Error al agregar el producto' });
     }
 });

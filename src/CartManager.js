@@ -14,7 +14,7 @@ class CartManager {
 
     async #readFile() {
         try {
-            const fileData = await fs.readFile(this.path, 'utf-8');
+            const fileData = await fs.promises.readFile(this.path, 'utf-8');
             this.#carts = JSON.parse(fileData);
             this.#updateLastCartId();
         } catch (error) {
@@ -24,7 +24,7 @@ class CartManager {
 
     #updateLastCartId() {
         const lastCart = this.#carts[this.#carts.length - 1];
-        if (lastProduct) {
+        if (lastCart) {
             this.#lastCartId = lastCart.id + 1;
         }
     }
@@ -39,9 +39,9 @@ class CartManager {
 
     async getCarts() {
         try {
-            const fileContents = await fs.readFile(this.path, 'utf-8');
+            const fileContents = await fs.promises.readFile(this.path, 'utf-8');
             const existingCart = JSON.parse(fileContents);
-            return existingCart
+            return existingCart;
         } catch (err) {
             return [];
         }

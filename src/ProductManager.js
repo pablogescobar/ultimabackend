@@ -76,7 +76,7 @@ class ProductManager {
         try {
             const fileContents = await fs.readFile(this.path, 'utf-8');
             const existingProduct = JSON.parse(fileContents);
-            return existingProduct
+            return existingProduct;
         } catch (err) {
             return [];
         }
