@@ -20,9 +20,25 @@ nodemon src/app
 
 ### `getProducts`
 
-Busca todos los productos disponibles en el archivo
+Busca todos los productos disponibles en el archivo.
 
-**URL** `http://localhost:8080/api/products`
+[**URL:**](http://localhost:8080/api/products) `http://localhost:8080/api/products`
+
+**Método** `GET`
+
+### `getProductsLimit`
+
+Indica un limite en la URL para mostrar la cantidad de productos deseada.
+
+[**URL:**](http://localhost:8080/api/products?limit=5) `http://localhost:8080/api/products?limit=5`
+
+**Método** `GET`
+
+### `getProductById`
+
+Busca el producto deseado según su ID.
+
+[**URL:**](http://localhost:8080/api/products/2) `http://localhost:8080/api/products/2`
 
 **Método** `GET`
 
@@ -30,11 +46,11 @@ Busca todos los productos disponibles en el archivo
 
 Añade un nuevo producto al sistema.
 
-**URL:** `http://localhost:8080/api/products`
+[**URL:**](http://localhost:8080/api/products) `http://localhost:8080/api/products`
 
 **Método:** `POST`
 
-**Cuerpo de la solicitud:**
+**Cuerpo de la Solicitud (Ejemplo para `addProduct`):**
 ```json
 {
     "title": "Test",
@@ -43,3 +59,61 @@ Añade un nuevo producto al sistema.
     "code": "zad258",
     "stock": 50
 }
+````
+
+### `updateProduct`
+
+Selecciona un producto según su ID y se editan los campos deseados.
+
+[**URL:**](http://localhost:8080/api/products/11) `http://localhost:8080/api/products/11
+
+**Método:** `PUT`
+
+**Cuerpo de la Solicitud (Ejemplo para `updateProduct`):**
+```json
+{
+    "title": "TitleActualizado",
+    "thumbnail": "./imagen.webp",
+    "status": true
+}
+````
+
+### `deleteProduct`
+
+Selecciona un producto según su ID para eliminarlo.
+
+[**URL:**](http://localhost:8080/api/products/11) `http://localhost:8080/api/products/11`
+
+**Método:** `DELETE`
+
+### `addCart`
+
+Crea un nuevo carrito en el archivo.
+
+[**URL:**](http://localhost:8080/api/cart) `http://localhost:8080/api/cart`
+
+**Método** `POST`
+
+### `getCarts`
+
+Busca y muestra todos los carritos existentes en el archivo.
+
+[**URL:**](http://localhost:8080/api/cart) `http://localhost:8080/api/cart`
+
+**Método** `GET`
+
+### `getCartById`
+
+Busca un carrito según su ID.
+
+[**URL:**](http://localhost:8080/api/cart/1) `http://localhost:8080/api/cart/1`
+
+**Método** `GET`
+
+### `addProductToCart`
+
+Se indica en la URL el ID del producto a actualizar, así como el ID del carrito donde se desea realizar la actualización.
+
+[**URL:**](http://localhost:8080/api/cart/1/product/5) `http://localhost:8080/api/cart/1/product/5`
+
+**Método** `POST`
