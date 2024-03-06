@@ -15,3 +15,31 @@ nodemon src/app
 ## Construido usando
 
 - [Express](https://www.npmjs.com/package/express)
+
+## Endponints
+
+### `getProducts`
+
+Busca todos los productos disponibles en el archivo
+
+**URL** `http://localhost:8080/api/products`
+
+**Método** `GET`
+
+### `addProduct`
+
+Añade un nuevo producto al sistema.
+
+**URL:** `http://localhost:8080/api/products`
+
+**Método:** `POST`
+
+**Cuerpo de la solicitud:**
+```json
+{
+    "title": "Test",
+    "description": "Descripción de testeo",
+    "price": 200,
+    "code": "zad258",
+    "stock": 50
+}
