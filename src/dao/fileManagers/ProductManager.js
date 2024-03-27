@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 
 class ProductManager {
 
@@ -18,7 +18,7 @@ class ProductManager {
     async #readFile() {
         try {
             // Se esepera respuesta sobre la existencia del archivvo en la dirección path
-            const fileData = await fs.readFile(this.path, 'utf-8');
+            const fileData = await fs.promises.readFile(this.path, 'utf-8');
 
             // Se parsean los productos en el archivo
             this.#products = JSON.parse(fileData);
@@ -47,7 +47,7 @@ class ProductManager {
     async #saveFile() {
 
         // Se espera una respuesta. Hecho esto se convierte el array en json y se guarda la información en el archivo
-        await fs.writeFile(this.path, JSON.stringify(this.#products, null, 2), 'utf-8');
+        await fs.promises.writeFile(this.path, JSON.stringify(this.#products, null, 2), 'utf-8');
     }
 
     // Se genera un nuevo ID incremenando en 1 cada vez que se llama al método.
@@ -111,7 +111,7 @@ class ProductManager {
         try {
 
             // Se obtienen los productos 
-            const fileContents = await fs.readFile(this.path, 'utf-8');
+            const fileContents = await fs.promises.readFile(this.path, 'utf-8');
 
             // Una vez obtenidos se parsean para retornarlos en el método
             const existingProduct = JSON.parse(fileContents);

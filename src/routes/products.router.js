@@ -1,13 +1,11 @@
-const ProductManager = require('../ProductManager'); // Importa el módulo ProductManager para gestionar los productos
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
 const router = Router(); // Crea un enrutador
-
-const manager = new ProductManager(`${__dirname}/../../assets/products.json`); // Crea una instancia del ProductManager para manejar los productos
 
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
     try {
-        const products = await manager.getProducts(); // Obtiene todos los productos
+        const productManager = req.app.get('productManager'); // Obtiene todos los productos
+        const products = await productManager.getProducts();
         const limitFilter = req.query.limit; // Obtiene el parámetro de consulta "limit"
 
         if (limitFilter) { // Si se proporciona el parámetro "limit"
@@ -31,7 +29,8 @@ router.get('/', async (req, res) => {
 router.get('/:pid', async (req, res) => {
     try {
         const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
-        const product = await manager.getProductById(productId); // Obtiene el producto por su ID
+        const productManager = req.app.get('productManager');
+        const product = await productManager.getProductById(productId); // Obtiene el producto por su ID
         res.status(200).json(product); // Responde con el producto obtenido
     } catch {
         res.status(500).json({ Error: 'Error al cargar los productos' }); // Responde con un error 500 si hay un error al obtener el producto
@@ -42,7 +41,8 @@ router.get('/:pid', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { title, description, price, thumbnail, code, status, stock } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
-        await manager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
+        const productManager = req.app.get('productManager');
+        await productManager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
         res.status(201).json({ message: 'Producto agregado correctamente' }); // Responde con un mensaje de éxito
     } catch (error) {
         res.status(500).json({ error: 'Error al agregar el producto' }); // Responde con un error 500 si hay un error al agregar el producto
@@ -53,7 +53,8 @@ router.post('/', async (req, res) => {
 router.put('/:pid', async (req, res) => {
     try {
         const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
-        await manager.updateProduct(productId, req.body); // Actualiza el producto
+        const productManager = req.app.get('productManager');
+        await productManager.updateProduct(productId, req.body); // Actualiza el producto
         res.status(200).json({ message: 'Producto actualizado' }); // Responde con un mensaje de éxito
     } catch {
         res.status(500).json({ error: 'Error al actualizar el producto' }); // Responde con un error 500 si hay un error al actualizar el producto
@@ -64,7 +65,8 @@ router.put('/:pid', async (req, res) => {
 router.delete('/:pid', async (req, res) => {
     try {
         const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
-        await manager.deleteProduct(productId); // Elimina el producto
+        const productManager = req.app.get('productManager');
+        await productManager.deleteProduct(productId); // Elimina el producto
         res.status(200).json({ message: 'Producto eliminado' }); // Responde con un mensaje de éxito
     } catch {
         res.status(500).json({ error: 'Error al eliminar el producto' }); // Responde con un error 500 si hay un error al eliminar el producto
