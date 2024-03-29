@@ -12,9 +12,10 @@
 
 <body>
     <div class="navBar">
-        <h1>{{h1}}</h1>
+        <h1>Ecommerce</h1>
         <ul class="ul">
             <li><a href="http://localhost:8080/api/products">Productos</a></li>
+            <li><a href="http://localhost:8080/api/admin">Crear Producto</a></li>
         </ul>
 
 
@@ -24,6 +25,13 @@
     {{#if useWS}}
     <script src="/socket.io/socket.io.js"></script>
     {{/if}}
+
+    {{!-- jquery --}}
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+
+    {{!-- sweet alerts --}}
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{#each script}}
     <script src="/js/{{this}}"></script>

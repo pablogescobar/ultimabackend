@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
                 const limitedProducts = products.slice(0, limit); // Obtiene los productos limitados según el valor de "limit"
 
                 res.render('home', {
-                    limitedProducts: productsData,
+                    products: limitedProducts,
                     titlePage: 'Productos',
                     h1: 'Tienda',
                     style: ['styles.css'],
@@ -40,7 +40,6 @@ router.get('/', async (req, res) => {
             res.render('home', {
                 products: productsData,
                 titlePage: 'Productos',
-                h1: 'Tienda',
                 style: ['styles.css'],
                 script: ['home.js']
             });
@@ -59,7 +58,7 @@ router.get('/:pid', async (req, res) => {
         const product = await productManager.getProductById(productId); // Obtiene el producto por su ID
         res.status(200).json(product); // Responde con el producto obtenido
     } catch {
-        res.status(500).json({ Error: 'Error al cargar los productos' }); // Responde con un error 500 si hay un error al obtener el producto
+        res.status(500).json({ Error: 'Error al cargar el producto' }); // Responde con un error 500 si hay un error al obtener el producto
     }
 });
 
