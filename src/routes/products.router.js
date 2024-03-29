@@ -68,7 +68,7 @@ router.post('/', async (req, res) => {
         const { title, description, price, thumbnail, code, status, stock } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
         const productManager = req.app.get('productManager');
         await productManager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
-        res.status(201).json({ message: 'Producto agregado correctamente' }); // Responde con un mensaje de éxito
+        res.status(201).redirect('/api/products').json({ message: 'Producto agregado correctamente' }); // Responde con un mensaje de éxito
     } catch (error) {
         res.status(500).json({ error: 'Error al agregar el producto' }); // Responde con un error 500 si hay un error al agregar el producto
     }
