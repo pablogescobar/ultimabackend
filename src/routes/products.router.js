@@ -67,7 +67,7 @@ router.post('/', async (req, res) => {
         await productManager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
         res.status(201).json({ message: 'Producto agregado correctamente' }); // Responde con un mensaje de éxito
     } catch (error) {
-        res.status(500).json({ error: 'Error al agregar el producto' }); // Responde con un error 500 si hay un error al agregar el producto
+        res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto
     }
 });
 

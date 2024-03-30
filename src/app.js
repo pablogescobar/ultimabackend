@@ -2,14 +2,14 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 
-const ProductManager = require('./dao/fileManagers/ProductManager');
-const CartManager = require('./dao/fileManagers/CartManager');
+// const ProductManager = require('./dao/fileManagers/ProductManager');
+const ProductManager = require('./dao/dbManagers/ProductManager');
 
-// const DbProductManager = require('./dao/dbManagers/ProductManager');
+const CartManager = require('./dao/fileManagers/CartManager');
 
 const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
-const createProductRouter = require('./routes/createProduct.router');
+// const createProductRouter = require('./routes/createProduct.router');
 
 const app = express();
 
@@ -31,19 +31,23 @@ app.use('/api/cart', cartRouter); // Rutas relacionadas con el carrito
 
 const main = async () => {
 
-    await mongoose.connect('mongodb://127.0.0.1:27017', {
+    await mongoose.connect('mongodb+srv://FedeDiiorio:EatnQEgmFMs8oxtY@clusterfede.lnfsj8w.mongodb.net/?retryWrites=true&w=majority&appName=ClusterFede', {
         dbName: 'ecommerce'
     })
 
     // <-- FILEMANAGER -->
-    const productManager = new ProductManager(`${__dirname}/../assets/products.json`);
-    await productManager.getProducts()
-    app.set('productManager', productManager);
+    // const productManager = new ProductManager(`${__dirname}/../assets/products.json`);
+    // await productManager.getProducts()
+    // app.set('productManager', productManager);
 
     const cartManager = new CartManager(`${__dirname}/../assets/cart.json`);
     await cartManager.getCarts();
     app.set('cartManager', cartManager);
 
+    // <-- MONGOMANAGER --> 
+    const productManager = new ProductManager();
+    await productManager.prepare();
+    app.set('productManager', productManager);
 
 
 }
