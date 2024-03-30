@@ -16,7 +16,8 @@ const schema = new mongoose.Schema({
 
     price: {
         type: Number,
-        require: true
+        require: true,
+        min: 1
     },
 
     thumbnail: {
@@ -38,7 +39,8 @@ const schema = new mongoose.Schema({
 
     stock: {
         type: Number,
-        require: true
+        require: true,
+        min: 0
     }
 });
 

@@ -16,27 +16,30 @@ class ProductManager {
         try {
             // Se obtienen los productos 
             const allProducts = await Products.find();
-            return allProducts;
-        } catch (err) {
+            return allProducts.map(p => p.toObject({ virtuals: true }));
+        } catch {
             // En caso de que no haya productos se retorna un array vacio
             return [];
         }
     }
 
-    // async getProductById(id) {
+    async getProductById(id) {
+        try {
+            // Buscar el producto por su ID utilizando findOne
+            const product = await Products.findOne({ _id: id });
 
-    //     // Se utiliza el método para obtener todos los productos
-    //     const existingProducts = await this.getProducts();
+            if (product) {
+                return product;
+            } else {
+                throw new Error('Not Found: El ID solicitado no existe.');
+            }
+        } catch (error) {
+            // Manejar cualquier error que ocurra durante la consulta
+            console.error('Error al obtener el producto por ID:', error);
+            throw new Error('Error al obtener el producto por ID');
+        }
+    }
 
-    //     // Se filtran todos los productos buscando el ID pasado por parámetros
-    //     const filterProductById = existingProducts.find(el => el.id === id);
-
-    //     if (filterProductById) {
-    //         return filterProductById;
-    //     } else {
-    //         throw new Error('Not Found: El ID solicitado no existe.');
-    //     }
-    // }
 
     // Agregar un nuevo producto
     async addProduct(title, description, price, thumbnail, code, status, stock) {
@@ -65,7 +68,7 @@ class ProductManager {
                 thumbnail: finalThumbnail,
                 code,
                 status,
-                stock
+                stock,
             });
 
             console.log('Producto agregado correctamente');
@@ -75,51 +78,32 @@ class ProductManager {
         }
     }
 
+    async updateProduct(id, fieldsToUpdate) {
+        try {
+            // Verificar si se proporcionaron campos para actualizar
+            const areFieldsPresent = Object.keys(fieldsToUpdate).length > 0;
 
-    // async updateProduct(id, updatedProduct) {
+            if (!areFieldsPresent) {
+                throw new Error('No se proporcionaron campos para actualizar');
+            }
 
-    //     // Se busca si el ID existe
-    //     const indexToUpdate = this.#products.findIndex(el => el.id === id);
+            // Actualizar el producto
+            const updatedProduct = await Products.updateOne({ _id: id }, { $set: fieldsToUpdate });
 
-    //     // En caso de existir se actualiza el producto
-    //     if (indexToUpdate !== -1) {
-    //         const { id: updatedId, stock, price } = updatedProduct;
+            if (updatedProduct.nModified === 0) {
+                throw new Error('No se encontró el producto para actualizar');
+            }
 
-    //         // Comprobaciones para precio y stock
-    //         if (stock <= 0 || price <= 0) {
-    //             throw new Error('Asegúrese de que stock y price sean valores de tipo "number" superiores a 0');
-    //         }
+            return updatedProduct;
+        } catch (error) {
+            console.error('Error al actualizar el producto desde DB:', error);
+            throw new Error('Error al actualizar el producto desde DB');
+        }
+    }
 
-    //         // Comprobación para no atualizar el ID
-    //         if (updatedId && updatedId !== id) {
-    //             throw new Error('No se permite modificar el ID del producto');
-    //         }
-
-    //         // Se genera el producto actualizado
-    //         this.#products[indexToUpdate] = { ...this.#products[indexToUpdate], ...updatedProduct, id };
-
-    //         // Se guarda el nuevo producto en el archivo
-    //         await this.#saveFile();
-    //         console.log('Producto actualizado correctamente');
-    //     } else {
-    //         throw new Error('Not found: El ID solicitado no existe');
-    //     }
-    // }
-
-    // async deleteProduct(id) {
-
-    //     // Se busca el ID existente
-    //     const indexToDelete = this.#products.findIndex(el => el.id === id);
-
-    //     // En caso de que el ID exista se elimina el producto con 'splice'
-    //     if (indexToDelete !== -1) {
-    //         this.#products.splice(indexToDelete, 1);
-    //         await this.#saveFile();
-    //         console.log('Producto eliminado correctamente');
-    //     } else {
-    //         throw new Error('Not found: El ID solicitado no existe');
-    //     }
-    // }
+    async deleteProduct(id) {
+        await Products.deleteOne({ _id: id })
+    }
 }
 
 module.exports = ProductManager;

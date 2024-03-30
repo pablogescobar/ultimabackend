@@ -125,11 +125,12 @@ class ProductManager {
 
     async getProductById(id) {
 
+        numericId = parseInt(id)
         // Se utiliza el método para obtener todos los productos
         const existingProducts = await this.getProducts();
 
         // Se filtran todos los productos buscando el ID pasado por parámetros
-        const filterProductById = existingProducts.find(el => el.id === id);
+        const filterProductById = existingProducts.find(el => el.id === numericId);
 
         if (filterProductById) {
             return filterProductById;
@@ -140,8 +141,9 @@ class ProductManager {
 
     async updateProduct(id, updatedProduct) {
 
+        const numericId = parseInt(id)
         // Se busca si el ID existe
-        const indexToUpdate = this.#products.findIndex(el => el.id === id);
+        const indexToUpdate = this.#products.findIndex(el => el.id === numericId);
 
         // En caso de existir se actualiza el producto
         if (indexToUpdate !== -1) {
@@ -170,8 +172,9 @@ class ProductManager {
 
     async deleteProduct(id) {
 
+        const numericId = parseInt(id)
         // Se busca el ID existente
-        const indexToDelete = this.#products.findIndex(el => el.id === id);
+        const indexToDelete = this.#products.findIndex(el => el.id === numericId);
 
         // En caso de que el ID exista se elimina el producto con 'splice'
         if (indexToDelete !== -1) {

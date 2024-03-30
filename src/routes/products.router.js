@@ -14,7 +14,8 @@ router.get('/', async (req, res) => {
             description: product.description,
             price: product.price,
             stock: product.stock,
-            code: product.code
+            code: product.code,
+            id: product.id
         }));
 
         if (limitFilter) { // Si se proporciona el parámetro "limit"
@@ -50,14 +51,15 @@ router.get('/', async (req, res) => {
 // Ruta para obtener un producto por su ID
 router.get('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
+        const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud como una cadena
         const productManager = req.app.get('productManager');
         const product = await productManager.getProductById(productId); // Obtiene el producto por su ID
         res.status(200).json(product); // Responde con el producto obtenido
-    } catch {
-        res.status(500).json({ Error: 'Error al cargar el producto' }); // Responde con un error 500 si hay un error al obtener el producto
+    } catch (err) {
+        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el producto
     }
 });
+
 
 // Ruta para agregar un nuevo producto
 router.post('/', async (req, res) => {
@@ -65,7 +67,7 @@ router.post('/', async (req, res) => {
         const { title, description, price, thumbnail, code, status, stock } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
         const productManager = req.app.get('productManager');
         await productManager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
-        res.status(201).json({ message: 'Producto agregado correctamente' }); // Responde con un mensaje de éxito
+        res.status(301).redirect('/api/products'); // Responde con un mensaje de éxito
     } catch (error) {
         res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto
     }
@@ -74,19 +76,20 @@ router.post('/', async (req, res) => {
 // Ruta para actualizar un producto por su ID
 router.put('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
+        const productId = req.params.pid; // Obtener el ID del producto de los parámetros de la solicitud
         const productManager = req.app.get('productManager');
-        await productManager.updateProduct(productId, req.body); // Actualiza el producto
-        res.status(200).json({ message: 'Producto actualizado' }); // Responde con un mensaje de éxito
-    } catch {
-        res.status(500).json({ error: 'Error al actualizar el producto' }); // Responde con un error 500 si hay un error al actualizar el producto
+        await productManager.updateProduct(productId, req.body); // Actualizar el producto
+        res.status(200).json({ message: 'Producto actualizado' }); // Responder con un mensaje de éxito
+    } catch (err) {
+        res.status(500).json({ error: 'Error al actualizar el producto' }); // Responder con un error 500 si hay un error al actualizar el producto
     }
 });
+
 
 // Ruta para eliminar un producto por su ID
 router.delete('/:pid', async (req, res) => {
     try {
-        const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
+        const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
         const productManager = req.app.get('productManager');
         await productManager.deleteProduct(productId); // Elimina el producto
         res.status(200).json({ message: 'Producto eliminado' }); // Responde con un mensaje de éxito
