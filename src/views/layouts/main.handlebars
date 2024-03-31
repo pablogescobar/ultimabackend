@@ -16,6 +16,7 @@
         <ul class="ul">
             <li><a href="http://localhost:8080/api/products">Productos</a></li>
             <li><a href="http://localhost:8080/api/createProduct">Crear Producto</a></li>
+            <li><a href="http://localhost:8080/api/chat">Chat en Vivo</a></li>
         </ul>
 
 
@@ -30,8 +31,10 @@
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 
-    {{!-- sweet alerts --}}
+    {{!-- incluir librería sweetalert si es necesario --}}
+    {{#if useSweetAlert }}
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    {{/if}}
 
     {{#each script}}
     <script src="/js/{{this}}"></script>

@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
+const { Server } = require('socket.io');
 
 // <-- FILEMANAGER -->
 // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
@@ -15,6 +16,7 @@ const CartManager = require('./dao/dbManagers/CartManager')
 const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
 const createProductRouter = require('./routes/createProduct.router');
+const chatRouter = require('./routes/chat.router');
 
 const app = express();
 
@@ -32,8 +34,10 @@ app.use(express.static(`${__dirname}/../public`))
 app.use('/api/products', productsRouter); // Rutas relacionadas con los productos
 app.use('/api/cart', cartRouter); // Rutas relacionadas con el carrito
 app.use('/api/createProduct', createProductRouter);
+app.use('/api/chat', chatRouter);
 
 // Se inicia el servidor en el puerto 8080
+
 
 const main = async () => {
 
@@ -61,7 +65,18 @@ const main = async () => {
     await cartManager.prepare();
     app.set('cartManager', cartManager);
 
+    const httpServer = app.listen(8080, () => { console.log('Servidor cargado!') });
+
+    const io = new Server(httpServer)
+
+    io.on('connection', (clientSocket) => {
+
+        // cuando llegue un mensaje, enviárselo a todos los usuarios
+        clientSocket.on('message', (data) => {
+            io.emit('message', data)
+        })
+
+    })
 }
-app.listen(8080, () => { console.log('Servidor cargado!') });
 
 main();
