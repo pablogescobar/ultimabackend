@@ -66,7 +66,7 @@ class CartManager {
         try {
 
             // Se crea un nuevo carrito con el método correspondiente para agregar un ID y con un arreglo vacio donde se agregarán los IDs de los productos y las cantidades
-            const cart = { id: this.#getNewId(), products: [] }
+            const cart = { id: parseInt(this.#getNewId()), products: [] }
 
             // Se agrega este carrito al array de carritos
             this.#carts.push(cart);
@@ -81,8 +81,10 @@ class CartManager {
 
     // Se obtienen los carritos por ID de manera similar que en ProductManager
     async getCartById(cartId) {
+
+        const numericCartId = parseInt(cartId)
         const existingCart = await this.getCarts();
-        const filterCartById = existingCart.find(c => c.id === cartId);
+        const filterCartById = existingCart.find(c => c.id === numericCartId);
         if (filterCartById) {
             return filterCartById;
         } else {
@@ -94,13 +96,15 @@ class CartManager {
     async addProductToCart(productId, cartId) {
         try {
             // Se corrobora que el ID de producto exista mediante el correspondiente método de ProductManager
-            const product = await manager.getProductById(productId);
+            const numericProductId = parseInt(productId)
+            const product = await manager.getProductById(numericProductId);
 
             // Se corrobora que el ID de carrito exista
-            const cart = await this.getCartById(cartId);
+            const numericCartId = parseInt(cartId)
+            const cart = await this.getCartById(numericCartId);
 
             // Se corrobora si el ID de producto se encuentra agregado o no
-            const existingProduct = cart.products.find(p => p.id === productId);
+            const existingProduct = cart.products.find(p => p.id === numericProductId);
 
             if (existingProduct) {
 
@@ -119,7 +123,7 @@ class CartManager {
             const updatedCarts = await this.getCarts();
 
             // Se busca el ID del carrito que se va a actualizar
-            const indexToUpdate = updatedCarts.findIndex(c => c.id === cartId);
+            const indexToUpdate = updatedCarts.findIndex(c => c.id === numericCartId);
             if (indexToUpdate !== -1) {
 
                 // En caso de que exista el carrito se actualiza en la lista de carritos

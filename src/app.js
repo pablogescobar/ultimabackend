@@ -2,10 +2,15 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 
+// <-- FILEMANAGER -->
+// Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
 // const ProductManager = require('./dao/fileManagers/ProductManager');
-const ProductManager = require('./dao/dbManagers/ProductManager');
+// const CartManager = require('./dao/fileManagers/CartManager');
 
-const CartManager = require('./dao/fileManagers/CartManager');
+// <-- MONGOMANAGER --> 
+// Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
+const ProductManager = require('./dao/dbManagers/ProductManager');
+const CartManager = require('./dao/dbManagers/CartManager')
 
 const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
@@ -37,19 +42,24 @@ const main = async () => {
     })
 
     // <-- FILEMANAGER -->
+    // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
     // const productManager = new ProductManager(`${__dirname}/../assets/products.json`);
     // await productManager.getProducts()
     // app.set('productManager', productManager);
 
-    const cartManager = new CartManager(`${__dirname}/../assets/cart.json`);
-    await cartManager.getCarts();
-    app.set('cartManager', cartManager);
+    // const cartManager = new CartManager(`${__dirname}/../assets/cart.json`);
+    // await cartManager.getCarts();
+    // app.set('cartManager', cartManager);
 
     // <-- MONGOMANAGER --> 
+    // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
     const productManager = new ProductManager();
     await productManager.prepare();
     app.set('productManager', productManager);
 
+    const cartManager = new CartManager();
+    await cartManager.prepare();
+    app.set('cartManager', cartManager);
 
 }
 app.listen(8080, () => { console.log('Servidor cargado!') });

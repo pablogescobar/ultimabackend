@@ -26,7 +26,7 @@ router.post('/', async (req, res) => {
 // Ruta para obtener un carrito por su ID
 router.get('/:cid', async (req, res) => {
     try {
-        const cartId = parseInt(req.params.cid); // Obtiene el ID del carrito de los parámetros de la solicitud
+        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
         const cartManager = req.app.get('cartManager');
         const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
         res.status(200).json(cart); // Responde con el carrito obtenido
@@ -38,14 +38,14 @@ router.get('/:cid', async (req, res) => {
 // Ruta para agregar un producto a un carrito
 router.post('/:cid/product/:pid', async (req, res) => {
     try {
-        const cartId = parseInt(req.params.cid); // Obtiene el ID del carrito de los parámetros de la solicitud
-        const productId = parseInt(req.params.pid); // Obtiene el ID del producto de los parámetros de la solicitud
+        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
+        const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
         const cartManager = req.app.get('cartManager');
         const updatedCart = await cartManager.addProductToCart(productId, cartId); // Agrega el producto al carrito
         res.status(200).json(updatedCart); // Responde con el carrito actualizado
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Hubo un problema' }); // Responde con un error 500 si hay un error al agregar el producto al carrito
+        res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto al carrito
     }
 });
 

@@ -94,7 +94,7 @@ class ProductManager {
         if (!findProductCode) {
 
             // Porducto generado
-            const product = { id: this.#getNewId(), title, description, price: numericPrice, thumbnail, code, status, stock: numericStock };
+            const product = { id: parseInt(this.#getNewId()), title, description, price: numericPrice, thumbnail, code, status, stock: numericStock };
 
             // Se agrega el producto al array
             this.#products.push(product);
@@ -125,7 +125,7 @@ class ProductManager {
 
     async getProductById(id) {
 
-        numericId = parseInt(id)
+        const numericId = parseInt(id)
         // Se utiliza el método para obtener todos los productos
         const existingProducts = await this.getProducts();
 

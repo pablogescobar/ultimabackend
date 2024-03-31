@@ -93,8 +93,8 @@ router.delete('/:pid', async (req, res) => {
         const productManager = req.app.get('productManager');
         await productManager.deleteProduct(productId); // Elimina el producto
         res.status(200).json({ message: 'Producto eliminado' }); // Responde con un mensaje de éxito
-    } catch {
-        res.status(500).json({ error: 'Error al eliminar el producto' }); // Responde con un error 500 si hay un error al eliminar el producto
+    } catch (err) {
+        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al eliminar el producto
     }
 });
 
