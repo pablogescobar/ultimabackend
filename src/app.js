@@ -12,6 +12,7 @@ const { Server } = require('socket.io');
 // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
 const ProductManager = require('./dao/dbManagers/ProductManager');
 const CartManager = require('./dao/dbManagers/CartManager')
+const ChatManager = require('./dao/chatManagers/chatManager');
 
 const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
@@ -44,6 +45,10 @@ const main = async () => {
     await mongoose.connect('mongodb+srv://FedeDiiorio:EatnQEgmFMs8oxtY@clusterfede.lnfsj8w.mongodb.net/?retryWrites=true&w=majority&appName=ClusterFede', {
         dbName: 'ecommerce'
     })
+
+    const chatManager = new ChatManager();
+    await chatManager.prepare();
+    app.set('chatManager', chatManager);
 
     // <-- FILEMANAGER -->
     // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
