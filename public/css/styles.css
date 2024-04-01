@@ -75,3 +75,8 @@
 .product img {
     width: 10rem;
 }
+
+.chat {
+    text-align: center;
+    margin: 1rem auto;
+}

@@ -18,7 +18,19 @@ Swal.fire({
     allowOutsideClick: false
 }).then(input => {
     user = input.value;
+    // Una vez que se obtiene el nombre de usuario, establece el evento de escucha 'message'
+    setupMessageListener();
 });
+
+// Función para establecer el evento de escucha 'message'
+function setupMessageListener() {
+    // Escuchar los mensajes del servidor
+    socket.on('message', (data) => {
+        const { user, message } = data;
+        // Agregar el mensaje recibido a la interfaz de usuario
+        messageLogs.innerHTML += `<p><strong>${user}:</strong> ${message}</p>`;
+    });
+}
 
 // Enviar mensajes al presionar Enter
 chatBox.addEventListener('keyup', (event) => {
@@ -29,10 +41,4 @@ chatBox.addEventListener('keyup', (event) => {
             chatBox.value = '';
         }
     }
-});
-
-// Mostrar los mensajes nuevos en la vista
-socket.on('message', (data) => {
-    const { user, message } = data;
-    messageLogs.innerHTML += `<p><strong>${user}:</strong> ${message}</p>`;
 });
