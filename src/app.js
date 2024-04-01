@@ -45,11 +45,8 @@ const main = async () => {
     await mongoose.connect('mongodb+srv://FedeDiiorio:EatnQEgmFMs8oxtY@clusterfede.lnfsj8w.mongodb.net/?retryWrites=true&w=majority&appName=ClusterFede', {
         dbName: 'ecommerce'
     })
-
-    const chatManager = new ChatManager();
-    await chatManager.prepare();
-    app.set('chatManager', chatManager);
-
+    const io = new Server(app.listen(8080));
+    
     // <-- FILEMANAGER -->
     // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
     // const productManager = new ProductManager(`${__dirname}/../assets/products.json`);
@@ -70,18 +67,11 @@ const main = async () => {
     await cartManager.prepare();
     app.set('cartManager', cartManager);
 
-    const httpServer = app.listen(8080, () => { console.log('Servidor cargado!') });
+    const chatManager = new ChatManager(io);
+    await chatManager.prepare();
+    app.set('chatManager', chatManager);
 
-    const io = new Server(httpServer)
-
-    io.on('connection', (clientSocket) => {
-
-        // cuando llegue un mensaje, enviárselo a todos los usuarios
-        clientSocket.on('message', (data) => {
-            io.emit('message', data)
-        })
-
-    })
+    console.log('Servidor cargado!')
 }
 
 main();
