@@ -9,8 +9,9 @@ const schema = new mongoose.Schema({
     },
     messages: {
         type: Array,
-        require: true
+        require: true,
+        timestamps: true
     }
-}, { timestamps: true });
+});
 
 module.exports = mongoose.model(collection, schema, 'messages');

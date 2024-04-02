@@ -4,7 +4,7 @@ const messageLogs = document.getElementById('messageLogs');
 const chatBox = document.getElementById('chatBox');
 let user;
 
-// Autenticar usuario
+// Autenticar usuario y configurar eventos de escucha
 Swal.fire({
     title: "Identifícate para continuar",
     input: "text",
@@ -18,27 +18,35 @@ Swal.fire({
     allowOutsideClick: false
 }).then(input => {
     user = input.value;
-    // Una vez que se obtiene el nombre de usuario, establece el evento de escucha 'message'
-    setupMessageListener();
+    // Una vez que se obtiene el nombre de usuario, establecer eventos de escucha y enviar petición para obtener todos los mensajes
+    setupListenersAndFetchMessages();
 });
 
-// Función para establecer el evento de escucha 'message'
-function setupMessageListener() {
-    // Escuchar los mensajes del servidor
+// Función para establecer los eventos de escucha y obtener todos los mensajes
+function setupListenersAndFetchMessages() {
+    // Escuchar todos los mensajes del servidor
+    socket.on('allMessages', (allMessages) => {
+        // Mostrar todos los mensajes existentes en la interfaz de usuario
+        allMessages.forEach((message) => {
+            messageLogs.innerHTML += `<p><strong>${message.user}:</strong> ${message.messages}</p>`;
+        });
+    });
+
+    // Escuchar los nuevos mensajes del servidor
     socket.on('message', (data) => {
         const { user, message } = data;
-        // Agregar el mensaje recibido a la interfaz de usuario
+        // Agregar el nuevo mensaje recibido a la interfaz de usuario
         messageLogs.innerHTML += `<p><strong>${user}:</strong> ${message}</p>`;
     });
-}
 
-// Enviar mensajes al presionar Enter
-chatBox.addEventListener('keyup', (event) => {
-    if (event.key === 'Enter') {
-        const message = chatBox.value.trim();
-        if (message.length > 0) {
-            socket.emit('message', { user, message });
-            chatBox.value = '';
+    // Enviar mensajes al presionar Enter
+    chatBox.addEventListener('keyup', (event) => {
+        if (event.key === 'Enter') {
+            const message = chatBox.value.trim();
+            if (message.length > 0) {
+                socket.emit('message', { user, message });
+                chatBox.value = '';
+            }
         }
-    }
-});
+    });
+}

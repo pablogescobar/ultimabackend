@@ -31,7 +31,6 @@ router.get('/', async (req, res) => {
                     titlePage: 'Productos',
                     h1: 'Tienda',
                     style: ['styles.css'],
-                    script: ['home.js']
                 });
             }
         } else {
@@ -39,7 +38,6 @@ router.get('/', async (req, res) => {
                 products: productsData,
                 titlePage: 'Productos',
                 style: ['styles.css'],
-                script: ['home.js']
             });
 
         }

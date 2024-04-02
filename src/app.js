@@ -46,7 +46,7 @@ const main = async () => {
         dbName: 'ecommerce'
     })
     const io = new Server(app.listen(8080));
-    
+
     // <-- FILEMANAGER -->
     // Agregar o quitar comentarios para cambiar entre mongoDB y sistema de archivos
     // const productManager = new ProductManager(`${__dirname}/../assets/products.json`);
@@ -71,7 +71,7 @@ const main = async () => {
     await chatManager.prepare();
     app.set('chatManager', chatManager);
 
-    console.log('Servidor cargado!')
+    console.log('Servidor cargado!' + '\n' + 'http://localhost:8080/api/products')
 }
 
 main();
