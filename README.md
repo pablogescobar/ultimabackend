@@ -134,6 +134,8 @@ Se indica en la URL el ID del producto a actualizar, así como el ID del carrito
 
 Ten en cuenta que todos los endpoints están preparados para funcionar con mongoDB. Para que funcionen con fileSystem se deberán hacer las modificaciones pertinentes explicadas en [**app.js**](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/optional/src/app.js)
 
+Si tienes problemas al conectar con la base de datos de Mongo Atlas te aconsejo que reemplaces la dirección de Altas por la de tu mongo local con el fin de probar la aplicación.
+
 ## Chat en vivo
 
 Para acceder al chat en vivo debes ingresar en [http://localhost:8080/api/chat](http://localhost:8080/api/chat).
