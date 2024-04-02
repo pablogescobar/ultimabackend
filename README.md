@@ -141,3 +141,7 @@ Si tienes problemas al conectar con la base de datos de Mongo Atlas te aconsejo 
 Para acceder al chat en vivo debes ingresar en [http://localhost:8080/api/chat](http://localhost:8080/api/chat).
 
 Se te pedirá un username y una vez logueado podrás empezar a utilizar el chat.
+
+### Demostración
+
+[**Ver**](https://youtu.be/FI2g8ZqlydQ)
