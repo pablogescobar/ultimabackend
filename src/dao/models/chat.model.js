@@ -5,12 +5,11 @@ const collection = 'Messages';
 const schema = new mongoose.Schema({
     user: {
         type: String,
-        require: true
+        required: true
     },
     messages: {
         type: Array,
-        require: true,
-        timestamps: true
+        required: true,
     }
 });
 

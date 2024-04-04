@@ -4,6 +4,16 @@ const messageLogs = document.getElementById('messageLogs');
 const chatBox = document.getElementById('chatBox');
 let user;
 
+socket.on('allMessages', (allMessages) => {
+    // Limpiar el contenedor de mensajes
+    messageLogs.innerHTML = '';
+
+    // Mostrar todos los mensajes en la interfaz de usuario
+    allMessages.forEach((message) => {
+        messageLogs.innerHTML += `<p><strong>${message.user}:</strong> ${message.message}</p>`;
+    });
+});
+
 // Autenticar usuario y configurar eventos de escucha
 Swal.fire({
     title: "Identifícate para continuar",
@@ -26,17 +36,19 @@ Swal.fire({
 function setupListenersAndFetchMessages() {
     // Escuchar todos los mensajes del servidor
     socket.on('allMessages', (allMessages) => {
-        // Mostrar todos los mensajes existentes en la interfaz de usuario
+        // Limpiar el contenedor de mensajes
+        messageLogs.innerHTML = '';
+
+        // Mostrar todos los mensajes en la interfaz de usuario
         allMessages.forEach((message) => {
-            messageLogs.innerHTML += `<p><strong>${message.user}:</strong> ${message.messages}</p>`;
+            messageLogs.innerHTML += `<p><strong>${message.user}:</strong> ${message.message}</p>`;
         });
     });
 
-    // Escuchar los nuevos mensajes del servidor
-    socket.on('message', (data) => {
-        const { user, message } = data;
-        // Agregar el nuevo mensaje recibido a la interfaz de usuario
-        messageLogs.innerHTML += `<p><strong>${user}:</strong> ${message}</p>`;
+    // Escuchar nuevos mensajes del servidor
+    socket.on('message', (message) => {
+        // Agregar el nuevo mensaje a la interfaz de usuario
+        messageLogs.innerHTML += `<p><strong>${message.user}:</strong> ${message.message}</p>`;
     });
 
     // Enviar mensajes al presionar Enter
