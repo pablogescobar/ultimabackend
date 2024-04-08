@@ -6,7 +6,19 @@ router.get('/', async (req, res) => {
     try {
         const cartManager = req.app.get('cartManager');
         const carts = await cartManager.getCarts(); // Obtiene todos los carritos
-        res.status(200).json(carts); // Responde con los carritos obtenidos
+
+        const cartsData = carts.map(c => ({
+            id: c.id,
+            quantity: c.products.length
+        }))
+
+        console.log(cartsData);
+
+        res.status(200).render('carts', {
+            carts: cartsData,
+            titlePage: 'Carritos',
+            style: ['styles.css'],
+        }); // Responde con los carritos obtenidos
     } catch {
         res.status(500).json({ error: 'No se pudo conectar con los carritos' }); // Responde con un error 500 si hay un error al obtener los carritos
     }
@@ -31,7 +43,7 @@ router.get('/:cid', async (req, res) => {
         const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
         res.status(200).json(cart); // Responde con el carrito obtenido
     } catch {
-        res.status(500).json({ error: 'Hubo un problema al conectar con el servidor' }); // Responde con un error 500 si hay un error al obtener el carrito
+        res.status(500).json({ error: 'Hubo un problema con el ID del carrito.' }); // Responde con un error 500 si hay un error al obtener el carrito
     }
 });
 
