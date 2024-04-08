@@ -12,8 +12,6 @@ router.get('/', async (req, res) => {
             quantity: c.products.length
         }))
 
-        console.log(cartsData);
-
         res.status(200).render('carts', {
             carts: cartsData,
             titlePage: 'Carritos',
@@ -21,6 +19,32 @@ router.get('/', async (req, res) => {
         }); // Responde con los carritos obtenidos
     } catch {
         res.status(500).json({ error: 'No se pudo conectar con los carritos' }); // Responde con un error 500 si hay un error al obtener los carritos
+    }
+});
+
+// Ruta para obtener un carrito por su ID
+router.get('/:cid', async (req, res) => {
+    try {
+        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
+        const cartManager = req.app.get('cartManager');
+        const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
+
+        const cartData = {
+            id: cart.id,
+            products: cart.products.map(product => ({
+                productId: product.id,
+                quantity: product.quantity
+            }))
+        };
+
+        res.status(200).render('cart', {
+            cart: cartData,
+            titlePage: 'Carrito',
+            style: ['styles.css'],
+        }); // Responde con el carrito obtenido
+
+    } catch {
+        res.status(500).json({ error: 'Hubo un problema con el ID del carrito.' }); // Responde con un error 500 si hay un error al obtener el carrito
     }
 });
 
@@ -32,18 +56,6 @@ router.post('/', async (req, res) => {
         res.status(200).json({ message: 'Carrito creado con éxito', cart }); // Responde con un mensaje de éxito y el carrito agregado
     } catch {
         res.status(500).json({ error: 'No se pudo crear el carrito' }); // Responde con un error 500 si hay un error al agregar el carrito
-    }
-});
-
-// Ruta para obtener un carrito por su ID
-router.get('/:cid', async (req, res) => {
-    try {
-        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
-        const cartManager = req.app.get('cartManager');
-        const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
-        res.status(200).json(cart); // Responde con el carrito obtenido
-    } catch {
-        res.status(500).json({ error: 'Hubo un problema con el ID del carrito.' }); // Responde con un error 500 si hay un error al obtener el carrito
     }
 });
 

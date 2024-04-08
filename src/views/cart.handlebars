@@ -1,0 +1,14 @@
+<div class="container">
+    <h2>Carrito Nº: {{cart.id}}</h2>
+    <ul>
+        {{#each cart.products}}
+        <li>
+            <div>
+                <p>ID Producto: {{this.productId}}</p>
+                <p>Cantidad: {{this.quantity}}</p>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+    <a href="/api/cart">Volver</a>
+</div>

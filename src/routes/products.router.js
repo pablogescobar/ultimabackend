@@ -26,7 +26,7 @@ router.get('/', async (req, res) => {
                 const limit = parseInt(limitFilter); // Convierte el valor de "limit" a un número entero
                 const limitedProducts = products.slice(0, limit); // Obtiene los productos limitados según el valor de "limit"
 
-                res.render('home', {
+                res.render('products', {
                     products: limitedProducts,
                     titlePage: 'Productos',
                     h1: 'Tienda',
@@ -34,7 +34,7 @@ router.get('/', async (req, res) => {
                 });
             }
         } else {
-            res.render('home', {
+            res.render('products', {
                 products: productsData,
                 titlePage: 'Productos',
                 style: ['styles.css'],
