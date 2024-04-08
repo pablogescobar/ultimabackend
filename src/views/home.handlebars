@@ -1,15 +1,10 @@
-<div class="container">
+<ul class="container">
     {{#each products}}
-    <div class="product">
+    <li class="products">
         <h4>{{title}}</h4>
-        <img src="{{thumbnail}}" alt="imagen de {{title}}">
-        <div class="product__info">
-            <p>{{description}}</p>
-            <p>Precio: {{price}}</p>
-            <p>Stock: {{stock}}</p>
-            <p>Código: {{code}}</p>
-            <p>ID: {{id}}</p>
-        </div>
-    </div>
+        <p>Precio: {{price}}</p>
+        <p>Stock: {{stock}}</p>
+        <a href="http://localhost:8080/api/products/{{id}}">Ver</a>
+    </li>
     {{/each}}
-</div>
+</ul>

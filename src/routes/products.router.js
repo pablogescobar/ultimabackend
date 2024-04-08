@@ -49,10 +49,28 @@ router.get('/', async (req, res) => {
 // Ruta para obtener un producto por su ID
 router.get('/:pid', async (req, res) => {
     try {
+
         const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud como una cadena
         const productManager = req.app.get('productManager');
         const product = await productManager.getProductById(productId); // Obtiene el producto por su ID
-        res.status(200).json(product); // Responde con el producto obtenido
+
+        const productData = {
+            title: product.title,
+            thumbnail: product.thumbnail,
+            description: product.description,
+            price: product.price,
+            stock: product.stock,
+            code: product.code,
+            id: product.id
+        };
+
+        res.status(200).render('product', {
+            product: [productData],
+            titlePage: `Productos | ${product.title}`,
+            style: ['styles.css'],
+        });
+
+
     } catch (err) {
         res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el producto
     }
@@ -90,7 +108,7 @@ router.delete('/:pid', async (req, res) => {
         const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
         const productManager = req.app.get('productManager');
         await productManager.deleteProduct(productId); // Elimina el producto
-        res.status(200).json({ message: 'Producto eliminado' }); // Responde con un mensaje de éxito
+        res.status(301).redirect('/api/products'); // Responde con un mensaje de éxito
     } catch (err) {
         res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al eliminar el producto
     }

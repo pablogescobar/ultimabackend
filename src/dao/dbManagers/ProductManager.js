@@ -101,8 +101,12 @@ class ProductManager {
         }
     }
 
-    async deleteProduct(id) {
-        await Products.deleteOne({ _id: id })
+    async deleteProduct(productId) {
+        try {
+            await Products.deleteOne({ _id: productId });
+        } catch (error) {
+            throw new Error('Error al eliminar el producto en la base de datos');
+        }
     }
 }
 

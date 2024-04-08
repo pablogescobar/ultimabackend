@@ -57,22 +57,17 @@
 }
 
 .container {
-    text-align: center;
     margin: 2rem auto;
     width: 80vw;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 2rem;
 }
 
-.product {
-    background-color: #afafaf;
-    padding: 1rem;
-    border: 1px solid gray;
-    border-radius: 3rem;
+.products {
+    margin-bottom: 2rem;
+    display: flex;
+    gap: 1rem;
 }
 
-.product img {
+.products img {
     width: 10rem;
 }
 
