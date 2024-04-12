@@ -1,7 +1,5 @@
 const mongoose = require('mongoose');
 
-const collection = 'Products'
-
 const schema = new mongoose.Schema({
 
     title: {
@@ -48,4 +46,4 @@ schema.virtual('id').get(function () {
     return this._id.toString()
 });
 
-module.exports = mongoose.model(collection, schema, 'products');
+module.exports = mongoose.model('Products', schema, 'products');

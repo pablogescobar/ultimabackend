@@ -43,8 +43,8 @@ router.get('/:cid', async (req, res) => {
             style: ['styles.css'],
         }); // Responde con el carrito obtenido
 
-    } catch {
-        res.status(500).json({ error: 'Hubo un problema con el ID del carrito.' }); // Responde con un error 500 si hay un error al obtener el carrito
+    } catch (err) {
+        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el carrito
     }
 });
 

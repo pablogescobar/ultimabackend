@@ -36,9 +36,10 @@ class CartManager {
     // Se obtienen los carritos por ID de manera similar que en ProductManager
     async getCartById(cartId) {
         try {
-            const cart = await Carts.findOne({ _id: cartId });
+            const cart = await Carts.findOne({ _id: cartId }).populate('products.product');
+            console.log(JSON.stringify(cart, null, 4));
             return cart
-        } catch {
+        } catch (err) {
             throw new Error('Hubo un error al obtener el ID del carrito.')
         }
     }
@@ -66,6 +67,7 @@ class CartManager {
                 cart.products.push({ product: productId, quantity: 1 });
             }
 
+            // Guardar el carrito actualizado
             await cart.save();
 
             console.log('Producto agregado al carrito correctamente');
@@ -75,7 +77,6 @@ class CartManager {
             throw new Error('Hubo un error al agregar un producto al carrito.');
         }
     }
-
 
 };
 
