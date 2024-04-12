@@ -3,9 +3,16 @@ const mongoose = require('mongoose');
 const collection = 'Carts'
 
 const schema = new mongoose.Schema({
-    products: {
-        type: Array,
-    }
+    products: [{
+        product: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product'
+        },
+        quantity: {
+            type: Number,
+            default: 0
+        }
+    }]
 });
 
 schema.virtual('id').get(function () {

@@ -11,12 +11,12 @@ const schema = new mongoose.Schema({
 
     description: {
         type: String,
-        require: true
+        required: true
     },
 
     price: {
         type: Number,
-        require: true,
+        required: true,
         min: 1
     },
 
@@ -28,7 +28,7 @@ const schema = new mongoose.Schema({
     code: {
         type: String,
         unique: true,
-        require: true
+        required: true
     },
 
     status: {
@@ -39,7 +39,7 @@ const schema = new mongoose.Schema({
 
     stock: {
         type: Number,
-        require: true,
+        required: true,
         min: 0
     }
 });

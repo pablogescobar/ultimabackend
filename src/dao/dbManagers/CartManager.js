@@ -46,30 +46,27 @@ class CartManager {
     // Agregar productos al carrito
     async addProductToCart(productId, cartId) {
         try {
-            // Verificar si el ID del producto existe en la colección Products
-            const product = await Products.findOne({ _id: productId });
+            const product = await Products.findById(productId);
             if (!product) {
-                throw new Error('El ID de producto no existe');
+                throw new Error('El producto no existe');
             }
 
-            // Verificar si el ID del carrito existe en la colección Carts
-            const cart = await Carts.findOne({ _id: cartId });
+            let cart = await Carts.findById(cartId);
             if (!cart) {
-                throw new Error('El ID de carrito no existe');
+                throw new Error('El carrito no existe');
             }
 
             // Verificar si el producto ya está en el carrito
-            const existingProductIndex = cart.products.findIndex(p => p.id === productId);
+            const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
             if (existingProductIndex !== -1) {
                 // Si el producto existe, aumentar su cantidad en 1
                 cart.products[existingProductIndex].quantity += 1;
             } else {
                 // Si el producto no existe, agregarlo al carrito con cantidad 1
-                cart.products.push({ id: productId, quantity: 1 });
+                cart.products.push({ product: productId, quantity: 1 });
             }
 
-            // Actualizar el carrito en la colección Carts
-            await Carts.updateOne({ _id: cartId }, cart);
+            await cart.save();
 
             console.log('Producto agregado al carrito correctamente');
             return cart;
@@ -78,6 +75,7 @@ class CartManager {
             throw new Error('Hubo un error al agregar un producto al carrito.');
         }
     }
+
 
 };
 
