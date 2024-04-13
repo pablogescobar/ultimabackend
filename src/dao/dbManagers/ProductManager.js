@@ -12,11 +12,10 @@ class ProductManager {
         }
     }
 
-    async getProducts() {
+    async getProducts(page) {
         try {
-            // Se obtienen los productos 
-            const allProducts = await Products.find();
-            return allProducts.map(p => p.toObject({ virtuals: true }));
+            const allProducts = await Products.paginate({}, { limit: 10, page: page, lean: true });
+            return allProducts;
         } catch {
             // En caso de que no haya productos se retorna un array vacio
             return [];

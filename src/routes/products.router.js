@@ -1,12 +1,12 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
 const router = Router(); // Crea un enrutador
-const { Products } = require('../dao/models');
 
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
     try {
-        const page = req.query.page || 1;
-        const products = await Products.paginate({}, { limit: 10, page, lean: true });
+        const page = req.query.page || 1
+        const productManager = req.app.get('productManager');
+        const products = await productManager.getProducts(page);
 
         res.render('products', {
             products,
