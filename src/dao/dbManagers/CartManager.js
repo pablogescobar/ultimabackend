@@ -47,12 +47,13 @@ class CartManager {
     // Agregar productos al carrito
     async addProductToCart(productId, cartId) {
         try {
+
             const product = await Products.findById(productId);
             if (!product) {
                 throw new Error('El producto no existe');
             }
 
-            let cart = await Carts.findById(cartId);
+            const cart = await Carts.findById(cartId);
             if (!cart) {
                 throw new Error('El carrito no existe');
             }
@@ -80,13 +81,13 @@ class CartManager {
 
     async deleteProductFromCart(productId, cartId) {
         try {
-            let cart = await Carts.findById(cartId);
+
+            const cart = await Carts.findById(cartId);
             if (!cart) {
                 throw new Error('El carrito no existe.');
             }
 
-            const product = await Products.findOne({ _id: productId });
-
+            const product = await Products.findById(productId);
             if (!product) {
                 throw new Error('El producto no existe.');
             }
@@ -100,6 +101,33 @@ class CartManager {
         }
     }
 
+    async updateProductQuantityFromCart(productId, cartId, quantity) {
+        try {
+            const cart = await Carts.findById(cartId);
+            if (!cart) {
+                throw new Error('El carrito no existe.');
+            }
+
+            const product = await Products.findById(productId);
+            if (!product) {
+                throw new Error('El producto no existe.');
+            }
+
+            const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
+            if (existingProductIndex !== -1) {
+                cart.products[existingProductIndex].quantity = quantity;
+
+                await cart.save();
+
+                console.log(`Cantidad del producto ${productId} actualizada en el carrito ${cartId}`);
+            } else {
+                throw new Error('No se pudo encontrar el producto en el carrito');
+            }
+        } catch (error) {
+            console.error('Hubo un error al actualizar la cantidad del producto:', error);
+            throw new Error('Hubo un error al actualizar la cantidad del producto');
+        }
+    }
 
 };
 
