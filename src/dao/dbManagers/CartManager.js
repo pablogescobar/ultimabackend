@@ -37,7 +37,7 @@ class CartManager {
     async getCartById(cartId) {
         try {
             const cart = await Carts.findOne({ _id: cartId }).populate('products.product');
-            console.log(JSON.stringify(cart, null, 4));
+            // console.log(JSON.stringify(cart, null, 4));
             return cart
         } catch (err) {
             throw new Error('Hubo un error al obtener el ID del carrito.')
@@ -77,6 +77,29 @@ class CartManager {
             throw new Error('Hubo un error al agregar un producto al carrito.');
         }
     }
+
+    async deleteProductFromCart(productId, cartId) {
+        try {
+            let cart = await Carts.findById(cartId);
+            if (!cart) {
+                throw new Error('El carrito no existe.');
+            }
+
+            const product = await Products.findOne({ _id: productId });
+
+            if (!product) {
+                throw new Error('El producto no existe.');
+            }
+
+            await cart.updateOne({ $pull: { products: { product: productId } } });
+
+            console.log(`Se eliminó el producto ${productId} del carrito ${cartId}`);
+        } catch (error) {
+            console.error('Error al eliminar el producto del carrito:', error);
+            throw new Error('Error al eliminar el producto del carrito');
+        }
+    }
+
 
 };
 

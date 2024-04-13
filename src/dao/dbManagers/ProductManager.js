@@ -12,10 +12,32 @@ class ProductManager {
         }
     }
 
-    async getProducts(page) {
+    async getProducts(page, limit, sort, category) {
         try {
-            const allProducts = await Products.paginate({}, { limit: 10, page: page, lean: true });
-            return allProducts;
+            if (category) {
+                const allProducts = await Products.paginate({ category }, { limit: limit, page: page, sort: sort ? { price: sort } : undefined, lean: true });
+            }
+
+            const allProducts = await Products.paginate({}, { limit: limit, page: page, sort: sort ? { price: sort } : undefined, lean: true });
+
+            const status = allProducts ? 'success' : 'error';
+            const prevLink = allProducts.hasPrevPage ? `/api/products?page=${allProducts.prevPage}` : null
+            const nextLink = allProducts.hasNextPage ? `/api/products?page=${allProducts.nextPage}` : null
+
+
+            const result = {
+                status,
+                payload: allProducts.docs,
+                totalPages: allProducts.totalPages,
+                prevPage: allProducts.prevPage,
+                nextPage: allProducts.nextPage,
+                page: allProducts.page,
+                hasPrevPage: allProducts.hasPrevPage,
+                hasNextPage: allProducts.hasNextPage,
+                prevLink,
+                nextLink
+            }
+            return result;
         } catch {
             // En caso de que no haya productos se retorna un array vacio
             return [];

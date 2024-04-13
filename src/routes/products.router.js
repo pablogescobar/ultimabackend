@@ -5,8 +5,9 @@ const router = Router(); // Crea un enrutador
 router.get('/', async (req, res) => {
     try {
         const page = req.query.page || 1
+        const limit = req.query.limit || 10
         const productManager = req.app.get('productManager');
-        const products = await productManager.getProducts(page);
+        const products = await productManager.getProducts(page, limit);
 
         res.render('products', {
             products,

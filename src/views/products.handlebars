@@ -3,7 +3,7 @@
 
     <p class="margin">Página actual: {{products.page}}</p>
     <ul>
-        {{#each products.docs}}
+        {{#each products.payload}}
         <li>
             <div class="products">
                 <h4>{{this.title}}</h4>
@@ -17,11 +17,11 @@
 
     <div class="container">
         {{#if products.hasPrevPage}}
-        <a href="/api/products?page={{products.prevPage}}">Anterior</a>
+        <a href="{{products.prevLink}}">Anterior</a>
         {{/if}}
 
         {{#if products.hasNextPage}}
-        <a href="/api/products?page={{products.nextPage}}">Siguiente</a>
+        <a href="{{products.nextLink}}">Siguiente</a>
         {{/if}}
     </div>
 </div>

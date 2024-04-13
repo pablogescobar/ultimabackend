@@ -29,11 +29,13 @@ router.get('/:cid', async (req, res) => {
         const cartManager = req.app.get('cartManager');
         const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
 
+        console.log(cart)
+
         const cartData = {
             id: cart.id,
-            products: cart.products.map(product => ({
-                productId: product.id,
-                quantity: product.quantity
+            products: cart.products.map(p => ({
+                productId: p.product.id,
+                quantity: p.quantity
             }))
         };
 
@@ -72,5 +74,17 @@ router.post('/:cid/product/:pid', async (req, res) => {
         res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto al carrito
     }
 });
+
+router.delete('/:cid/product/:pid', async (req, res) => {
+    try {
+        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
+        const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
+        const cartManager = req.app.get('cartManager');
+        await cartManager.deleteProductFromCart(productId, cartId);
+        res.status(301).redirect('/api/cart')
+    } catch (err) {
+        res.status(500).json({ Error: err.message })
+    }
+})
 
 module.exports = router; // Exporta el enrutador
