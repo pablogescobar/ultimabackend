@@ -1,7 +1,6 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
-const { Server } = require('socket.io');
 
 const ProductManager = require('./dao/dbManagers/ProductManager');
 const CartManager = require('./dao/dbManagers/CartManager')
@@ -35,7 +34,6 @@ const main = async () => {
     await mongoose.connect('mongodb+srv://FedeDiiorio:EatnQEgmFMs8oxtY@clusterfede.lnfsj8w.mongodb.net/?retryWrites=true&w=majority&appName=ClusterFede', {
         dbName: 'ecommerce'
     })
-    const io = new Server(app.listen(8080));
 
     const productManager = new ProductManager();
     await productManager.prepare();
@@ -44,6 +42,8 @@ const main = async () => {
     const cartManager = new CartManager();
     await cartManager.prepare();
     app.set('cartManager', cartManager);
+
+    app.listen(8080);
 
     console.log('Servidor cargado!' + '\n' + 'http://localhost:8080/api/products')
 }

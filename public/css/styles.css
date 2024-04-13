@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+.margin {
+    margin: 1rem auto;
+}
+
 .form {
     margin: 2rem 0;
     display: flex;

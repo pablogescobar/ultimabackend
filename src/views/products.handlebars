@@ -1,14 +1,25 @@
-<h2 class="container">Productos</h2>
-<ul class="container">
-    {{#each products}}
-    <li>
-        <div class="products">
-            <h4>{{title}}</h4>
-            <p>Precio: {{price}}</p>
-            <p>Stock: {{stock}}</p>
-            <a href="http://localhost:8080/api/products/{{id}}">Ver</a>
-        </div>
-    </li>
-    {{/each}}
+<div class="container">
+    <h2>Productos</h2>
+    <p class="margin">Página actual: {{products.page}}</p class="margin">
+    <ul>
+        {{#each products.docs}}
+        <li>
+            <div class="products">
+                <h4>{{title}}</h4>
+                <p>Precio: {{price}}</p>
+                <p>Stock: {{stock}}</p>
+                <a href="http://localhost:8080/api/products/{{id}}">Ver</a>
+            </div>
+        </li>
+        {{/each}}
+    </ul>
+    <div class="container">
+        {{#if products.hasPrevPage}}
+        <a href="/api/products?page={{products.prevPage}}">Anterior</a>
+        {{/if}}
 
-</ul>
+        {{#if products.hasNextPage}}
+        <a href="/api/products?page={{products.nextPage}}">Siguiente</a>
+        {{/if}}
+    </div>
+</div>

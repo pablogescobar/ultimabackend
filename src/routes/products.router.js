@@ -1,46 +1,19 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
 const router = Router(); // Crea un enrutador
+const { Products } = require('../dao/models');
 
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
     try {
-        const productManager = req.app.get('productManager'); // Obtiene todos los productos
-        const products = await productManager.getProducts();
-        const limitFilter = req.query.limit; // Obtiene el parámetro de consulta "limit"
+        const page = req.query.page || 1;
+        const products = await Products.paginate({}, { limit: 10, page, lean: true });
 
-        const productsData = products.map(product => ({
-            title: product.title,
-            thumbnail: product.thumbnail,
-            description: product.description,
-            price: product.price,
-            stock: product.stock,
-            code: product.code,
-            id: product.id
-        }));
+        res.render('products', {
+            products,
+            titlePage: 'Productos',
+            style: ['styles.css'],
+        });
 
-        if (limitFilter) { // Si se proporciona el parámetro "limit"
-            if (limitFilter <= 0 || isNaN(parseInt(limitFilter))) { // Verifica si el parámetro "limit" es válido
-                res.status(400).json({ error: 'Debe ingresar un número válido superior a 0.' }); // Responde con un error 400 si el parámetro es inválido
-                return;
-            } else {
-                const limit = parseInt(limitFilter); // Convierte el valor de "limit" a un número entero
-                const limitedProducts = products.slice(0, limit); // Obtiene los productos limitados según el valor de "limit"
-
-                res.render('products', {
-                    products: limitedProducts,
-                    titlePage: 'Productos',
-                    h1: 'Tienda',
-                    style: ['styles.css'],
-                });
-            }
-        } else {
-            res.render('products', {
-                products: productsData,
-                titlePage: 'Productos',
-                style: ['styles.css'],
-            });
-
-        }
     } catch {
         res.status(500).json({ Error: 'Error al cargar los productos' }); // Responde con un error 500 si hay un error al obtener los productos
     };
