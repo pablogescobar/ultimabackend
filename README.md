@@ -43,12 +43,12 @@ Busca todos los productos disponibles en el archivo.
 - `limit` (número): Especifica el número máximo de productos por página. Por defecto, es 10.
 - `sort` (cadena): Ordena los productos por precio en orden ascendente (asc) o descendente (desc).
 - `category` (cadena): Filtra los productos por categoría.
-- `availability` (booleano): Filtra los productos por disponibilidad. true muestra solo productos disponibles, false - muestra solo productos no disponibles.
+- `availability` (booleano): Filtra los productos por disponibilidad. true muestra solo productos disponibles, false muestra solo productos no disponibles.
 
 #### Ejemplo de uso:
 
 ```http
-GET http://localhost:8080/api/products?page=1&limit=5&sort=asc&category=almacenamiento&availability=true
+http://localhost:8080/api/products?page=1&limit=5&sort=asc&category=almacenamiento&availability=true
 ````
 
 ### `getProductById`
