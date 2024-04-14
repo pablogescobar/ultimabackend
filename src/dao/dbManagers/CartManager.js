@@ -129,6 +129,21 @@ class CartManager {
         }
     }
 
+    async clearCart(cartId) {
+        try {
+
+            const existingCart = await this.getCartById(cartId);
+            if (!existingCart) {
+                throw new Error('El carrito no existe');
+            }
+
+            await Carts.updateOne({ _id: cartId }, { $set: { products: [] } });
+
+        } catch {
+            throw new Error('Hubo un error al vaciar el carrito')
+        }
+    }
+
 };
 
 module.exports = CartManager;

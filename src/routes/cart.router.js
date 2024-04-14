@@ -98,4 +98,15 @@ router.put('/:cid/product/:pid', async (req, res) => {
     }
 });
 
+router.delete('/:cid', async (req, res) => {
+    try {
+        const cartId = req.params.cid;
+        const cartManager = req.app.get('cartManager');
+        await cartManager.clearCart(cartId);
+        res.status(301).redirect('/api/cart');
+    } catch (err) {
+        res.status(500).json({ Error: err.message })
+    }
+})
+
 module.exports = router; // Exporta el enrutador
