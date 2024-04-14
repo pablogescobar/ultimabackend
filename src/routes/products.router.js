@@ -70,9 +70,9 @@ router.post('/:pid', async (req, res) => {
 // Ruta para agregar un nuevo producto
 router.post('/', async (req, res) => {
     try {
-        const { title, description, price, thumbnail, code, status, stock } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
+        const { title, description, price, thumbnail, code, status, stock, category } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
         const productManager = req.app.get('productManager');
-        await productManager.addProduct(title, description, price, thumbnail, code, status, stock); // Agrega el nuevo producto
+        await productManager.addProduct(title, description, price, thumbnail, code, status, stock, category); // Agrega el nuevo producto
         res.status(301).redirect('/api/products'); // Responde con un mensaje de éxito
     } catch (error) {
         res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto

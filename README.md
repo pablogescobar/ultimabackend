@@ -2,7 +2,10 @@
 
 Este producto se encuentra en construcción.
 
-Este proyecto fue creado con el fin de cumplir con los requisitos del desafío opcional del curso de backend de CoderHouse.
+Este proyecto fue creado con el fin de cumplir con los requisitos de la segunda pre-entrega del proyecto final del curso de backend de CoderHouse. 
+Para esta entrega, se eliminaron el chat y el sistema de fileManager con el fin de simplificar el código y hacer la navegación y corrección más sencilla. Si bien el fileManager ya no cumple ninguna función, aún se pueden revisar los archivos, ya que no han sido eliminados. No obstante, dado el enfoque de la entrega, estos archivos han quedado obsoletos. Si desea ver el funcionamiento de los archivos, puede moverse a la rama 'opcional' del repositorio, en la cual todavía se encuentra ese sistema funcional. 
+Se han agregado vistas para los productos y los carritos. 
+Tanto en el método como en el modelo para agregar un producto a la base de datos, se agregó el campo 'category' con el fin de cumplir mejor la consigna dada. Si bien los endpoints apuntan a /api/..., no solamente se devuelve JSON en los mismos. Pero se optó por hacer esto de esta forma para facilitar la corrección y ajustarse a lo pactado en las consignas.
 
 ## Correr de manera local
 ```bash
@@ -18,12 +21,13 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 
 - [Express](https://www.npmjs.com/package/express)
 - [Express-handlebars](https://handlebarsjs.com/guide/#what-is-handlebars)
-- [socket.io](https://socket.io/docs/v4/)
 - [Mongoose](https://mongoosejs.com/docs/guide.html)
+- [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
+- [socket.io](https://socket.io/docs/v4/)
 
 ## Endponints
 
-Todos los endpoints deberán ejecutarse desde Postman con excepción del `addProduct`.
+Todos los endpoints deberán ejecutarse desde Postman, a menos que se indique lo contrario en la documentación presentada..
 
 ### `getProducts`
 
@@ -33,13 +37,7 @@ Busca todos los productos disponibles en el archivo.
 
 **Método** `GET`
 
-### `getProductsLimit`
-
-Indica un limite en la URL para mostrar la cantidad de productos deseada.
-
-[**URL:**](http://localhost:8080/api/products?limit=5) `http://localhost:8080/api/products?limit=5`
-
-**Método** `GET`
+####
 
 ### `getProductById`
 
