@@ -73,6 +73,21 @@ router.post('/:cid/product/:pid', async (req, res) => {
     }
 });
 
+// Ruta para agregar o actualizar productos del carrito
+router.put('/:cid', async (req, res) => {
+    try {
+        const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
+        const { products } = req.body;
+        const cartManager = req.app.get('cartManager');
+        await cartManager.updateCart(cartId, products);
+        res.status(200).json({ message: 'Carrito actualizado correctamente.' });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+// Ruta para eliminar un producto del carrito
 router.delete('/:cid/product/:pid', async (req, res) => {
     try {
         const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
@@ -85,6 +100,7 @@ router.delete('/:cid/product/:pid', async (req, res) => {
     }
 });
 
+// Ruta para atualizar la cantidad de un producto en el carrito
 router.put('/:cid/product/:pid', async (req, res) => {
     try {
         const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
@@ -98,6 +114,7 @@ router.put('/:cid/product/:pid', async (req, res) => {
     }
 });
 
+// Ruta para vacial el carrito
 router.delete('/:cid', async (req, res) => {
     try {
         const cartId = req.params.cid;
