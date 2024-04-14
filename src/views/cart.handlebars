@@ -1,11 +1,13 @@
 <div class="container">
-    <h2>Carrito Nº: {{cart.id}}</h2>
+    <h2>ID Carrito: {{cart.id}}</h2>
     <ul>
         {{#each cart.products}}
         <li>
-            <div>
+            <div class="margin">
+                <p>Nombre de Producto: {{this.title}}</p>
                 <p>ID Producto: {{this.productId}}</p>
-                <p>Cantidad: {{this.quantity}}</p>
+                <p>Código de Producto: {{this.code}}</p>
+                <p>Cantidad en Carrito: {{this.quantity}}</p>
             </div>
         </li>
         {{/each}}

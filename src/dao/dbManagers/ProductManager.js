@@ -12,18 +12,24 @@ class ProductManager {
         }
     }
 
-    async getProducts(page, limit, sort, category) {
+    async getProducts(page, limit, sort, category, availability) {
         try {
-            if (category) {
-                const allProducts = await Products.paginate({ category }, { limit: limit, page: page, sort: sort ? { price: sort } : undefined, lean: true });
-            }
+            const query = {
+                ...(category && { category: category }),
+                ...(availability && { status: availability === 'true' })
+            };
+            const options = {
+                limit: parseInt(limit),
+                page: parseInt(page),
+                sort: sort ? { price: sort } : undefined,
+                lean: true
+            };
 
-            const allProducts = await Products.paginate({}, { limit: limit, page: page, sort: sort ? { price: sort } : undefined, lean: true });
+            const allProducts = await Products.paginate(query, options);
 
             const status = allProducts ? 'success' : 'error';
-            const prevLink = allProducts.hasPrevPage ? `/api/products?page=${allProducts.prevPage}` : null
-            const nextLink = allProducts.hasNextPage ? `/api/products?page=${allProducts.nextPage}` : null
-
+            const prevLink = allProducts.hasPrevPage ? `/api/products?page=${allProducts.prevPage}` : null;
+            const nextLink = allProducts.hasNextPage ? `/api/products?page=${allProducts.nextPage}` : null;
 
             const result = {
                 status,
@@ -36,11 +42,10 @@ class ProductManager {
                 hasNextPage: allProducts.hasNextPage,
                 prevLink,
                 nextLink
-            }
+            };
             return result;
-        } catch {
-            // En caso de que no haya productos se retorna un array vacio
-            return [];
+        } catch (error) {
+            throw new Error('Error al obtener los productos');
         }
     }
 
@@ -63,12 +68,12 @@ class ProductManager {
 
 
     // Agregar un nuevo producto
-    async addProduct(title, description, price, thumbnail, code, status, stock) {
+    async addProduct(title, description, price, thumbnail, code, status, stock, category) {
         // Validaciones y asignaciones de valores predeterminados
 
         const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
-        if (!title || !description || !code || invalidOptions) {
+        if (!title || !description || !code || !category || invalidOptions) {
             throw new Error('Error al validar los datos');
         };
 
@@ -90,6 +95,7 @@ class ProductManager {
                 code,
                 status,
                 stock,
+                category
             });
 
             console.log('Producto agregado correctamente');

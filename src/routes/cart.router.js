@@ -33,6 +33,8 @@ router.get('/:cid', async (req, res) => {
             id: cart.id,
             products: cart.products.map(p => ({
                 productId: p.product.id,
+                title: p.product.title,
+                code: p.product.code,
                 quantity: p.quantity
             }))
         };

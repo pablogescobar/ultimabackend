@@ -4,10 +4,14 @@ const router = Router(); // Crea un enrutador
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
     try {
-        const page = req.query.page || 1
-        const limit = req.query.limit || 10
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 10;
+        const sort = req.query.sort;
+        const category = req.query.category;
+        const availability = req.query.availability;
+
         const productManager = req.app.get('productManager');
-        const products = await productManager.getProducts(page, limit);
+        const products = await productManager.getProducts(page, limit, sort, category, availability);
 
         res.render('products', {
             products,

@@ -1,3 +1,4 @@
+const { test } = require('node:test');
 const { Carts, Products } = require('../models');
 
 class CartManager {
@@ -40,6 +41,7 @@ class CartManager {
             // console.log(JSON.stringify(cart, null, 4));
             return cart
         } catch (err) {
+            console.error(err)
             throw new Error('Hubo un error al obtener el ID del carrito.')
         }
     }
