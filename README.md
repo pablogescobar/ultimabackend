@@ -147,7 +147,7 @@ También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getP
 
 La URL debe incluir el ID del producto que se eliminará y el ID del carrito en el que se desea eliminar el producto.
 
-[**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c21d010ed064a3bd51854)
+[**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c21d010ed064a3bd51854) `http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c21d010ed064a3bd51854`
 
 **Método** `DELETE`
 
