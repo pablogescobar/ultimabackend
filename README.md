@@ -48,7 +48,7 @@ Busca todos los productos disponibles en el archivo.
 #### Ejemplo de uso:
 
 ```http
-GET http://localhost:8080/api/products?page=2&limit=20&sort=asc&category=electronics&availability=true
+GET http://localhost:8080/api/products?page=1&limit=5&sort=asc&category=almacenamiento&availability=true
 ````
 
 ### `getProductById`
