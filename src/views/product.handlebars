@@ -9,7 +9,9 @@
             <p>Stock: {{stock}}</p>
             <p>Código: {{code}}</p>
             <p>ID: {{id}}</p>
-            <a href="#">Agregar al Carrito</a>
+            <form action="/api/products/{{id}}" id="formProductToCart" method="post">
+                <input id="addToCart" type="submit" value="Agregar al Carrito">
+            </form>
         </div>
         <a href="/api/products">Volver</a>
     </div>

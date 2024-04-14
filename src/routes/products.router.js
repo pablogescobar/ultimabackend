@@ -54,6 +54,18 @@ router.get('/:pid', async (req, res) => {
     }
 });
 
+// Ruta para agregar producto al carrito
+router.post('/:pid', async (req, res) => {
+    try {
+        const productId = req.params.pid;
+        const cartId = '6619078c94d150818d996ec7'
+        const cartManager = req.app.get('cartManager');
+        await cartManager.addProductToCart(productId, cartId)
+        res.status(301).redirect('/api/products');
+    } catch (err) {
+        res.status(500).json({ Error: err.message })
+    }
+});
 
 // Ruta para agregar un nuevo producto
 router.post('/', async (req, res) => {
