@@ -17,6 +17,7 @@ router.get('/', async (req, res) => {
             products,
             titlePage: 'Productos',
             style: ['styles.css'],
+            script: ['products.js']
         });
 
     } catch {

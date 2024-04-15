@@ -84,3 +84,8 @@
 .cart .cart__id {
     width: 15rem;
 }
+
+.filter {
+    display: flex;
+    gap: 1rem;
+}
