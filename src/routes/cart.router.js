@@ -79,7 +79,7 @@ router.post('/:cid/product/:pid', async (req, res) => {
 router.put('/:cid', async (req, res) => {
     try {
         const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
-        const { products } = req.body;
+        const products = req.body;
         const cartManager = req.app.get('cartManager');
         await cartManager.updateCart(cartId, products);
         res.status(200).json({ message: 'Carrito actualizado correctamente.' });

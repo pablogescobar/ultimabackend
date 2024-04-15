@@ -138,7 +138,6 @@ class CartManager {
         }
     }
 
-
     async updateProductQuantityFromCart(productId, cartId, quantity) {
         try {
             const cart = await Carts.findById(cartId);

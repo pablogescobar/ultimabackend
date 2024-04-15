@@ -153,7 +153,7 @@ La URL debe incluir el ID del producto que se eliminará y el ID del carrito en 
 
 ### `updateCart`
 
-La URL debe incluir el ID del carrito en el cual se realizará la actualización. Esta debe recibir como parámetros el ID del producto y la cantidad que se desea agregar.
+La URL debe incluir el ID del carrito en el cual se realizará la actualización. Esta debe recibir como parámetros el ID del producto y la cantidad que se desea agregar. 
 
 [**URL:**](http://localhost:8080/api/cart/661b091c818ef788075fdb89) `http://localhost:8080/api/cart/661b091c818ef788075fdb89`
 
@@ -161,18 +161,16 @@ La URL debe incluir el ID del carrito en el cual se realizará la actualización
 
 **Cuerpo de la Solicitud (Ejemplo para `updateCart`):**
 ```json
-{
-    "products": [
+[
         {
-            "product": "660867f537dbc33df4aab5a6",
-            "quantity": 8
+            "product": "6608684d37dbc33df4aab5a9",
+            "quantity": 10
         },
         {
-            "product": "6608686137dbc33df4aab5aa",
-            "quantity": 6
+            "product": "6608682b37dbc33df4aab5a7",
+            "quantity": 5
         }
-    ]
-}
+]
 ````
 
 ### `updateProductQuantityFromCart`
