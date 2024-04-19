@@ -20,8 +20,8 @@ router.get('/', async (req, res) => {
             script: ['products.js']
         });
 
-    } catch {
-        res.status(500).json({ Error: 'Error al cargar los productos' }); // Responde con un error 500 si hay un error al obtener los productos
+    } catch (err) {
+        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener los productos
     };
 });
 

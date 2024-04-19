@@ -27,6 +27,10 @@ class ProductManager {
 
             const allProducts = await Products.paginate(query, options);
 
+            if (isNaN(page) || page > allProducts.totalPages) {
+                throw new Error('La página no existe');
+            }
+
             const status = allProducts ? 'success' : 'error';
             const prevLink = allProducts.hasPrevPage ? `/api/products?page=${allProducts.prevPage}` : null;
             const nextLink = allProducts.hasNextPage ? `/api/products?page=${allProducts.nextPage}` : null;
