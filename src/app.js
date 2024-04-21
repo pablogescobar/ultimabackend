@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 // MANAGERS
 const ProductManager = require('./dao/dbManagers/ProductManager');
 const CartManager = require('./dao/dbManagers/CartManager');
-const UserManager = require('./dao/dbManagers/UserManager');
+const UserManager = require('./dao/dbManagers/userManager');
 
 // ROUTERS
 const productsRouter = require('./routes/products.router');

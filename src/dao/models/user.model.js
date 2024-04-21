@@ -9,6 +9,10 @@ const schema = new mongoose.Schema({
         unique: true
     },
     password: String,
+    rol: {
+        type: String,
+        default: 'usuario'
+    }
 })
 
 module.exports = mongoose.model('Users', schema, 'users')

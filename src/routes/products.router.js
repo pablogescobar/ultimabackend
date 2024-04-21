@@ -4,6 +4,9 @@ const router = Router(); // Crea un enrutador
 // Ruta para obtener todos los productos
 router.get('/', async (req, res) => {
     try {
+
+        const isLoggedIn = ![null, undefined].includes(req.session.user);
+
         const page = req.query.page || 1;
         const limit = req.query.limit || 10;
         const sort = req.query.sort;
@@ -17,7 +20,9 @@ router.get('/', async (req, res) => {
             products,
             titlePage: 'Productos',
             style: ['styles.css'],
-            script: ['products.js']
+            script: ['products.js'],
+            isLoggedIn,
+            isNotLoggedIn: !isLoggedIn,
         });
 
     } catch (err) {
@@ -28,6 +33,8 @@ router.get('/', async (req, res) => {
 // Ruta para obtener un producto por su ID
 router.get('/:pid', async (req, res) => {
     try {
+
+        const isLoggedIn = ![null, undefined].includes(req.session.user);
 
         const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud como una cadena
         const productManager = req.app.get('productManager');
@@ -47,6 +54,8 @@ router.get('/:pid', async (req, res) => {
             product: [productData],
             titlePage: `Productos | ${product.title}`,
             style: ['styles.css'],
+            isLoggedIn,
+            isNotLoggedIn: !isLoggedIn,
         });
 
 

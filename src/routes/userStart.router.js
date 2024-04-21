@@ -27,18 +27,23 @@ router.get('/', (req, res) => {
         });
     });
 
-    router.get('/profile', (_, res) => {
-        // TODO: agregar middleware, sólo se puede acceder si está logueado
-        // TODO: mostrar los datos del usuario actualmente loggeado, en vez de los fake
+    router.get('/profile', async (req, res) => {
+        const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const idFromSession = req.session.user._id
+
+        const userManager = req.app.get('userManager');
+        const user = await userManager.getUser(idFromSession);
+
         res.render('profile', {
             style: ['styles.css'],
             title: 'My profile',
             user: {
-                firstName: 'Luke',
-                lastName: 'SkyWalker',
-                age: 33,
-                email: 'luke@gmail.com'
-            }
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                email: user.email
+            }, isLoggedIn
+
         });
     });
 });
