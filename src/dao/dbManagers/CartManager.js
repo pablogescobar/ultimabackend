@@ -1,4 +1,3 @@
-const { test } = require('node:test');
 const { Carts, Products } = require('../models');
 
 class CartManager {
