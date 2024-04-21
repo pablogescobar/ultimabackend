@@ -8,6 +8,8 @@ const CartManager = require('./dao/dbManagers/CartManager')
 const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
 const createProductRouter = require('./routes/createProduct.router');
+const sessionRouter = require('./routes/session.router');
+const userStartRouter = require('./routes/userStart.router');
 
 const app = express();
 
@@ -21,19 +23,24 @@ app.use(express.urlencoded({ extended: true })); // Middleware para parsear dato
 app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`))
 
+// Configuración de session
+const { dbName, mongoUrl } = require('./dbconfig');
+const sessionMiddleware = require('./session/mongoStorage');
+
+app.use(sessionMiddleware);
+
 // Se asignan las rutas para los endpoints relacionados con los productos y el carrito
 app.use('/api/products', productsRouter); // Rutas relacionadas con los productos
 app.use('/api/cart', cartRouter); // Rutas relacionadas con el carrito
 app.use('/api/createProduct', createProductRouter);
+app.use('/session', sessionRouter);
+app.use('/', userStartRouter);
 
 // Se inicia el servidor en el puerto 8080
 
-
 const main = async () => {
 
-    await mongoose.connect('mongodb+srv://FedeDiiorio:EatnQEgmFMs8oxtY@clusterfede.lnfsj8w.mongodb.net/?retryWrites=true&w=majority&appName=ClusterFede', {
-        dbName: 'ecommerce'
-    })
+    await mongoose.connect(mongoUrl, { dbName });
 
     const productManager = new ProductManager();
     await productManager.prepare();
@@ -45,7 +52,7 @@ const main = async () => {
 
     app.listen(8080);
 
-    console.log('Servidor cargado!' + '\n' + 'http://localhost:8080/api/products')
+    console.log('Servidor cargado!' + '\n' + 'http://localhost:8080')
 }
 
 main();

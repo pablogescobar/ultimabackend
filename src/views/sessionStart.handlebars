@@ -1,0 +1,15 @@
+<div>
+    {{#if isNotLoggedIn}}
+    <ul class="ul margin">
+        <li><a href="/login">Login</a></li>
+        <li><a href="/register">Register</a></li>
+    </ul>
+    {{/if}}
+
+    {{#if isLoggedIn}}
+    <ul class="ul margin">
+        <li><a href="/profile">My Profile</a></li>
+    </ul>
+
+    {{/if}}
+</div>
