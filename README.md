@@ -33,7 +33,7 @@ Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, exc
 
 ![Imagen de loggedIn](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploConLogin.png?raw=true)
 
-Con todo esto listo ver
+Con todo esto listo, verás todos los botones habilitados. Si deseas ver las características del usuario, deberás ingresar en `Sesión` y luego en `Perfil`. Allí podrás encontrar información del usuario, como por ejemplo, el rol
 
 ## Correr de manera local
 ```bash
@@ -61,7 +61,7 @@ Todos los endpoints deben ser ejecutados desde Postman, a menos que se indique l
 
 ### `getProducts`
 
-Busca todos los productos disponibles en el archivo.
+Busca todos los productos disponibles en la base de datos. Debes tener en cuenta que para ver los precios deberás tener una `sesión` iniciada.
 
 [**URL:**](http://localhost:8080/api/products) `http://localhost:8080/api/products`
 
@@ -83,7 +83,7 @@ http://localhost:8080/api/products?page=1&limit=5&sort=asc&category=almacenamien
 
 ### `getProductById`
 
-La URL debe incluir el ID del producto que desea buscar.
+La URL debe incluir el ID del producto que desea buscar. Debes tener en cuenta que para ver los precios deberás tener una `sesión` iniciada. 
 
 [**URL:**](http://localhost:8080/api/products/660867f537dbc33df4aab5a6) `http://localhost:8080/api/products/660867f537dbc33df4aab5a6`
 
@@ -113,6 +113,10 @@ También es posible añadir un nuevo producto completando el formulario en: [loc
 **Ejemplo:**
 
 ![Imagen del formulario](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/imagenEjemplo1.png?raw=true)
+
+**Importante:**
+
+Para poder crear un nuevo producto deberás contar con permisos de `administrador`.
 
 ### `updateProduct`
 
@@ -150,7 +154,8 @@ Crea un nuevo carrito en la base de datos.
 ### `getCarts`
 
 Busca y muestra todos los carritos existentes en la base de datos.
-Además, puedes acceder a la vista de este endpoint con la siguiente URL.
+Además, puedes acceder a la vista de este endpoint con la siguiente URL. 
+Debes tener en cuenta que deberás tener una `sesión` iniciada. 
 
 [**URL:**](http://localhost:8080/api/cart) `http://localhost:8080/api/cart`
 
@@ -158,7 +163,7 @@ Además, puedes acceder a la vista de este endpoint con la siguiente URL.
 
 ### `getCartById`
 
-La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes acceder a la vista de este endpoint mediante la URL que se proporciona a continuación. En este caso, se utiliza populate para obtener información detallada sobre los productos agregados.
+La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes acceder a la vista de este endpoint mediante la URL que se proporciona a continuación. En este caso, se utiliza populate para obtener información detallada sobre los productos agregados. Debes tener en cuenta que deberás tener una `sesión` iniciada.
 
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7) `http://localhost:8080/api/cart/6619078c94d150818d996ec7`
 
@@ -167,7 +172,7 @@ La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes a
 ### `addProductToCart`
 
 La URL debe incluir el ID del producto que se agregará y el ID del carrito al que se desea agregar.
-También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getProductById`. Por defecto, el producto se agregará al carrito con el ID: **6619078c94d150818d996ec7**. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**.
+También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getProductById`. Por defecto, el producto se agregará al carrito con el ID: **6619078c94d150818d996ec7**. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**. Debes tener en cuenta que deberás tener una `sesión` iniciada. 
 
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f) `http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f`
 
