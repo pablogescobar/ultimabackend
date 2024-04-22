@@ -29,7 +29,7 @@ Una vez registrado, el usuario deberá iniciar sesión, para lo cual tendrá que
 
 ![Imagen de login](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/loginExample.png?raw=true)
 
-Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, excepto a la de  **Agregar Producto**, para la que necesitarás permisos de administrador. Para obtener estos permisos, tendrás que completar los campos con el email `adminCoder@coder.com` y la contraseña `adminCod3er123`.
+Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, excepto a la de  **Agregar Producto**, para la que necesitarás permisos de administrador. Para obtener estos permisos, tendrás que completar los campos con el email `adminCoder@coder.com` y la contraseña `adminCod3er123`. Es importante aclarar que los datos de `administrador` se comprobarán en el `userManager`, dado que este usuario no existe en la base de datos.
 
 ![Imagen de loggedIn](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploConLogin.png?raw=true)
 
