@@ -5,6 +5,10 @@ const router = Router(); // Crea un enrutador
 router.get('/', async (req, res) => {
     try {
         const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const adminUser = req.session.user;
+        if (!adminUser) {
+            return res.status(403).json({ Error: 'No tiene permisos para acceder.' })
+        }
 
         const cartManager = req.app.get('cartManager');
         const carts = await cartManager.getCarts(); // Obtiene todos los carritos
@@ -21,8 +25,8 @@ router.get('/', async (req, res) => {
             isLoggedIn,
             isNotLoggedIn: !isLoggedIn,
         }); // Responde con los carritos obtenidos
-    } catch {
-        res.status(500).json({ error: 'No se pudo conectar con los carritos' }); // Responde con un error 500 si hay un error al obtener los carritos
+    } catch (err) {
+        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener los carritos
     }
 });
 

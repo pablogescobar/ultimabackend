@@ -41,7 +41,8 @@ router.get('/', (req, res) => {
                 firstName: user.firstName,
                 lastName: user.lastName,
                 age: user.age,
-                email: user.email
+                email: user.email,
+                rol: user.rol
             }, isLoggedIn
 
         });

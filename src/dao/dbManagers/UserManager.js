@@ -1,7 +1,18 @@
 const { Users } = require('../models');
 
 class UserManager {
-    constructor() { }
+    constructor() {
+        // Definir el usuario admin
+        this.adminUser = {
+            _id: 'admin',
+            firstName: 'Romina',
+            lastName: 'Molina',
+            age: 18,
+            email: 'adminCoder@coder.com',
+            password: 'adminCod3r123',
+            rol: 'admin'
+        };
+    }
 
     async prepare() {
         // No hacer nada. 
@@ -15,6 +26,10 @@ class UserManager {
         try {
             if (!email || !password) {
                 throw new Error('Debe ingresar su usuario y contraseña');
+            }
+
+            if (email === this.adminUser.email && password === this.adminUser.password) {
+                return this.adminUser;
             }
 
             const user = await Users.findOne({ email, password })
@@ -60,8 +75,14 @@ class UserManager {
 
     async getUser(id) {
         try {
-            const user = await Users.findOne({ _id: id })
-            return user
+
+            if (id === this.adminUser._id) {
+                return this.adminUser
+            } else {
+                const user = await Users.findOne({ _id: id })
+                return user
+            }
+
         } catch {
             throw new Error('Error al cargar la sesion de usuario')
         }
