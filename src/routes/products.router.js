@@ -6,6 +6,9 @@ router.get('/', async (req, res) => {
     try {
 
         const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const user = req.session.user;
+        const firstName = user ? user.firstName : 'Usuario'
+        const lastName = user ? user.lastName : 'Sin Identificar'
 
         const page = req.query.page || 1;
         const limit = req.query.limit || 10;
@@ -16,13 +19,20 @@ router.get('/', async (req, res) => {
         const productManager = req.app.get('productManager');
         const products = await productManager.getProducts(page, limit, sort, category, availability);
 
+        const productsPayload = products.payload.map(product => ({
+            ...product,
+            isLoggedIn
+        }));
+
         res.render('products', {
-            products,
+            products: { ...products, payload: productsPayload },
             titlePage: 'Productos',
             style: ['styles.css'],
             script: ['products.js'],
             isLoggedIn,
             isNotLoggedIn: !isLoggedIn,
+            firstName,
+            lastName
         });
 
     } catch (err) {
@@ -47,7 +57,8 @@ router.get('/:pid', async (req, res) => {
             price: product.price,
             stock: product.stock,
             code: product.code,
-            id: product.id
+            id: product.id,
+            isLoggedIn
         };
 
         res.status(200).render('product', {

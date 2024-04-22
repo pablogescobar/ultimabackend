@@ -13,17 +13,18 @@
 <body>
     <div class="navBar">
         <h1>Ecommerce</h1>
-        {{#if isLoggedIn}}
         <ul class="ul">
+            {{#if isLoggedIn}}
             <li><a href="http://localhost:8080/api/products">Productos</a></li>
             <li><a href="http://localhost:8080/api/cart">Carritos</a></li>
             <li><a href="http://localhost:8080/api/createProduct">Crear Producto</a></li>
-            <li><a href="http://localhost:8080">Inicio</a></li>
+            <li><a href="http://localhost:8080">Sesión</a></li>
+            {{/if}}
         </ul>
-        {{/if}}
         {{#if isNotLoggedIn}}
         <ul class="ul">
-            <li><a href="http://localhost:8080">Inicio</a></li>
+            <li><a href="http://localhost:8080/api/products">Productos</a></li>
+            <li><a href="http://localhost:8080">Sesión</a></li>
         </ul>
         {{/if}}
     </div>

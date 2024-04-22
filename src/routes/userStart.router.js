@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
 
         res.render('profile', {
             style: ['styles.css'],
-            title: 'My profile',
+            titlePage: 'Perfil',
             user: {
                 firstName: user.firstName,
                 lastName: user.lastName,

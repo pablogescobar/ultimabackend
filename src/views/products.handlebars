@@ -1,13 +1,17 @@
 <div class="container">
     <h2>Productos</h2>
-
+    {{#if isLoggedIn}}
+    <h3>Hola {{firstName}} {{lastName}}</h3>
+    {{/if}}
     <p class="margin">Página actual: {{products.page}}</p>
     <ul>
         {{#each products.payload}}
         <li>
             <div class="products">
                 <h4>{{this.title}}</h4>
+                {{#if isLoggedIn}}
                 <p>Precio: {{this.price}}</p>
+                {{/if}}
                 <p>Stock: {{this.stock}}</p>
                 <p>ID: {{this._id}}</p>
                 <a href="http://localhost:8080/api/products/{{this._id}}">Ver</a>

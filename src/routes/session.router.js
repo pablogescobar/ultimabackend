@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
             return res.status(400).json({ error: 'Email o contraseña incorrectas.' });
         }
 
-        req.session.user = { email, _id: user._id.toString() }
+        req.session.user = { email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName }
         res.redirect('/api/products');
     } catch (err) {
         res.status(500).json({ error: err.message })
@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
         const userManager = req.app.get('userManager');
         await userManager.registerUser(firstName, lastName, age, email, password);
 
-        res.redirect('/api/products');
+        res.redirect('/');
     } catch (err) {
         res.status(500).json({ Error: err.message });
     }

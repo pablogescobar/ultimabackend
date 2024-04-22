@@ -3,6 +3,10 @@ const router = Router(); // Crea un enrutador
 
 router.get('/', async (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user);
+    const adminUser = req.session.user.rol;
+    if (adminUser !== 'admin') {
+        return res.status(403).json({ Error: 'No tiene permisos para acceder.' })
+    }
 
     res.render('createProduct', {
         titlePage: 'Agregar Producto',
