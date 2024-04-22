@@ -6,9 +6,13 @@ const schema = new mongoose.Schema({
     age: Number,
     email: {
         type: String,
-        unique: true
+        unique: true,
+        required: true
     },
-    password: String,
+    password: {
+        type: String,
+        required: true
+    },
     rol: {
         type: String,
         default: 'usuario'

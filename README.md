@@ -2,15 +2,38 @@
 
 Este producto se encuentra en construcción.
 
-Se corrigieron los siguientes errores marcados en la segunda pre entrega: 
+### Se corrigieron los siguientes errores marcados en la segunda preentrega
 - Se agregó un input select en la vista para crear productos con el fin de evitar posibles errores.
-- Se reparó un error que existía a la hora de eliminar un porducto de la base de datos cuando dicho producto se econtraba agregado en un carrito.
+- Se reparó un error que existía al eliminar un producto de la base de datos cuando dicho producto se encontraba agregado en un carrito.
 
-Con respecto a esta entrega: 
-- Se realizaron los cambios requeridos para la implementación de login
+### Con respecto a esta entrega
+- Se realizaron los cambios requeridos para la implementación del inicio de sesión.
+- Una vez que inicies el proyecto de forma local, accederás a la vista de inicio para iniciar sesión o registrarte.
+- Todos los usuarios creados desde el sitio se alojarán en la base de datos de MongoDB con el rol de `usuario`.
+- Para poder acceder como administrador, deberás ingresar con el correo electrónico `adminCoder@coder.com` y la contraseña `adminCod3r123`.
+- UUna vez que inicies sesión como `usuario`, podrás ver el **precio** en los productos y se habilitarán otras funciones, como el botón **Agregar al carrito** y tendrás acceso a la vista de **carritos**.
+- Si inicias sesión como `administrador`, además de tener acceso de `usuario`, se te permitirá acceder al formulario para **agregar productos**.
 
-##Nuevos endpoints agregados:
+### Nuevas vistas agregadas
 
+Para esta entrega en especifico, no hace falta el uso de postman dado a que podrás controlar todo desde la interfaz. Si no tienes una sesión iniciada verás los botones de `login` y `register`. Tendrás acceso al listado de productos pero no podrás ver los precios ni podrás ver el botón de **Agregar al carrito**.
+
+![Imagen del inicio](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploSinLogin.png?raw=true)
+
+
+Si haces clic en el botón `register`, podrás ver un formulario en el cual deberás completar los campos para ingresar tu información en la base de datos. Es importante aclarar que solo son requeridos los campos de **email** y **contraseña**. En caso de no completar el resto de los campos, estos serán completados automáticamente por el `userManager`.
+
+![Imagen de register](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/registerExample.png?raw=true)
+
+Una vez registrado, el usuario deberá iniciar sesión, para lo cual tendrá que hacer clic en el botón `login` y completar con el **email** y la **contraseña**.
+
+![Imagen de login](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/loginExample.png?raw=true)
+
+Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, excepto a la de  **Agregar Producto**, para la que necesitarás permisos de administrador. Para obtener estos permisos, tendrás que completar los campos con el email `adminCoder@coder.com` y la contraseña `adminCod3er123`.
+
+![Imagen de loggedIn](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploConLogin.png?raw=true)
+
+Con todo esto listo ver
 
 ## Correr de manera local
 ```bash
