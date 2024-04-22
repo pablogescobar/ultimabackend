@@ -38,7 +38,7 @@ Con todo esto listo, verás todos los botones habilitados. Si deseas ver las car
 ## Correr de manera local
 ```bash
 git clone https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio.git
-cd backend_preEntrega1_Di-Iorio
+cd backend_Entregas_Di-Iorio
 npm install
 nodemon src/app
 ```
