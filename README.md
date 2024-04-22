@@ -1,11 +1,16 @@
-# Segunda Pre-entrega - Coderhouse Backend
+# Implementación de login - Coderhouse Backend
 
 Este producto se encuentra en construcción.
 
-Este proyecto fue creado con el fin de cumplir con los requisitos de la segunda pre-entrega del proyecto final del curso de backend de CoderHouse. 
-Para esta entrega, se eliminaron el chat y el sistema de fileManager con el fin de simplificar el código y hacer la navegación y corrección más sencilla. Si bien el fileManager ya no cumple ninguna función, aún se pueden revisar los archivos, ya que no han sido eliminados. No obstante, dado el enfoque de la entrega, estos archivos han quedado obsoletos. Si desea ver el funcionamiento de los archivos, puede moverse a la rama 'opcional' del repositorio, en la cual todavía se encuentra ese sistema funcional. 
-Se han agregado vistas para los productos y los carritos. 
-Tanto en el método como en el modelo para agregar un producto a la base de datos, se agregó el campo 'category' con el fin de cumplir mejor la consigna dada. Si bien los endpoints apuntan a /api/..., no solamente se devuelve JSON en los mismos. Pero se optó por hacer esto de esta forma para facilitar la corrección y ajustarse a lo pactado en las consignas.
+Se corrigieron los siguientes errores marcados en la segunda pre entrega: 
+- Se agregó un input select en la vista para crear productos con el fin de evitar posibles errores.
+- Se reparó un error que existía a la hora de eliminar un porducto de la base de datos cuando dicho producto se econtraba agregado en un carrito.
+
+Con respecto a esta entrega: 
+- Se realizaron los cambios requeridos para la implementación de login
+
+##Nuevos endpoints agregados:
+
 
 ## Correr de manera local
 ```bash
@@ -24,6 +29,8 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Mongoose](https://mongoosejs.com/docs/guide.html)
 - [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
 - [socket.io](https://socket.io/docs/v4/)
+- [Express-session](https://www.npmjs.com/package/express-session)
+- [Cookie-parser](https://www.npmjs.com/package/cookie-parser)
 
 ## Endponints
 
