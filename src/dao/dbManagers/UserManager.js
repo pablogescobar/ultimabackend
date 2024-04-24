@@ -1,4 +1,4 @@
-const { hashPassword } = require('../../utils/hashing');
+const { hashPassword, isValidPassword } = require('../../utils/hashing');
 const { Users } = require('../models');
 
 class UserManager {
@@ -33,13 +33,17 @@ class UserManager {
                 return this.adminUser;
             }
 
-            const user = await Users.findOne({ email, password })
+            const user = await Users.findOne({ email });
 
             if (!user) {
                 throw new Error('El usuario no existe');
             }
 
-            return user
+            if (isValidPassword(password, user.password)) {
+                return user;
+            } else {
+                throw new Error('Credenciales inválidas');
+            }
 
         } catch {
             throw new Error('El usuario o contraseña son incorrectos');
