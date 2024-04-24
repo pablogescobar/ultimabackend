@@ -57,6 +57,10 @@ class UserManager {
                 throw new Error('El email y la contraseña son obligatorios.')
             }
 
+            if (email === this.adminUser.email) {
+                throw new Error('Acceso denegado.');
+            }
+
             const firstNameManager = firstName ? firstName : 'Usuario'
             const lastNameManager = lastName ? lastName : 'Sin Identificar'
 
@@ -94,6 +98,27 @@ class UserManager {
             throw new Error('Error al cargar la sesion de usuario')
         }
     }
+
+    async resetPassword(email, password) {
+        try {
+            const user = await Users.findOne({ email });
+            if (!user) {
+                throw new Error('El usuario no existe.');
+            }
+
+            if (email === this.adminUser.email) {
+                throw new Error('No tiene permisos para actualizar ese email.');
+            }
+
+            const hashedPassword = hashPassword(password);
+            const userUpdated = await Users.updateOne({ email }, { $set: { password: hashedPassword } });
+            return userUpdated;
+
+        } catch (error) {
+            throw new Error('No se pudo actualizar la contraseña');
+        }
+    }
+
 }
 
 module.exports = UserManager;
