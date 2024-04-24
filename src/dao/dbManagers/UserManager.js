@@ -1,3 +1,4 @@
+const { hashPassword } = require('../../utils/hashing');
 const { Users } = require('../models');
 
 class UserManager {
@@ -57,6 +58,8 @@ class UserManager {
 
             const numericAge = age ? parseInt(age) : age = 1
 
+            const hashedPassword = hashPassword(password);
+
             if (age <= 0) {
                 throw new Error('La edad debe ser mayor a 1')
             }
@@ -66,7 +69,7 @@ class UserManager {
                 lastName: lastNameManager,
                 age: numericAge,
                 email,
-                password
+                password: hashedPassword
             })
         } catch {
             throw new Error('Error al registrar el ususario.')
