@@ -23,7 +23,7 @@ const inicializeStrategy = () => {
                     }
 
                     // Nuevo usuario creado exitosamente
-                    const result = Users.create(newUser);
+                    const result = await Users.create(newUser);
                     return done(null, result);
                 }
             } catch (err) {
@@ -53,7 +53,7 @@ const inicializeStrategy = () => {
     }))
 
     passport.serializeUser((user, done) => {
-        console.log('Serializado', user);
+        console.log(user);
         done(null, user._id);
     })
 

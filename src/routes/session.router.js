@@ -50,22 +50,9 @@ router.get('/logout', (req, res) => {
 })
 
 router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister' }), (req, res) => {
-    passport.authenticate('login', (err, user) => {
-        if (err) {
-            return res.status(500).json({ error: err.message });
-        }
-        if (!user) {
-            return res.status(401).json({ error: 'Usuario no autenticado.' });
-        }
-        req.logIn(user, err => {
-            if (err) {
-                return res.status(500).json({ error: err.message });
-            }
-            res.redirect('/');
-        });
-    })(req, res);
+    console.log('Usuario:', req.body);
+    res.redirect('/');
 });
-
 
 router.get('/failregister', (_, res) => {
     res.send('Hubo un error de registro.');
