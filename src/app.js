@@ -1,6 +1,7 @@
 const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
+const passport = require('passport');
 
 // MANAGERS
 const ProductManager = require('./dao/dbManagers/ProductManager');
@@ -27,9 +28,14 @@ app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`))
 
 // Configuración de session
+const inicializeStrategy = require('./config/passport.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
 app.use(sessionMiddleware);
+inicializeStrategy();
+app.use(passport.initialize());
+app.use(passport.session());
+
 
 // ENDPOINTS
 app.use('/api/products', productsRouter);

@@ -1,28 +1,20 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
 const router = Router(); // Crea un enrutador
+const passport = require('passport');
 
-router.post('/login', async (req, res) => {
+router.post('/login', passport.authenticate('login', { failureRedirect: 'api/sessions/failogin' }), async (req, res) => {
     try {
-        const { email, password } = req.body
-
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Debe ingresar un mail y una contraseña.' });
-        }
-
-        const userManager = req.app.get('userManager');
-        const user = await userManager.loginUser(email, password);
-
-        if (!user) {
-            return res.status(400).json({ error: 'Email o contraseña incorrectas.' });
-        }
-
-        req.session.user = { email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName }
+        req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName }
         res.redirect('/api/products');
     } catch (err) {
         res.status(500).json({ error: err.message })
     }
 
 });
+
+router.get('/faillogin', (_, res) => {
+    res.send('Hubo un error de logeo.');
+})
 
 router.get('/resetPassword', async (req, res) => {
     try {
@@ -57,19 +49,26 @@ router.get('/logout', (req, res) => {
     })
 })
 
-router.post('/register', async (req, res) => {
-    try {
-        const { firstName, lastName, age, email, password } = req.body;
-
-        const userManager = req.app.get('userManager');
-        await userManager.registerUser(firstName, lastName, age, email, password);
-
-        res.redirect('/');
-    } catch (err) {
-        res.status(500).json({ Error: err.message });
-    }
-
+router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister' }), (req, res) => {
+    passport.authenticate('login', (err, user) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        }
+        if (!user) {
+            return res.status(401).json({ error: 'Usuario no autenticado.' });
+        }
+        req.logIn(user, err => {
+            if (err) {
+                return res.status(500).json({ error: err.message });
+            }
+            res.redirect('/');
+        });
+    })(req, res);
 });
 
+
+router.get('/failregister', (_, res) => {
+    res.send('Hubo un error de registro.');
+})
 
 module.exports = router;
