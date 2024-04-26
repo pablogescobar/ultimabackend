@@ -1,11 +1,10 @@
 const passport = require('passport');
-const local = require('passport-local');
+const { Strategy } = require('passport-local');
 const { Users } = require('../dao/models');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 
-const localStrategy = local.Strategy;
 const inicializeStrategy = () => {
-    passport.use('register', new localStrategy(
+    passport.use('register', new Strategy(
         { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
             const { firstName, lastName, email, age } = req.body;
             try {
@@ -32,22 +31,23 @@ const inicializeStrategy = () => {
         }
     ))
 
-    passport.use('login', new local.Strategy({
+    passport.use('login', new Strategy({
         usernameField: 'email'
     }, async (username, password, done) => {
         try {
-            if (!username || !password) {
-                return done(null, false);
-            }
-            const user = await Users.findOne({ email: username });
+            const user = await Users.findOne({ email: username })
             if (!user) {
+                console.log('User not found!')
                 return done(null, false)
             }
+
             if (!isValidPassword(password, user.password)) {
                 return done(null, false)
             }
-            return done(null, user);
-        } catch (err) {
+
+            return done(null, user)
+        }
+        catch (err) {
             done(err)
         }
     }))
