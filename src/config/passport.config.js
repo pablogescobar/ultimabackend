@@ -53,11 +53,12 @@ const inicializeStrategy = () => {
     }))
 
     passport.serializeUser((user, done) => {
-        console.log(user);
+        console.log('Serailized: ', user);
         done(null, user._id);
     })
 
     passport.deserializeUser(async (id, done) => {
+        console.log('Deserialized: ', id)
         const user = await Users.findById(id);
         done(null, user)
     })

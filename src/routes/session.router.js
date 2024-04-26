@@ -12,11 +12,18 @@ router.post('/login', passport.authenticate('login', { failureRedirect: 'api/ses
 
 });
 
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
+
+router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
+    req.session.user = { _id: req.user._id };
+    res.redirect('/');
+})
+
 router.get('/faillogin', (_, res) => {
     res.send('Hubo un error de logeo.');
 })
 
-router.get('/resetPassword', async (req, res) => {
+router.get('/resetPassword', async (_, res) => {
     try {
 
         res.render('reset_password', {
