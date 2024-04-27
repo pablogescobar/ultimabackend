@@ -2,7 +2,7 @@ const { Router } = require('express'); // Importa la clase Router de Express par
 const router = Router(); // Crea un enrutador
 const passport = require('passport');
 
-router.post('/login', passport.authenticate('login', { failureRedirect: 'api/sessions/failogin' }), async (req, res) => {
+router.post('/login', passport.authenticate('login', { failureRedirect: 'api/sessions/faillogin' }), async (req, res) => {
     try {
         req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName }
         res.redirect('/api/products');
@@ -35,14 +35,8 @@ router.get('/resetPassword', async (_, res) => {
     }
 })
 
-router.post('/resetPassword', async (req, res) => {
+router.post('/resetPassword', passport.authenticate('resetPass', { failureRedirect: '/api/sessions/failogin' }), async (req, res) => {
     try {
-        const { email, password } = req.body
-        if (!email || !password) {
-            return res.status(400).json({ error: 'Debe establecer un email y una nueva contraseña.' });
-        }
-        const userManager = req.app.get('userManager');
-        await userManager.resetPassword(email, password);
         res.redirect('/');
     } catch (err) {
         res.status(500).json({ error: err.message });
@@ -63,6 +57,10 @@ router.post('/register', passport.authenticate('register', { failureRedirect: '/
 
 router.get('/failregister', (_, res) => {
     res.send('Hubo un error de registro.');
+})
+
+router.get('/faillogin', (_, res) => {
+    res.send('Hubo un error de logeo.');
 })
 
 module.exports = router;
