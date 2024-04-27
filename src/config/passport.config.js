@@ -50,7 +50,6 @@ const inicializeStrategy = () => {
                     password: 'adminCod3r123',
                     rol: 'admin'
                 };
-
                 return done(null, adminUser);
             } else {
                 const user = await Users.findOne({ email: username })
