@@ -31,7 +31,7 @@ router.post('/', async (req, res) => {
         const productManager = req.app.get('productManager');
         await productManager.addProduct(title, description, price, thumbnail, code, status, stock);
 
-        res.status(301).redirect('/api/products');
+        res.status(301).redirect('/products');
     } catch (error) {
         console.error(error);
         res.status(500).send('Error interno del servidor');

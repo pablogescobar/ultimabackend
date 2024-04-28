@@ -10,7 +10,9 @@ const UserManager = require('./dao/dbManagers/UserManager');
 
 // ROUTERS
 const productsRouter = require('./routes/products.router');
+const productsViewsRouter = require('./routes/productsViews.router');
 const cartRouter = require('./routes/cart.router');
+const cartViewsRouter = require('./routes/cartViews.router');
 const createProductRouter = require('./routes/createProduct.router');
 const sessionRouter = require('./routes/session.router');
 const sessionViewsRouter = require('./routes/sessionViews.router');
@@ -41,8 +43,10 @@ app.use(passport.session());
 
 // ENDPOINTS
 app.use('/api/products', productsRouter);
+app.use('/products', productsViewsRouter);
 app.use('/api/cart', cartRouter);
-app.use('/api/createProduct', createProductRouter);
+app.use('/cart', cartViewsRouter);
+app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
 

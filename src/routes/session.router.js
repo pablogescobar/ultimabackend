@@ -22,17 +22,17 @@ router.get('/faillogin', (_, res) => {
     res.send('Hubo un error de logeo.');
 })
 
-router.get('/resetPassword', async (_, res) => {
-    try {
+// router.get('/resetPassword', async (_, res) => {
+//     try {
 
-        res.render('reset_password', {
-            titlePage: 'Reset Password',
-            style: ['styles.css']
-        });
-    } catch (err) {
-        res.status(500).json({ Error: err.message });
-    }
-})
+//         res.render('reset_password', {
+//             titlePage: 'Reset Password',
+//             style: ['styles.css']
+//         });
+//     } catch (err) {
+//         res.status(500).json({ Error: err.message });
+//     }
+// })
 
 router.post('/resetPassword', passport.authenticate('resetPass', { failureRedirect: '/api/sessions/failogin' }), async (req, res) => {
     try {
