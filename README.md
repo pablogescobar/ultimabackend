@@ -1,25 +1,46 @@
-# Implementación de login - Coderhouse Backend
-
-Este producto se encuentra en construcción.
-
-### Se corrigieron los siguientes errores marcados en la segunda preentrega
-- Se agregó un input select en la vista para crear productos con el fin de evitar posibles errores.
-- Se reparó un error que existía al eliminar un producto de la base de datos cuando dicho producto se encontraba agregado en un carrito.
+# Desafío 6 - Coderhouse Backend
 
 ### Con respecto a esta entrega
-- Se realizaron los cambios requeridos para la implementación del inicio de sesión.
-- Una vez que inicies el proyecto de forma local, accederás a la vista de inicio para iniciar sesión o registrarte.
-- Todos los usuarios creados desde el sitio se alojarán en la base de datos de MongoDB con el rol de `usuario`.
-- Para poder acceder como administrador, deberás ingresar con el correo electrónico `adminCoder@coder.com` y la contraseña `adminCod3r123`.
-- UUna vez que inicies sesión como `usuario`, podrás ver el **precio** en los productos y se habilitarán otras funciones, como el botón **Agregar al carrito** y tendrás acceso a la vista de **carritos**.
-- Si inicias sesión como `administrador`, además de tener acceso de `usuario`, se te permitirá acceder al formulario para **agregar productos**.
+- Se implementó `bcrypt` con el fin de hashear las contraseñas.
+- Se cambió el método de `userManager` por estrategías de `passport` para el logueo y el registro.
+- Con la utilización de `passport` ahora el posible realizar un login con **Github**.
 
-### Nuevas vistas agregadas
+## Correr de manera local
+```bash
+git clone https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio.git
+cd backend_Entregas_Di-Iorio
+npm install
+```
+
+Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challenge6/.env.example) Luego de este paso podrás correr el pryecto con el siguiente comando:
+
+````bash
+nodemon src/app
+````
+
+Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos.
+
+## Construido usando
+
+- [Bcrypt](https://www.npmjs.com/package/bcrypt)
+- [Connet-mongo](https://www.npmjs.com/package/connect-mongo)
+- [Cookie-parser](https://www.npmjs.com/package/cookie-parser)
+- [Dotenv](https://www.npmjs.com/package/dotenv)
+- [Express](https://www.npmjs.com/package/express)
+- [Express-handlebars](https://handlebarsjs.com/guide/#what-is-handlebars)
+- [Express-session](https://www.npmjs.com/package/express-session)
+- [Mongoose](https://mongoosejs.com/docs/guide.html)
+- [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
+- [Passport](https://www.passportjs.org/docs/)
+- [Passport-github2](https://www.passportjs.org/packages/passport-github2/)
+- [Passport-local](https://www.passportjs.org/packages/passport-local/)
+- [Socket.io](https://socket.io/docs/v4/)
+
+## Logueo y Registro
 
 Para esta entrega en especifico, no hace falta el uso de postman dado a que podrás controlar todo desde la interfaz. Si no tienes una sesión iniciada verás los botones de `login` y `register`. Tendrás acceso al listado de productos pero no podrás ver los precios ni podrás ver el botón de **Agregar al carrito**.
 
 ![Imagen del inicio](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploSinLogin.png?raw=true)
-
 
 Si haces clic en el botón `register`, podrás ver un formulario en el cual deberás completar los campos para ingresar tu información en la base de datos. Es importante aclarar que solo son requeridos los campos de **email** y **contraseña**. En caso de no completar el resto de los campos, estos serán completados automáticamente por el `userManager`.
 
@@ -34,26 +55,6 @@ Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, exc
 ![Imagen de loggedIn](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploConLogin.png?raw=true)
 
 Con todo esto listo, verás todos los botones habilitados. Si deseas ver las características del usuario, deberás ingresar en `Sesión` y luego en `Perfil`. Allí podrás encontrar información del usuario, como por ejemplo, el rol del usuario.
-
-## Correr de manera local
-```bash
-git clone https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio.git
-cd backend_Entregas_Di-Iorio
-npm install
-nodemon src/app
-```
-
-Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos.
-
-## Construido usando
-
-- [Express](https://www.npmjs.com/package/express)
-- [Express-handlebars](https://handlebarsjs.com/guide/#what-is-handlebars)
-- [Mongoose](https://mongoosejs.com/docs/guide.html)
-- [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
-- [socket.io](https://socket.io/docs/v4/)
-- [Express-session](https://www.npmjs.com/package/express-session)
-- [Cookie-parser](https://www.npmjs.com/package/cookie-parser)
 
 ## Endponints
 
