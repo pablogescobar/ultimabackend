@@ -5,7 +5,12 @@ router.get('/', async (req, res) => {
     const isLoggedIn = ![null, undefined].includes(req.session.user);
     const adminUser = req.session.user.rol;
     if (adminUser !== 'admin') {
-        return res.status(403).json({ Error: 'No tiene permisos para acceder.' })
+        return res.render('error', {
+            titlePage: 'Error',
+            message: 'No tiene permisos de acceso.',
+            style: ['styles.css'],
+            isLoggedIn
+        });
     }
 
     res.render('createProduct', {

@@ -13,7 +13,7 @@ const productsRouter = require('./routes/products.router');
 const cartRouter = require('./routes/cart.router');
 const createProductRouter = require('./routes/createProduct.router');
 const sessionRouter = require('./routes/session.router');
-const userStartRouter = require('./routes/userStart.router');
+const sessionViewsRouter = require('./routes/sessionViews.router');
 
 const app = express();
 
@@ -44,7 +44,7 @@ app.use('/api/products', productsRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
-app.use('/', userStartRouter);
+app.use('/', sessionViewsRouter);
 
 // Se inicia el servidor en el puerto 8080
 const main = async () => {
