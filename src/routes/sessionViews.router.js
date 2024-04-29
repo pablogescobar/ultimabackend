@@ -62,4 +62,16 @@ router.get('/profile', async (req, res) => {
     }
 });
 
+router.get('/resetPassword', async (_, res) => {
+    try {
+
+        res.render('reset_password', {
+            titlePage: 'Reset Password',
+            style: ['styles.css']
+        });
+    } catch (err) {
+        res.status(500).json({ Error: err.message });
+    }
+})
+
 module.exports = router;

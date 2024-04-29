@@ -36,27 +36,92 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Passport-local](https://www.passportjs.org/packages/passport-local/)
 - [Socket.io](https://socket.io/docs/v4/)
 
-## Logueo y Registro
+## Vistas
+
+### `Home`
 
 Para esta entrega en especifico, no hace falta el uso de postman dado a que podrás controlar todo desde la interfaz. Si no tienes una sesión iniciada verás los botones de `login` y `register`. Tendrás acceso al listado de productos pero no podrás ver los precios ni podrás ver el botón de **Agregar al carrito**.
 
-![Imagen del inicio](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploSinLogin.png?raw=true)
+
+[**URL:**](http://localhost:8080) `http://localhost:8080`
+
+### `Register`
 
 Si haces clic en el botón `register`, podrás ver un formulario en el cual deberás completar los campos para ingresar tu información en la base de datos. Es importante aclarar que solo son requeridos los campos de **email** y **contraseña**. En caso de no completar el resto de los campos, estos serán completados automáticamente por el `userManager`.
 
 ![Imagen de register](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/registerExample.png?raw=true)
 
-Una vez registrado, el usuario deberá iniciar sesión, para lo cual tendrá que hacer clic en el botón `login` y completar con el **email** y la **contraseña**.
+[**URL:**](http://localhost:8080/register) `http://localhost:8080/register`
 
-![Imagen de login](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/loginExample.png?raw=true)
+### `Login`
 
-Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, excepto a la de  **Agregar Producto**, para la que necesitarás permisos de administrador. Para obtener estos permisos, tendrás que completar los campos con el email `adminCoder@coder.com` y la contraseña `adminCod3er123`. Es importante aclarar que los datos de `administrador` se comprobarán en el `userManager`, dado que este usuario no existe en la base de datos.
+Una vez registrado, el usuario deberás iniciar sesión, para lo cual tendrás que hacer clic en el botón `login` y completar con el **email** y la **contraseña**. Ten en cuenta que también podrás iniciar sesión utilizando `github` haciendo clic en el respectivo botón.
+
+![Imagen de login](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/loginExample.png?raw=true)
+
+[**URL:**](http://localhost:8080/login) `http://localhost:8080/login`
+
+### `ResetPassword`
+
+Si has olvidado tu contraseña puedes podrás restablecerla fácilmente. De momento solo bastará con ingresar un **email** registrado y una nueva contraseña dado a que por ahora no se realizan comprobaciones de dos pasos.
+
+![Imagen de resetPass](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/resetPasswordExample.png?raw=true)
+
+[**URL:**](http://localhost:8080/resetPassword) `http://localhost:8080/resetPassword`
+
+### `Sesión Iniciada`
+
+Cuando hayas completado estos pasos, tendrás acceso al resto de las vistas, excepto a la de  **Agregar Producto**, para la que necesitarás permisos de administrador. Para obtener estos permisos, tendrás que completar los campos del `login` con el email `adminCoder@coder.com` y la contraseña `adminCod3er123`. Es importante aclarar que los datos de `administrador` se comprobarán en la estrategía `passport`, dado que este usuario no existe en la base de datos.
 
 ![Imagen de loggedIn](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challengeLogin/public/img/ejemploConLogin.png?raw=true)
 
 Con todo esto listo, verás todos los botones habilitados. Si deseas ver las características del usuario, deberás ingresar en `Sesión` y luego en `Perfil`. Allí podrás encontrar información del usuario, como por ejemplo, el rol del usuario.
 
-## Endponints
+[**URL:**](http://localhost:8080) `http://localhost:8080`
+
+### `getProducts`
+
+Aquí podrás ver la lista de productos de la base de datos. Debes tener en cuenta que para ver los precios deberás tener una `sesión` iniciada.
+
+[**URL:**](http://localhost:8080/products) `http://localhost:8080/products`
+
+#### **Parámetros de consulta opcionales:**
+
+- `page` (número): Indica la página deseada. Por defecto, es la página 1.
+- `limit` (número): Especifica el número máximo de productos por página. Por defecto, es 10.
+- `sort` (cadena): Ordena los productos por precio en orden ascendente (asc) o descendente (desc).
+- `category` (cadena): Filtra los productos por categoría.
+- `availability` (booleano): Filtra los productos por disponibilidad. true muestra solo productos disponibles, false muestra solo productos no disponibles.
+
+#### Ejemplo de uso:
+
+```http
+http://localhost:8080/products?page=1&limit=5&sort=asc&category=almacenamiento&availability=true
+````
+
+### `getCarts`
+
+Aquí podrás ver la lista de carritos que estan creados en la base de datos. Debes tener en cuenta que para acceder a esta vista deberás tener una `sesion` iniciada.
+
+[**URL:**](http://localhost:8080/cart) `http://localhost:8080/cart`
+
+### `getCartsById`
+
+Aquí podrás acceder a un carrito de manera individual. En esta vista podrás divisar la totalidad de productos agregados al carrito si es que existen. Es importante aclarar que se utiliza `populate` para obtener ciertos datos de los productos.
+
+[**URL:**](http://localhost:8080/cart/6619078c94d150818d996ec7) `http://localhost:8080/cart/6619078c94d150818d996ec7`
+
+### `addProduct`
+
+En esta vista deberás completar un formulario para poder agregar un producto nuevo a la base de datos. Es importante tener en cuenta que para tener acceso a esta vista debes tener permisos de `administrador`.
+
+[**URL:**](http://localhost:8080/createProduct) `http://localhost:8080/createProduct`
+
+**Ejemplo:**
+
+![Imagen del formulario](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/imagenEjemplo1.png?raw=true)
+
+## Endpoints API
 
 Todos los endpoints deben ser ejecutados desde Postman, a menos que se indique lo contrario en el endpoint específico. A continuación, se presenta la lista completa de todos los endpoints disponibles.
 
@@ -109,15 +174,6 @@ Añade un nuevo producto a la base de datos.
     "category": "test"
 }
 ````
-También es posible añadir un nuevo producto completando el formulario en: [localhost:8080/api/createProduct](http://localhost:8080/api/createProduct)
-
-**Ejemplo:**
-
-![Imagen del formulario](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/imagenEjemplo1.png?raw=true)
-
-**Importante:**
-
-Para poder crear un nuevo producto deberás contar con permisos de `administrador`.
 
 ### `updateProduct`
 
@@ -155,8 +211,6 @@ Crea un nuevo carrito en la base de datos.
 ### `getCarts`
 
 Busca y muestra todos los carritos existentes en la base de datos.
-Además, puedes acceder a la vista de este endpoint con la siguiente URL. 
-Debes tener en cuenta que deberás tener una `sesión` iniciada. 
 
 [**URL:**](http://localhost:8080/api/cart) `http://localhost:8080/api/cart`
 
@@ -164,7 +218,7 @@ Debes tener en cuenta que deberás tener una `sesión` iniciada.
 
 ### `getCartById`
 
-La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes acceder a la vista de este endpoint mediante la URL que se proporciona a continuación. En este caso, se utiliza populate para obtener información detallada sobre los productos agregados. Debes tener en cuenta que deberás tener una `sesión` iniciada.
+La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes acceder a la vista de este endpoint mediante la URL que se proporciona a continuación. En este caso, se utiliza populate para obtener información detallada sobre los productos agregados. 
 
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7) `http://localhost:8080/api/cart/6619078c94d150818d996ec7`
 
@@ -173,7 +227,7 @@ La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes a
 ### `addProductToCart`
 
 La URL debe incluir el ID del producto que se agregará y el ID del carrito al que se desea agregar.
-También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getProductById`. Por defecto, el producto se agregará al carrito con el ID: **6619078c94d150818d996ec7**. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**. Debes tener en cuenta que deberás tener una `sesión` iniciada. 
+También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getProductById`. Por defecto, el producto se agregará al carrito con el ID: **6619078c94d150818d996ec7**. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**. 
 
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f) `http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f`
 
@@ -234,4 +288,4 @@ La URL debe incluir el ID del carrito que desea vaciar.
 
 ### Nota:
 
-Si tienes problemas al conectar con la base de datos de Mongo Atlas te aconsejo que reemplaces la dirección de Altas por la de tu mongo local con el fin de probar la aplicación.
+Si tienes problemas al conectar con la base de datos de Mongo Atlas, te aconsejo que reemplaces la dirección de Atlas por la de tu MongoDB local para probar la aplicación. Ten en cuenta que esta dirección es una variable de entorno, así que deberás reemplazar el enlace que figura en `MONGO_URL=` por el de tu MongoDB local.
