@@ -30,13 +30,15 @@ app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`))
 
 // Configuración de session
-const inicializeStrategy = require('./config/passport.config');
-const inicializeStrategyGithub = require('./config/passport-github.config');
+const initializeStrategy = require('./config/passport.config');
+const initializeStrategyGithub = require('./config/passport-github.config');
+const initializeStrategyJwt = require('./config/passport-jwt.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
 app.use(sessionMiddleware);
-inicializeStrategy();
-inicializeStrategyGithub();
+initializeStrategy();
+initializeStrategyGithub();
+initializeStrategyJwt();
 app.use(passport.initialize());
 app.use(passport.session());
 

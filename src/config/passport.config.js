@@ -94,7 +94,6 @@ const inicializeStrategy = () => {
         }
     }));
 
-
     passport.serializeUser((user, done) => {
         console.log('Serailized: ', user);
         done(null, user._id);
