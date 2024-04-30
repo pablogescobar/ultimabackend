@@ -1,9 +1,5 @@
 # Desafío 6 - Coderhouse Backend
 
-### Nuevos Cambios
-
-Un gran cambio que se hizo para esta entrega fue cambiar algunos endpoints y rutas. Ahora, cuando ingresas una ruta que contiene la palabra **api**, esta ruta devolverá solo JSON. Por ejemplo: `http://localhost:8080/api/products`. Por otro lado, para poder renderizar el contenido en una vista de Handlebars, deberás ingresar a una URL que no contenga **api**. Por ejemplo: `http://localhost:8080/products`.
-
 ### Con respecto a esta entrega
 - Se implementó `bcrypt` con el fin de hashear las contraseñas.
 - Se cambió el método de `userManager` por estrategías de `passport` para el logueo y el registro.
