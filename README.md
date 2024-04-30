@@ -67,7 +67,7 @@ Si has olvidado tu contraseña puedes podrás restablecerla fácilmente. De mome
 
 ![Imagen de resetPass](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/sec/public/img/resetPasswordExample.png?raw=true)
 
-[**URL:**](http://localhost:8080/resetPassword) `http://localhost:8080/resetPassword`
+[**URL:**](http://localhost:8080/api/sessions/resetPassword) `http://localhost:8080/api/sessions/resetPassword`
 
 ### `Sesión Iniciada`
 
