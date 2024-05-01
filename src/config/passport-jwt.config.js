@@ -1,22 +1,23 @@
+require('dotenv').config(); // Carga las variables de entorno desde .env
 const { Users } = require('../dao/models');
 const passport = require('passport');
-const jwt = require('passport-jwt');
-require('dotenv').config(); // Carga las variables de entorno desde .env
+const { Strategy, ExtractJwt } = require('passport-jwt');
 
-const JWTStrategy = jwt.Strategy;
-const ExtractJWT = jwt.ExtractJwt;
+const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
 
 const initializePassport = () => {
-    passport.use('jwt', new JWTStrategy({
-        jwtFromRequest: ExtractJWT.fromExtractors([cookieExtractor]),
+
+    passport.use('jwt', new Strategy({
         secretOrKey: process.env.JWT_SECRET,
-    }, async (jwt_payload, done) => {
+        jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor])
+    }, async (jwtPayload, done) => {
         try {
-            return done(null, jwt_payload);
+            return done(null, jwtPayload.user);
         } catch (err) {
-            return done(err)
+            done(err);
         }
-    }))
+    }
+    ))
 
     passport.serializeUser((user, done) => {
         console.log('Serailized: ', user);

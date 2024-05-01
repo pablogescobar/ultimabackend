@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cookieParser = require('cookie-parser')
 
 // MANAGERS
 const ProductManager = require('./dao/dbManagers/ProductManager');
@@ -41,7 +42,7 @@ initializeStrategyGithub();
 initializeStrategyJwt();
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(cookieParser())
 
 // ENDPOINTS
 app.use('/api/products', productsRouter);
