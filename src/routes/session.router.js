@@ -11,7 +11,7 @@ router.post('/login', passport.authenticate('login', { failureRedirect: '/api/se
         req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age }
         const credentials = { id: req.user._id.toString(), email: req.user.email }
         const accessToken = generateToken(credentials);
-        res.cookie('accessToken', accessToken, { maxAge: 60 * 60 * 100, httpOnly: true });
+        res.cookie('accessToken', accessToken, { maxAge: 60 * 60 * 1000, httpOnly: true });
         res.redirect('/');
     } catch (err) {
         res.status(500).json({ error: err.message })
