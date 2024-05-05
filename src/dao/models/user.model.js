@@ -13,7 +13,7 @@ const schema = new mongoose.Schema({
     },
     rol: {
         type: String,
-        default: 'usuario'
+        default: 'user'
     }
 })
 
