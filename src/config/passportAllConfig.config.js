@@ -7,7 +7,8 @@ const { Strategy, ExtractJwt } = require('passport-jwt');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { default: mongoose } = require('mongoose');
 const { ObjectId } = mongoose.Types;
-const { clientID, clientSectret, callbackURL } = require('./github.private');
+const { clientID, clientSecret, callbackURL } = require('./github.private');
+const { generateToken } = require('../utils/jwt');
 
 const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
 
@@ -83,32 +84,36 @@ const initializeStrategy = () => {
         }
     ))
 
-    passport.use('github', new githubStrategy({ clientID, clientSectret, callbackURL },
+    passport.use('github', new githubStrategy({ clientID, clientSecret, callbackURL },
         async (_accessToken, _refreshToken, profile, done) => {
             try {
-                const user = await Users.findOne({ email: profile._json.email });
-                if (user) {
-                    return done(null, user, { message: 'Login successfully' });
-                }
-                const fullName = profile._json.name;
-                const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
-                const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+                let user = await Users.findOne({ email: profile._json.email });
 
-                const newUser = {
-                    firstName,
-                    lastName,
-                    age: 30,
-                    email: profile._json.email,
-                    password: ''
+                if (!user) {
+                    const fullName = profile._json.name;
+                    const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
+                    const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+
+                    const newUser = {
+                        firstName,
+                        lastName,
+                        age: 30,
+                        email: profile._json.email,
+                        password: ''
+                    }
+
+                    user = await Users.create(newUser);
                 }
 
-                const result = await Users.create(newUser);
-                return done(null, result, { message: 'Registered successfully' });
+                // Genera el token JWT
+                const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age });
+
+                return done(null, { accessToken, user }, { message: 'Authentication successful' });
             } catch (e) {
-                done(e)
+                done(e);
             }
         }
-    ))
+    ));
 
     passport.use('jwt', new Strategy({ secretOrKey: process.env.JWT_SECRET, jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]) },
         async (token, done) => {

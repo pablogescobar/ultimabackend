@@ -7,8 +7,8 @@ const { generateToken } = require('../utils/jwt');
 
 router.use(cookieParser());
 
-router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister', session: false }), (req, res) => {
-    res.json({ message: 'Singup successfully', user: req.user });
+router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister', session: false }), (_, res) => {
+    res.redirect('/');
 });
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin', session: false }), async (req, res) => {
@@ -26,18 +26,30 @@ router.get('/current', passport.authenticate('jwt', { session: false }), async (
     return res.json(req.user)
 })
 
-router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
 
-router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
-    req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age };
-    res.redirect('/');
+router.get('/githubcallback', passport.authenticate('github', { session: false, failureRedirect: '/login' }), async (req, res) => {
+    try {
+        // Envía el token JWT al cliente
+        res.cookie('accessToken', req.user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+        res.redirect('/');
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 })
+
+// router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
+
+// router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
+//     req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age };
+//     res.redirect('/');
+// })
 
 router.get('/faillogin', (_, res) => {
     res.send('Hubo un error de logeo.');
 })
 
-router.post('/resetPassword', passport.authenticate('resetPass', { failureRedirect: '/api/sessions/failogin' }), async (_, res) => {
+router.post('/resetPassword', passport.authenticate('resetPassword', { failureRedirect: '/api/sessions/failogin' }), async (_, res) => {
     try {
         res.redirect('/');
     } catch (err) {
