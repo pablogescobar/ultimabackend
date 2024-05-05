@@ -1,8 +1,12 @@
 const { Router } = require('express');
 const router = Router();
+const { verifyToken } = require('../utils/jwt');
+const cookieParser = require('cookie-parser');
+
+router.use(cookieParser());
 
 router.get('/', (req, res) => {
-    const isLoggedIn = ![null, undefined].includes(req.session.user);
+    const isLoggedIn = req.cookies.accessToken !== undefined;
 
     res.render('sessionStart', {
         titlePage: 'Login/Register',
@@ -28,19 +32,18 @@ router.get('/register', (_, res) => {
     });
 });
 
-router.get('/profile', async (req, res) => {
+router.get('/profile', verifyToken, (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const isLoggedIn = req.cookies.accessToken !== undefined;
         if (isLoggedIn) {
             const user = {
-                firstName: req.session.user.firstName,
-                lastName: req.session.user.lastName,
-                age: req.session.user.age,
-                email: req.session.user.email,
-                rol: req.session.user.rol,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                age: req.user.age,
+                email: req.user.email,
+                rol: req.user.rol,
             }
 
-            console.log('Edad desde el router: ', req.session.user);
             res.render('profile', {
                 style: ['styles.css'],
                 titlePage: 'Perfil',
@@ -51,9 +54,7 @@ router.get('/profile', async (req, res) => {
                     email: user.email,
                     rol: user.rol
                 }, isLoggedIn
-
             });
-
         } else {
             return res.status(403).json({ Error: 'Debe logearse para poder acceder.' })
         }
@@ -64,7 +65,6 @@ router.get('/profile', async (req, res) => {
 
 router.get('/resetPassword', async (_, res) => {
     try {
-
         res.render('reset_password', {
             titlePage: 'Reset Password',
             style: ['styles.css']

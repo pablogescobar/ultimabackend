@@ -1,11 +1,12 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
+const { verifyToken } = require('../utils/jwt');
 const router = Router(); // Crea un enrutador
 
 // Ruta para obtener todos los productos
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
-        const user = req.session.user;
+        const isLoggedIn = req.cookies.accessToken !== undefined;
+        const user = req.user;
         const firstName = user ? user.firstName : 'Usuario'
         const lastName = user ? user.lastName : 'Sin Identificar'
 
@@ -40,9 +41,9 @@ router.get('/', async (req, res) => {
 });
 
 // Ruta para obtener un producto por su ID
-router.get('/:pid', async (req, res) => {
+router.get('/:pid', verifyToken, async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const isLoggedIn = req.cookies.accessToken !== undefined;
         const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud como una cadena
         const productManager = req.app.get('productManager');
         const product = await productManager.getProductById(productId); // Obtiene el producto por su ID

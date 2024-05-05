@@ -97,7 +97,7 @@ const initializeStrategy = () => {
                 const newUser = {
                     firstName,
                     lastName,
-                    age: 'NN',
+                    age: 30,
                     email: profile._json.email,
                     password: ''
                 }

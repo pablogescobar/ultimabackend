@@ -1,9 +1,10 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
+const { verifyToken } = require('../utils/jwt');
 const router = Router(); // Crea un enrutador
 
-router.get('/', async (req, res) => {
-    const isLoggedIn = ![null, undefined].includes(req.session.user);
-    const adminUser = req.session.user.rol;
+router.get('/', verifyToken, async (req, res) => {
+    const isLoggedIn = req.cookies.accessToken !== undefined;
+    const adminUser = req.user.rol;
     if (adminUser !== 'admin') {
         return res.render('error', {
             titlePage: 'Error',
