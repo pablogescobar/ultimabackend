@@ -9,14 +9,13 @@ const { default: mongoose } = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const { clientID, clientSecret, callbackURL } = require('./github.private');
 const { generateToken } = require('../utils/jwt');
-const cartManager = require('../dao/dbManagers/CartManager');
 
 const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
 
 const initializeStrategy = () => {
     passport.use('register', new localStrategy({ passReqToCallback: true, usernameField: 'email', passwordField: 'password' },
         async (req, username, password, done) => {
-            const { firstName, lastName, email, age, cart } = req.body;
+            const { firstName, lastName, email, age } = req.body;
             try {
                 const user = await Users.findOne({ email: username });
                 if (user || username === 'adminCoder@coder.com') {
@@ -42,7 +41,7 @@ const initializeStrategy = () => {
     passport.use('login', new localStrategy({ usernameField: 'email' },
         async (username, password, done) => {
             try {
-                if (username === 'adminCoder@coder.com' && password === 'adminCod3r13') {
+                if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
                     adminUser = {
                         _id: new ObjectId(),
                         firstName: 'Romina',
@@ -96,20 +95,22 @@ const initializeStrategy = () => {
                     const fullName = profile._json.name;
                     const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
                     const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+                    const newCart = await Carts.create({ products: [] });
 
                     const newUser = {
                         firstName,
                         lastName,
                         age: 30,
                         email: profile._json.email,
-                        password: ''
+                        password: '',
+                        cart: newCart._id
                     }
 
                     user = await Users.create(newUser);
                 }
 
                 // Genera el token JWT
-                const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age });
+                const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age, cart: user.cart._id });
 
                 return done(null, { accessToken, user }, { message: 'Authentication successful' });
             } catch (e) {

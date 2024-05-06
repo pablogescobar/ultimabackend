@@ -10,7 +10,9 @@ const generateToken = user => {
 const verifyToken = (req, res, next) => {
     const accessToken = req.cookies.accessToken;
     if (!accessToken) {
-        return res.status(401).json({ error: 'Not authenticated!' });
+        req.user = null;
+        // return res.status(401).json({ error: 'Not authenticated!' });
+        return next();
     }
 
     // const [, token] = authHeader.split(' ')

@@ -4,9 +4,8 @@ const router = Router(); // Crea un enrutador
 // Ruta para obtener todos los carritos
 router.get('/', async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
-        const adminUser = req.session.user;
-        if (!adminUser) {
+        const isLoggedIn = req.cookies.accessToken !== undefined;
+        if (!isLoggedIn) {
             return res.render('error', {
                 titlePage: 'Error',
                 message: 'No tiene permisos de acceso.',
@@ -38,7 +37,7 @@ router.get('/', async (req, res) => {
 // Ruta para obtener un carrito por su ID
 router.get('/:cid', async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
+        const isLoggedIn = req.cookies.accessToken !== undefined;
 
         const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
         const cartManager = req.app.get('cartManager');

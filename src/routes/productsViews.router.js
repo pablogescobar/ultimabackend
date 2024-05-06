@@ -74,10 +74,10 @@ router.get('/:pid', verifyToken, async (req, res) => {
 });
 
 // Ruta para agregar producto al carrito
-router.post('/:pid', async (req, res) => {
+router.post('/:pid', verifyToken, async (req, res) => {
     try {
         const productId = req.params.pid;
-        const cartId = '6619078c94d150818d996ec7'
+        const cartId = req.user.cart;
         const cartManager = req.app.get('cartManager');
         await cartManager.addProductToCart(productId, cartId)
         res.status(301).redirect('/products');

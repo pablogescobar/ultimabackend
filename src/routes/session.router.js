@@ -13,7 +13,7 @@ router.post('/register', passport.authenticate('register', { failureRedirect: '/
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin', session: false }), async (req, res) => {
     try {
-        const user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age };
+        const user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age, cart: req.user.cart._id };
         const accessToken = generateToken(user);
         res.cookie('accessToken', accessToken, { maxAge: 60 * 5 * 1000, httpOnly: true });
         res.redirect('/');
@@ -37,13 +37,6 @@ router.get('/githubcallback', passport.authenticate('github', { session: false, 
         res.status(500).json({ error: err.message });
     }
 })
-
-// router.get('/github', passport.authenticate('github', { scope: ['user:email'] }), async (req, res) => { })
-
-// router.get('/githubcallback', passport.authenticate('github', { failureRedirect: '/login' }), async (req, res) => {
-//     req.session.user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age };
-//     res.redirect('/');
-// })
 
 router.get('/faillogin', (_, res) => {
     res.send('Hubo un error de logeo.');
