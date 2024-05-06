@@ -1,5 +1,5 @@
 require('dotenv').config(); // Carga las variables de entorno desde .env
-const { Users } = require('../dao/models');
+const { Users, Carts } = require('../dao/models');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const githubStrategy = require('passport-github2').Strategy;
@@ -9,24 +9,27 @@ const { default: mongoose } = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const { clientID, clientSecret, callbackURL } = require('./github.private');
 const { generateToken } = require('../utils/jwt');
+const cartManager = require('../dao/dbManagers/CartManager');
 
 const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
 
 const initializeStrategy = () => {
     passport.use('register', new localStrategy({ passReqToCallback: true, usernameField: 'email', passwordField: 'password' },
         async (req, username, password, done) => {
-            const { firstName, lastName, email, age } = req.body;
+            const { firstName, lastName, email, age, cart } = req.body;
             try {
                 const user = await Users.findOne({ email: username });
                 if (user || username === 'adminCoder@coder.com') {
                     done(null, false, { message: 'User already exists' });
                 } else {
+                    const newCart = await Carts.create({ products: [] });
                     const newUser = {
                         firstName,
                         lastName,
                         email,
                         age: +age,
-                        password: hashPassword(password)
+                        password: hashPassword(password),
+                        cart: newCart._id
                     }
                     const result = await Users.create(newUser);
                     return done(null, result, { message: 'Registered successfully' })
