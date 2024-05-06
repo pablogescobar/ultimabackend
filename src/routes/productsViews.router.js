@@ -9,6 +9,7 @@ router.get('/', verifyToken, async (req, res) => {
         const user = req.user;
         const firstName = user ? user.firstName : 'Usuario'
         const lastName = user ? user.lastName : 'Sin Identificar'
+        const cartId = user ? user.cart : null;
 
         const page = req.query.page || 1;
         const limit = req.query.limit || 10;
@@ -32,7 +33,7 @@ router.get('/', verifyToken, async (req, res) => {
             isLoggedIn,
             isNotLoggedIn: !isLoggedIn,
             firstName,
-            lastName
+            lastName, cartId
         });
 
     } catch (err) {
@@ -95,31 +96,6 @@ router.post('/', async (req, res) => {
         res.status(301).redirect('/products'); // Responde con un mensaje de éxito
     } catch (error) {
         res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto
-    }
-});
-
-// Ruta para actualizar un producto por su ID
-router.put('/:pid', async (req, res) => {
-    try {
-        const productId = req.params.pid; // Obtener el ID del producto de los parámetros de la solicitud
-        const productManager = req.app.get('productManager');
-        await productManager.updateProduct(productId, req.body); // Actualizar el producto
-        res.status(200).json({ message: 'Producto actualizado' }); // Responder con un mensaje de éxito
-    } catch (err) {
-        res.status(500).json({ error: 'Error al actualizar el producto' }); // Responder con un error 500 si hay un error al actualizar el producto
-    }
-});
-
-
-// Ruta para eliminar un producto por su ID
-router.delete('/:pid', async (req, res) => {
-    try {
-        const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
-        const productManager = req.app.get('productManager');
-        await productManager.deleteProduct(productId); // Elimina el producto
-        res.status(301).redirect('/products'); // Responde con un mensaje de éxito
-    } catch (err) {
-        res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al eliminar el producto
     }
 });
 

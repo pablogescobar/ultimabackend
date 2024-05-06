@@ -1,98 +1,133 @@
+require('dotenv').config(); // Carga las variables de entorno desde .env
+const { Users, Carts } = require('../dao/models');
 const passport = require('passport');
-const { Strategy } = require('passport-local');
-const { Users } = require('../dao/models');
+const localStrategy = require('passport-local').Strategy;
+const githubStrategy = require('passport-github2').Strategy;
+const { Strategy, ExtractJwt } = require('passport-jwt');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { default: mongoose } = require('mongoose');
 const { ObjectId } = mongoose.Types;
+const { clientID, clientSecret, callbackURL } = require('./github.private');
+const { generateToken } = require('../utils/jwt');
 
-const inicializeStrategy = () => {
-    passport.use('register', new Strategy(
-        { passReqToCallback: true, usernameField: 'email' }, async (req, username, password, done) => {
+const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
+
+const initializeStrategy = () => {
+    passport.use('register', new localStrategy({ passReqToCallback: true, usernameField: 'email', passwordField: 'password' },
+        async (req, username, password, done) => {
             const { firstName, lastName, email, age } = req.body;
             try {
-
                 const user = await Users.findOne({ email: username });
-                console.log(user);
                 if (user || username === 'adminCoder@coder.com') {
-                    console.log('El usuario ya existe.');
-                    return done(null, false);
+                    done(null, false, { message: 'User already exists' });
                 } else {
+                    const newCart = await Carts.create({ products: [] });
                     const newUser = {
                         firstName,
                         lastName,
                         email,
                         age: +age,
-                        password: hashPassword(password)
+                        password: hashPassword(password),
+                        cart: newCart._id
+                    }
+                    const result = await Users.create(newUser);
+                    return done(null, result, { message: 'Registered successfully' })
+                }
+            } catch (e) {
+                done(e)
+            }
+        }))
+
+    passport.use('login', new localStrategy({ usernameField: 'email' },
+        async (username, password, done) => {
+            try {
+                if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
+                    adminUser = {
+                        _id: new ObjectId(),
+                        firstName: 'Romina',
+                        lastName: 'Molina',
+                        age: 18,
+                        email: 'adminCoder@coder.com',
+                        password: 'adminCod3r13',
+                        rol: 'admin'
+                    };
+                    return done(null, adminUser);
+                } else {
+                    const user = await Users.findOne({ email: username });
+                    if (!user) {
+                        return done(null, false, { message: 'User not found' });
                     }
 
-                    // Nuevo usuario creado exitosamente
-                    const result = await Users.create(newUser);
-                    return done(null, result);
+                    if (!isValidPassword(password, user.password)) {
+                        return done(null, false, { message: 'Wrong password' });
+                    }
+
+                    return done(null, user, { message: 'Login successfull' });
                 }
-            } catch (err) {
-                done(err);
+            } catch (e) {
+                done(e)
             }
         }
     ))
 
-    passport.use('login', new Strategy({
-        usernameField: 'email'
-    }, async (username, password, done) => {
-        try {
-
-            if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-                adminUser = {
-                    _id: new ObjectId(),
-                    firstName: 'Romina',
-                    lastName: 'Molina',
-                    age: 18,
-                    email: 'adminCoder@coder.com',
-                    password: 'adminCod3r123',
-                    rol: 'admin'
-                };
-                return done(null, adminUser);
-            } else {
-                const user = await Users.findOne({ email: username })
-                if (!user) {
-                    console.log('User not found!')
-                    return done(null, false)
-                }
-
-                if (!isValidPassword(password, user.password)) {
-                    return done(null, false)
-                }
-
-                return done(null, user)
-            }
-        }
-        catch (err) {
-            done(err)
-        }
-    }))
-
-    passport.use('resetPass', new Strategy({
-        usernameField: 'email'
-    }, async (username, password, done) => {
-        try {
+    passport.use('resetPassword', new localStrategy({ usernameField: 'email' },
+        async (username, password, done) => {
             if (!username || !password) {
-                console.log('Faltan credenciales.');
-                return done(null, false);
+                return done(null, false, { message: 'Invalid credentials' });
             }
             const user = await Users.findOne({ email: username });
             if (!user) {
-                console.log('No existe el usuario');
-                return done(null, false);
+                return done(null, false, { message: 'User not found' });
             }
-
-            const hashedPassword = hashPassword(password);
-            await Users.updateOne({ email: username }, { $set: { password: hashedPassword } });
+            await Users.updateOne({ email: username }, { $set: { password: hashPassword(password) } });
             const userUpdated = await Users.findOne({ email: username });
 
-            return done(null, userUpdated);
-        } catch (err) {
-            done(err);
+            return done(null, userUpdated, { message: 'Updated successfully' });
         }
-    }));
+    ))
+
+    passport.use('github', new githubStrategy({ clientID, clientSecret, callbackURL },
+        async (_accessToken, _refreshToken, profile, done) => {
+            try {
+                let user = await Users.findOne({ email: profile._json.email });
+
+                if (!user) {
+                    const fullName = profile._json.name;
+                    const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
+                    const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+                    const newCart = await Carts.create({ products: [] });
+
+                    const newUser = {
+                        firstName,
+                        lastName,
+                        age: 30,
+                        email: profile._json.email,
+                        password: '',
+                        cart: newCart._id
+                    }
+
+                    user = await Users.create(newUser);
+                }
+
+                // Genera el token JWT
+                const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age, cart: user.cart._id });
+
+                return done(null, { accessToken, user }, { message: 'Authentication successful' });
+            } catch (e) {
+                done(e);
+            }
+        }
+    ));
+
+    passport.use('jwt', new Strategy({ secretOrKey: process.env.JWT_SECRET, jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]) },
+        async (token, done) => {
+            try {
+                return done(null, token.user);
+            } catch (e) {
+                done(e)
+            }
+        }
+    ))
 
     passport.serializeUser((user, done) => {
         console.log('Serailized: ', user);
@@ -106,4 +141,4 @@ const inicializeStrategy = () => {
     })
 }
 
-module.exports = inicializeStrategy
+module.exports = initializeStrategy;

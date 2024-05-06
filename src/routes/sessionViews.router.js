@@ -5,15 +5,26 @@ const cookieParser = require('cookie-parser');
 
 router.use(cookieParser());
 
-router.get('/', (req, res) => {
+router.get('/', verifyToken, (req, res) => {
     const isLoggedIn = req.cookies.accessToken !== undefined;
 
-    res.render('sessionStart', {
-        titlePage: 'Login/Register',
-        isLoggedIn,
-        isNotLoggedIn: !isLoggedIn,
-        style: ['styles.css']
-    });
+    if (isLoggedIn) {
+        const cartId = req.user.cart
+        res.render('sessionStart', {
+            titlePage: 'Login/Register',
+            isLoggedIn,
+            isNotLoggedIn: !isLoggedIn,
+            style: ['styles.css'],
+            cartId
+        });
+    } else {
+        res.render('sessionStart', {
+            titlePage: 'Login/Register',
+            isLoggedIn,
+            isNotLoggedIn: !isLoggedIn,
+            style: ['styles.css'],
+        });
+    }
 })
 
 router.get('/login', (_, res) => {
@@ -36,6 +47,7 @@ router.get('/profile', verifyToken, (req, res) => {
     try {
         const isLoggedIn = req.cookies.accessToken !== undefined;
         if (isLoggedIn) {
+            const cartId = req.user.cart
             const user = {
                 firstName: req.user.firstName,
                 lastName: req.user.lastName,
@@ -53,7 +65,9 @@ router.get('/profile', verifyToken, (req, res) => {
                     age: user.age,
                     email: user.email,
                     rol: user.rol
-                }, isLoggedIn
+                },
+                isLoggedIn,
+                cartId
             });
         } else {
             return res.status(403).json({ Error: 'Debe logearse para poder acceder.' })

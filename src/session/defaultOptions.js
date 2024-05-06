@@ -1,5 +1,5 @@
 module.exports = {
-    secret: 'secretCoder',
+    secret: 'RomeoMike&1530$',
     resave: true,
     saveUninitialized: true,
 }

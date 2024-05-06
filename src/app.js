@@ -28,14 +28,13 @@ app.set('view engine', 'handlebars')
 // Permitir envío de información mediante formularios y JSON
 app.use(express.urlencoded({ extended: true })); // Middleware para parsear datos de formularios
 app.use(express.json()); // Middleware para parsear datos JSON
-app.use(express.static(`${__dirname}/../public`))
+app.use(express.static(`${__dirname}/../public`));
 
-    ;
-const initializeStrategyAll = require('./config/passportAllConfig.config');
+const initializeStrategy = require('./config/passport.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
 app.use(sessionMiddleware);
-initializeStrategyAll();
+initializeStrategy();
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser())
