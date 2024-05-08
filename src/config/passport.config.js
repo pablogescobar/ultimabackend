@@ -9,6 +9,7 @@ const { default: mongoose } = require('mongoose');
 const { ObjectId } = mongoose.Types;
 const { clientID, clientSecret, callbackURL } = require('./github.private');
 const { generateToken } = require('../utils/jwt');
+const CartManager = require('../dao/dbManagers/CartManager');
 
 const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
 
@@ -21,14 +22,16 @@ const initializeStrategy = () => {
                 if (user || username === 'adminCoder@coder.com') {
                     done(null, false, { message: 'User already exists' });
                 } else {
-                    const newCart = await Carts.create({ products: [] });
+                    const cartManager = new CartManager();
+                    const newCart = await cartManager.addCart();
+                    console.log('Carrito: ', newCart);
                     const newUser = {
                         firstName,
                         lastName,
                         email,
                         age: +age,
                         password: hashPassword(password),
-                        cart: newCart._id
+                        cart: newCart
                     }
                     const result = await Users.create(newUser);
                     return done(null, result, { message: 'Registered successfully' })
@@ -46,7 +49,7 @@ const initializeStrategy = () => {
                         _id: new ObjectId(),
                         firstName: 'Romina',
                         lastName: 'Molina',
-                        age: 18,
+                        age: 23,
                         email: 'adminCoder@coder.com',
                         password: 'adminCod3r13',
                         rol: 'admin'
