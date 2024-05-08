@@ -2,6 +2,7 @@ const express = require('express');
 const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
+const cookieParser = require('cookie-parser')
 
 // MANAGERS
 const ProductManager = require('./dao/dbManagers/ProductManager');
@@ -10,7 +11,9 @@ const UserManager = require('./dao/dbManagers/UserManager');
 
 // ROUTERS
 const productsRouter = require('./routes/products.router');
+const productsViewsRouter = require('./routes/productsViews.router');
 const cartRouter = require('./routes/cart.router');
+const cartViewsRouter = require('./routes/cartViews.router');
 const createProductRouter = require('./routes/createProduct.router');
 const sessionRouter = require('./routes/session.router');
 const sessionViewsRouter = require('./routes/sessionViews.router');
@@ -25,24 +28,23 @@ app.set('view engine', 'handlebars')
 // Permitir envío de información mediante formularios y JSON
 app.use(express.urlencoded({ extended: true })); // Middleware para parsear datos de formularios
 app.use(express.json()); // Middleware para parsear datos JSON
-app.use(express.static(`${__dirname}/../public`))
+app.use(express.static(`${__dirname}/../public`));
 
-// Configuración de session
-const inicializeStrategy = require('./config/passport.config');
-const inicializeStrategyGithub = require('./config/passport-github.config');
+const initializeStrategy = require('./config/passport.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
 app.use(sessionMiddleware);
-inicializeStrategy();
-inicializeStrategyGithub();
+initializeStrategy();
 app.use(passport.initialize());
 app.use(passport.session());
-
+app.use(cookieParser())
 
 // ENDPOINTS
 app.use('/api/products', productsRouter);
+app.use('/products', productsViewsRouter);
 app.use('/api/cart', cartRouter);
-app.use('/api/createProduct', createProductRouter);
+app.use('/cart', cartViewsRouter);
+app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
 

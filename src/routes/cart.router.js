@@ -4,12 +4,6 @@ const router = Router(); // Crea un enrutador
 // Ruta para obtener todos los carritos
 router.get('/', async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
-        const adminUser = req.session.user;
-        if (!adminUser) {
-            return res.status(403).json({ Error: 'No tiene permisos para acceder.' })
-        }
-
         const cartManager = req.app.get('cartManager');
         const carts = await cartManager.getCarts(); // Obtiene todos los carritos
 
@@ -18,13 +12,7 @@ router.get('/', async (req, res) => {
             quantity: c.products.length
         }))
 
-        res.status(200).render('carts', {
-            carts: cartsData,
-            titlePage: 'Carritos',
-            style: ['styles.css'],
-            isLoggedIn,
-            isNotLoggedIn: !isLoggedIn,
-        }); // Responde con los carritos obtenidos
+        res.status(200).json(cartsData); // Responde con los carritos obtenidos
     } catch (err) {
         res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener los carritos
     }
@@ -33,7 +21,6 @@ router.get('/', async (req, res) => {
 // Ruta para obtener un carrito por su ID
 router.get('/:cid', async (req, res) => {
     try {
-        const isLoggedIn = ![null, undefined].includes(req.session.user);
 
         const cartId = req.params.cid; // Obtiene el ID del carrito de los parámetros de la solicitud
         const cartManager = req.app.get('cartManager');
@@ -49,13 +36,7 @@ router.get('/:cid', async (req, res) => {
             }))
         };
 
-        res.status(200).render('cart', {
-            cart: cartData,
-            titlePage: 'Carrito',
-            style: ['styles.css'],
-            isLoggedIn,
-            isNotLoggedIn: !isLoggedIn,
-        }); // Responde con el carrito obtenido
+        res.status(200).json(cartData)// Responde con el carrito obtenido
 
     } catch (err) {
         res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el carrito
@@ -108,7 +89,7 @@ router.delete('/:cid/product/:pid', async (req, res) => {
         const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud
         const cartManager = req.app.get('cartManager');
         await cartManager.deleteProductFromCart(productId, cartId);
-        res.status(301).redirect('/api/cart')
+        res.status(200).json({ message: `Producto ${productId} eliminado del carrito ${cartId} de manera correcta.` });
     } catch (err) {
         res.status(500).json({ Error: err.message })
     }
@@ -122,7 +103,7 @@ router.put('/:cid/product/:pid', async (req, res) => {
         const { quantity } = req.body;
         const cartManager = req.app.get('cartManager');
         await cartManager.updateProductQuantityFromCart(productId, cartId, quantity);
-        res.status(301).redirect('/api/cart');
+        res.status(200).json({ message: `Se actualizó el producto ${productId} en una cantidad de ${quantity} del carrito ${cartId}.` });
     } catch (err) {
         res.status(500).json({ Error: err.message })
     }
@@ -134,7 +115,18 @@ router.delete('/:cid', async (req, res) => {
         const cartId = req.params.cid;
         const cartManager = req.app.get('cartManager');
         await cartManager.clearCart(cartId);
-        res.status(301).redirect('/api/cart');
+        res.status(200).json({ message: `Carrito ${cartId} vaciado de manera correcta.` });
+    } catch (err) {
+        res.status(500).json({ Error: err.message })
+    }
+})
+
+router.delete('/destroyCart/:cid', async (req, res) => {
+    try {
+        const cartId = req.params.cid;
+        const cartManager = req.app.get('cartManager');
+        await cartManager.deleteCart(cartId);
+        res.status(200).json({ message: `Carrito ${cartId} eliminado de manera correcta.` })
     } catch (err) {
         res.status(500).json({ Error: err.message })
     }

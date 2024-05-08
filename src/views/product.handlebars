@@ -12,12 +12,12 @@
             <p>Código: {{code}}</p>
             <p>ID: {{id}}</p>
             {{#if isLoggedIn}}
-            <form action="/api/products/{{id}}" id="formProductToCart" method="post">
+            <form action="/products/{{id}}" id="formProductToCart" method="post">
                 <input id="addToCart" type="submit" value="Agregar al Carrito">
             </form>
             {{/if}}
         </div>
-        <a href="/api/products">Volver</a>
+        <a href="/products">Volver</a>
     </div>
     {{/each}}
 </div>

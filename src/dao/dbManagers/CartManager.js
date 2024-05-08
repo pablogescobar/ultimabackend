@@ -41,9 +41,10 @@ class CartManager {
     // Agregar un nuevo carrito
     async addCart() {
         try {
-            await Carts.create({
+            const newCart = await Carts.create({
                 products: []
             })
+            return newCart;
         } catch {
             throw new Error('Error al agregar un nuevo carrito.')
         }
@@ -169,7 +170,7 @@ class CartManager {
             }
         } catch (error) {
             console.error('Hubo un error al actualizar la cantidad del producto:', error);
-            throw new Error('Hubo un error al actualizar la cantidad del producto');
+            throw new Error('Hubo un error al actualizar la cantidad del producto.');
         }
     }
 
@@ -182,7 +183,18 @@ class CartManager {
             await Carts.updateOne({ _id: cartId }, { $set: { products: [] } });
 
         } catch {
-            throw new Error('Hubo un error al vaciar el carrito')
+            throw new Error('Hubo un error al vaciar el carrito.')
+        }
+    }
+
+    async deleteCart(cartId) {
+        try {
+            const cart = await this.verifyCartExists(cartId);
+            console.log(cart);
+
+            await Carts.deleteOne({ _id: cartId });
+        } catch {
+            throw new Error('Hubo un error al eliminar el carrito.')
         }
     }
 
