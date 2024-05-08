@@ -19,7 +19,9 @@ const initializeStrategy = () => {
             const { firstName, lastName, email, age } = req.body;
             try {
                 const user = await Users.findOne({ email: username });
-                if (user || username === 'adminCoder@coder.com') {
+                const isAdmin = username === 'adminCoder@coder.com';
+
+                if (user || isAdmin) {
                     done(null, false, { message: 'User already exists' });
                 } else {
                     const cartManager = new CartManager();
@@ -39,13 +41,14 @@ const initializeStrategy = () => {
             } catch (e) {
                 done(e)
             }
-        }))
+        }
+    ));
 
     passport.use('login', new localStrategy({ usernameField: 'email' },
         async (username, password, done) => {
             try {
                 if (username === 'adminCoder@coder.com' && password === 'adminCod3r123') {
-                    adminUser = {
+                    const adminUser = {
                         _id: new ObjectId(),
                         firstName: 'Romina',
                         lastName: 'Molina',
@@ -122,7 +125,7 @@ const initializeStrategy = () => {
         }
     ));
 
-    passport.use('jwt', new Strategy({ secretOrKey: process.env.JWT_SECRET, jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]) },
+    passport.use('current', new Strategy({ secretOrKey: process.env.JWT_SECRET, jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]) },
         async (token, done) => {
             try {
                 return done(null, token.user);

@@ -13,16 +13,30 @@ router.post('/register', passport.authenticate('register', { failureRedirect: '/
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin', session: false }), async (req, res) => {
     try {
-        const user = { email: req.user.email, _id: req.user._id.toString(), rol: req.user.rol, firstName: req.user.firstName, lastName: req.user.lastName, age: req.user.age, cart: req.user.cart._id };
+        let user;
+        if (req.user && req.user.email === 'adminCoder@coder.com') {
+            user = req.user;
+        } else {
+            user = {
+                email: req.user.email,
+                _id: req.user._id.toString(),
+                rol: req.user.rol,
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                age: req.user.age,
+                cart: req.user.cart ? req.user.cart._id : null
+            };
+        }
         const accessToken = generateToken(user);
         res.cookie('accessToken', accessToken, { maxAge: 60 * 5 * 1000, httpOnly: true });
         res.redirect('/');
     } catch (e) {
-        res.status(500).json({ error: e.message })
+        res.status(500).json({ error: e.message });
     }
-})
+});
 
-router.get('/current', passport.authenticate('jwt', { session: false }), async (req, res) => {
+
+router.get('/current', passport.authenticate('current', { session: false }), async (req, res) => {
     return res.json(req.user)
 })
 
