@@ -55,7 +55,8 @@ const initializeStrategy = () => {
                         age: 23,
                         email: 'adminCoder@coder.com',
                         password: 'adminCod3r13',
-                        rol: 'admin'
+                        rol: 'admin',
+                        cart: '6619078c94d150818d996ec7'
                     };
                     return done(null, adminUser);
                 } else {

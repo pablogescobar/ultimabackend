@@ -2,14 +2,14 @@
 
 ### Nuevos Cambios
 
-Un gran cambio que se hizo para esta entrega fue cambiar algunos endpoints y rutas. Ahora, cuando ingresas una ruta que contiene la palabra **api**, esta ruta devolverá solo JSON. Por ejemplo: `http://localhost:8080/api/products`. Por otro lado, para poder renderizar el contenido en una vista de Handlebars, deberás ingresar a una URL que no contenga **api**. Por ejemplo: `http://localhost:8080/products`.
-Ya no se cuenta con una vista de `carts`, dado que ahora solo se mostrará el carrito según su ID, debido a que cada usuario cuenta con un carrito.
-Para esta entrega se dejó de utilizar **sessions** para 
+- Un gran cambio que se hizo para esta entrega fue cambiar algunos endpoints y rutas. Ahora, cuando ingresas una ruta que contiene la palabra **api**, esta ruta devolverá solo JSON. Por ejemplo: `http://localhost:8080/api/products`. Por otro lado, para poder renderizar el contenido en una vista de Handlebars, deberás ingresar a una URL que no contenga **api**. Por ejemplo: `http://localhost:8080/products`.
+- Ya no se cuenta con una vista de `carts`, dado que ahora solo se mostrará el carrito según su ID, debido a que cada usuario cuenta con un carrito.
+- Para esta entrega se dejó de utilizar **sessions** para mirgar a  **JWT**.
 
 ### Con respecto a esta entrega
-- Se implementó `bcrypt` con el fin de hashear las contraseñas.
-- Se cambió el método de `userManager` por estrategías de `passport` para el logueo y el registro.
-- Con la utilización de `passport` ahora el posible realizar un login con **Github**.
+- Se modificó el modelo de usuarios para dedicarle un carrito a cada nuevo usuario registrado.
+- Ahora todo el sistema de `login` y `register` utiliza **JWT** en lugar de **sessions**.
+- Se implementó un nuevo endpoint `http://localhost:8080/api/sessions/current`, el cual utiliza una estrategia de Passport para extraer el token del usuario de la correspondiente cookie.
 
 ## Correr de manera local
 ```bash
@@ -18,7 +18,13 @@ cd backend_Entregas_Di-Iorio
 npm install
 ```
 
-Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challenge6/.env.example) Luego de este paso podrás correr el pryecto con el siguiente comando:
+Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challenge6/.env.example) 
+
+#### Como ubicar el archivo **.env**:
+
+![Imagen de env](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/public/img/envExample.png?raw=true)
+
+Luego de este paso podrás correr el proyecto con el siguiente comando:
 
 ````bash
 nodemon src/app
@@ -35,10 +41,12 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Express](https://www.npmjs.com/package/express)
 - [Express-handlebars](https://handlebarsjs.com/guide/#what-is-handlebars)
 - [Express-session](https://www.npmjs.com/package/express-session)
+- [Jsonwebtoken](https://jwt.io/)
 - [Mongoose](https://mongoosejs.com/docs/guide.html)
 - [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
 - [Passport](https://www.passportjs.org/docs/)
 - [Passport-github2](https://www.passportjs.org/packages/passport-github2/)
+- [Passport-jwt](https://www.passportjs.org/packages/passport-jwt/)
 - [Passport-local](https://www.passportjs.org/packages/passport-local/)
 - [Socket.io](https://socket.io/docs/v4/)
 
@@ -105,15 +113,9 @@ Aquí podrás ver la lista de productos de la base de datos. Debes tener en cuen
 http://localhost:8080/products?page=1&limit=5&sort=asc&category=almacenamiento&availability=true
 ````
 
-### `getCarts`
-
-Aquí podrás ver la lista de carritos que estan creados en la base de datos. Debes tener en cuenta que para acceder a esta vista deberás tener una `sesion` iniciada.
-
-[**URL:**](http://localhost:8080/cart) `http://localhost:8080/cart`
-
 ### `getCartsById`
 
-Aquí podrás acceder a un carrito de manera individual. En esta vista podrás divisar la totalidad de productos agregados al carrito si es que existen. Es importante aclarar que se utiliza `populate` para obtener ciertos datos de los productos.
+Aquí podrás acceder a un carrito según su ID. En esta vista podrás divisar la totalidad de productos agregados al carrito si es que existen. Es importante aclarar que se utiliza `populate` para obtener ciertos datos de los productos. Cada carrito está relacionado con un usuario.
 
 [**URL:**](http://localhost:8080/cart/6619078c94d150818d996ec7) `http://localhost:8080/cart/6619078c94d150818d996ec7`
 
@@ -129,11 +131,17 @@ En esta vista deberás completar un formulario para poder agregar un producto nu
 
 ## Endpoints API
 
-Todos los endpoints deben ser ejecutados desde Postman, a menos que se indique lo contrario en el endpoint específico. A continuación, se presenta la lista completa de todos los endpoints disponibles.
+Todos los endpoints deben ser ejecutados desde Postman A continuación, se presenta la lista completa de todos los endpoints disponibles.
+
+### `getToken`
+
+Muestra las información que contiene el token de logeo del usuario.
+
+[**URL:**](http://localhost:8080/api/sessions/current) `http://localhost:8080/api/sessions/current`
 
 ### `getProducts`
 
-Busca todos los productos disponibles en la base de datos. Debes tener en cuenta que para ver los precios deberás tener una `sesión` iniciada.
+Busca todos los productos disponibles en la base de datos.
 
 [**URL:**](http://localhost:8080/api/products) `http://localhost:8080/api/products`
 
@@ -155,9 +163,9 @@ http://localhost:8080/api/products?page=1&limit=5&sort=asc&category=almacenamien
 
 ### `getProductById`
 
-La URL debe incluir el ID del producto que desea buscar. Debes tener en cuenta que para ver los precios deberás tener una `sesión` iniciada. 
+La URL debe incluir el ID del producto que desea buscar.
 
-[**URL:**](http://localhost:8080/api/products/660867f537dbc33df4aab5a6) `http://localhost:8080/api/products/660867f537dbc33df4aab5a6`
+[**URL:**](http://localhost:8080/api/products/6619078c94d150818d996ec7) `http://localhost:8080/api/products/6619078c94d150818d996ec7`
 
 **Método** `GET`
 
@@ -232,8 +240,7 @@ La URL debe incluir el ID del carrito que se desea visualizar. Además, puedes a
 
 ### `addProductToCart`
 
-La URL debe incluir el ID del producto que se agregará y el ID del carrito al que se desea agregar.
-También puedes usar el botón 'Agregar al carrito' al acceder al endpoint `getProductById`. Por defecto, el producto se agregará al carrito con el ID: **6619078c94d150818d996ec7**. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**. 
+La URL debe incluir el ID del producto que se agregará y el ID del carrito al que se desea agregar. Una vez completada esta operación solamente se añadirá el ID del producto y la cantidad en el carrito. Los demás detalles del producto se verán al acceder a `getCartById` mediante **populate**. 
 
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f) `http://localhost:8080/api/cart/6619078c94d150818d996ec7/product/661c232d10ed064a3bd5185f`
 
@@ -251,7 +258,7 @@ La URL debe incluir el ID del producto que se eliminará y el ID del carrito en 
 
 La URL debe incluir el ID del carrito en el cual se realizará la actualización. Esta debe recibir como parámetros el ID del producto y la cantidad que se desea agregar. 
 
-[**URL:**](http://localhost:8080/api/cart/661b091c818ef788075fdb89) `http://localhost:8080/api/cart/661b091c818ef788075fdb89`
+[**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7) `http://localhost:8080/api/cart/6619078c94d150818d996ec7`
 
 **Método** `PUT`
 
