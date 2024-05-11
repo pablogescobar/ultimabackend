@@ -1,5 +1,7 @@
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
 const { Users } = require('../models');
+const { findOne } = require('../models/product.model');
+const CartManager = require('./CartManager');
 
 class UserManager {
     constructor() {
@@ -11,7 +13,8 @@ class UserManager {
             age: 18,
             email: 'adminCoder@coder.com',
             password: 'adminCod3r123',
-            rol: 'admin'
+            rol: 'admin',
+            cart: '6619078c94d150818d996ec7'
         };
     }
 
@@ -54,33 +57,42 @@ class UserManager {
     async registerUser(firstName, lastName, age, email, password) {
         try {
             if (!email || !password) {
-                throw new Error('El email y la contraseña son obligatorios.')
+                throw new Error('El email y la contraseña son obligatorios.');
             }
 
             if (email === this.adminUser.email) {
-                throw new Error('Acceso denegado.');
+                throw new Error('Error al registrar el usuario');
+            }
+
+            const existingUser = await Users.findOne({ email });
+            if (existingUser) {
+                throw new Error('El email ya está registrado');
+            }
+
+            if (age <= 0) {
+                throw new Error('La edad debe ser mayor a 1');
             }
 
             const firstNameManager = firstName ? firstName : 'Usuario'
             const lastNameManager = lastName ? lastName : 'Sin Identificar'
-
-            const numericAge = age ? parseInt(age) : age = 1
-
+            const newCartPromise = new CartManager().addCart();
+            const newCart = await newCartPromise;
+            const numericAge = age ? parseInt(age) : age = ""
             const hashedPassword = hashPassword(password);
 
-            if (age <= 0) {
-                throw new Error('La edad debe ser mayor a 1')
-            }
-
-            await Users.create({
+            const user = await Users.create({
                 firstName: firstNameManager,
                 lastName: lastNameManager,
                 age: numericAge,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                cart: newCart
             })
-        } catch {
-            throw new Error('Error al registrar el ususario.')
+            console.log(user);
+            return user;
+        } catch (err) {
+            console.error('Error al registrar el usuario: ', err);
+            throw new Error('Error al registrar el ususario.');
         }
     }
 
@@ -101,6 +113,9 @@ class UserManager {
 
     async resetPassword(email, password) {
         try {
+            if (!email || !password) {
+                throw new Error('Credenciales invalidas.');
+            }
             const user = await Users.findOne({ email });
             if (!user) {
                 throw new Error('El usuario no existe.');
@@ -110,8 +125,9 @@ class UserManager {
                 throw new Error('No tiene permisos para actualizar ese email.');
             }
 
-            const hashedPassword = hashPassword(password);
-            const userUpdated = await Users.updateOne({ email }, { $set: { password: hashedPassword } });
+            await Users.updateOne({ email }, { $set: { password: hashPassword(password) } });
+
+            const userUpdated = await Users.findOne({ email });
             return userUpdated;
 
         } catch (error) {
