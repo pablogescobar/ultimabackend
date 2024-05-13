@@ -77,4 +77,15 @@ router.get('/faillogin', (_, res) => {
     res.send('Hubo un error de logeo.');
 })
 
+router.delete('/', async (req, res) => {
+    try {
+        const { email } = req.body;
+        const userManager = req.app.get('userManager');
+        await userManager.deleteUser(email);
+        res.json({ message: 'Usuario eliminado correctamente.' });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+})
+
 module.exports = router;

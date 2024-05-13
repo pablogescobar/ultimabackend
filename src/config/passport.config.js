@@ -1,11 +1,11 @@
 require('dotenv').config(); // Carga las variables de entorno desde .env
-const { Users, Carts } = require('../dao/models');
+const { Users } = require('../dao/models');
 const passport = require('passport');
 const localStrategy = require('passport-local').Strategy;
 const githubStrategy = require('passport-github2').Strategy;
 const { Strategy, ExtractJwt } = require('passport-jwt');
 const { clientID, clientSecret, callbackURL } = require('./github.private');
-const { generateToken } = require('../utils/jwt');
+const { verifyToken } = require('../utils/jwt');
 const UserManager = require('../dao/dbManagers/UserManager');
 
 const cookieExtractor = req => req && req.cookies ? req.cookies['accessToken'] : null;
@@ -51,30 +51,16 @@ const initializeStrategy = () => {
     passport.use('github', new githubStrategy({ clientID, clientSecret, callbackURL },
         async (_accessToken, _refreshToken, profile, done) => {
             try {
-                let user = await Users.findOne({ email: profile._json.email });
+                const userManager = new UserManager();
+                const { accessToken, user } = await userManager.githubLogin(profile);
 
-                if (!user) {
-                    const fullName = profile._json.name;
-                    const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
-                    const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
-                    const newCart = await Carts.create({ products: [] });
-
-                    const newUser = {
-                        firstName,
-                        lastName,
-                        age: 30,
-                        email: profile._json.email,
-                        password: '',
-                        cart: newCart._id
+                verifyToken({ cookies: { accessToken } }, null, (err) => {
+                    if (err) {
+                        return done(err);
                     }
 
-                    user = await Users.create(newUser);
-                }
-
-                // Genera el token JWT
-                const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age, cart: user.cart._id });
-
-                return done(null, { accessToken, user }, { message: 'Authentication successful' });
+                    return done(null, { accessToken, user }, { message: 'Authentication successful' });
+                });
             } catch (e) {
                 done(e);
             }

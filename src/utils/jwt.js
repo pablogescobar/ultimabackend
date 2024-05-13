@@ -27,6 +27,6 @@ const verifyToken = (req, res, next) => {
 
         next();
     });
-};;
+};
 
 module.exports = { generateToken, verifyToken, secret: PRIVATE_KEY };

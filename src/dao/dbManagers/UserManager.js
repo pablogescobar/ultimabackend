@@ -1,11 +1,10 @@
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
 const { Users } = require('../models');
-const { findOne } = require('../models/product.model');
 const CartManager = require('./CartManager');
+const { generateToken } = require('../../utils/jwt');
 
 class UserManager {
     constructor() {
-        // Definir el usuario admin
         this.adminUser = {
             _id: 'admin',
             firstName: 'Romina',
@@ -135,6 +134,44 @@ class UserManager {
         }
     }
 
+    async githubLogin(profile) {
+        try {
+            const user = await Users.findOne({ email: profile._json.email });
+
+            if (!user) {
+                const fullName = profile._json.name;
+                const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
+                const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+                const age = 18;
+                const password = '123';
+
+                const newUser = await this.registerUser(firstName, lastName, age, profile._json.email, password);
+                const accessToken = generateToken({ email: newUser.email, _id: newUser._id.toString(), rol: newUser.rol, firstName: newUser.firstName, lastName: newUser.lastName, age: newUser.age, cart: newUser.cart._id });
+
+                return { accessToken, user: newUser };
+            }
+
+            const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age, cart: user.cart._id });
+
+            return { accessToken, user };
+
+        } catch (e) {
+            console.error('Error al loguearse con GitHub: ', e);
+            throw new Error('Hubo un problema al loguearse.');
+        }
+    }
+
+    async deleteUser(email) {
+        try {
+            const user = await Users.findOne({ email });
+            const cartManager = new CartManager();
+            await cartManager.deleteCart(user.cart);
+            await Users.deleteOne({ email });
+
+        } catch {
+            throw new Error('Hubo un error al eliminar el usuario');
+        }
+    }
 }
 
 module.exports = UserManager;
