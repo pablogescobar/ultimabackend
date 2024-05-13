@@ -133,6 +133,22 @@ En esta vista deberás completar un formulario para poder agregar un producto nu
 
 Todos los endpoints deben ser ejecutados desde Postman A continuación, se presenta la lista completa de todos los endpoints disponibles.
 
+### `deleteUser`
+
+Elimina el usuario y su carrito según el email.
+
+[**URL:**](http://localhost:8080/api/sessions) `http://localhost:8080/api/sessions`
+
+**Método** `DELETE`
+
+**Cuerpo de la Solicitud (Ejemplo para `deleteUser`):**
+
+```json
+{
+    "email": "correo@ejemplo.com"
+}
+````
+
 ### `getToken`
 
 Muestra las información que contiene el token de logeo del usuario.

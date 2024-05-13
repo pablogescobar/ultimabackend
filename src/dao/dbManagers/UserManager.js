@@ -167,7 +167,6 @@ class UserManager {
             const cartManager = new CartManager();
             await cartManager.deleteCart(user.cart);
             await Users.deleteOne({ email });
-
         } catch {
             throw new Error('Hubo un error al eliminar el usuario');
         }
