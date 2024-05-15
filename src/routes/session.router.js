@@ -14,7 +14,7 @@ router.post('/register', passport.authenticate('register', { failureRedirect: '/
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin', session: false }), async (req, res) => {
     try {
         let user;
-        if (req.user && req.user.email === 'adminCoder@coder.com') {
+        if (req.user && req.user.email === process.env.ADMIN_USER) {
             user = req.user;
         } else {
             user = {

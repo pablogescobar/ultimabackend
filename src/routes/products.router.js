@@ -3,6 +3,7 @@ const router = Router(); // Crea un enrutador
 const { Controller } = require('../controller/products.controller');
 const { verifyToken } = require('../utils/jwt');
 
+// Ruta para obtener todos los produtos
 router.get('/', (req, res) => new Controller().getProducts(req, res));
 
 // Ruta para obtener un producto por su ID
