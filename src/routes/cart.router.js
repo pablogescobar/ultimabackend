@@ -121,15 +121,4 @@ router.delete('/:cid', async (req, res) => {
     }
 })
 
-router.delete('/destroyCart/:cid', async (req, res) => {
-    try {
-        const cartId = req.params.cid;
-        const cartManager = req.app.get('cartManager');
-        await cartManager.deleteCart(cartId);
-        res.status(200).json({ message: `Carrito ${cartId} eliminado de manera correcta.` })
-    } catch (err) {
-        res.status(500).json({ Error: err.message })
-    }
-})
-
 module.exports = router; // Exporta el enrutador

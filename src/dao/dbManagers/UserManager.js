@@ -1,17 +1,19 @@
+require('dotenv').config(); // Carga las variables de entorno desde .env
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
 const { Users } = require('../models');
 const CartManager = require('./CartManager');
 const { generateToken } = require('../../utils/jwt');
 
+
 class UserManager {
     constructor() {
         this.adminUser = {
             _id: 'admin',
-            firstName: 'Romina',
-            lastName: 'Molina',
+            firstName: 'Luciano',
+            lastName: 'Staniszewski',
             age: 18,
-            email: 'adminCoder@coder.com',
-            password: 'adminCod3r123',
+            email: process.env.ADMIN_USER,
+            password: process.env.ADMIN_PASS,
             rol: 'admin',
             cart: '6619078c94d150818d996ec7'
         };

@@ -64,7 +64,7 @@ router.post('/resetPassword', passport.authenticate('resetPassword', { failureRe
     }
 });
 
-router.get('/logout', (req, res) => {
+router.get('/logout', (_, res) => {
     res.clearCookie('accessToken'); // Elimina la cookie llamada 'accessToken'
     res.redirect('/');
 });

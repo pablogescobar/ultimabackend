@@ -176,7 +176,6 @@ class CartManager {
 
     async clearCart(cartId) {
         try {
-
             const cart = await this.verifyCartExists(cartId);
             console.log(cart);
 
@@ -186,18 +185,6 @@ class CartManager {
             throw new Error('Hubo un error al vaciar el carrito.')
         }
     }
-
-    async deleteCart(cartId) {
-        try {
-            const cart = await this.verifyCartExists(cartId);
-            console.log(cart);
-
-            await Carts.deleteOne({ _id: cartId });
-        } catch {
-            throw new Error('Hubo un error al eliminar el carrito.')
-        }
-    }
-
 };
 
 module.exports = CartManager;
