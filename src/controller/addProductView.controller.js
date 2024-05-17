@@ -27,15 +27,14 @@ class Controller {
         }
     }
 
-    async addProduct(res, req) {
+    async addProduct(req, res) {
         try {
 
             // Obtener los datos del producto del cuerpo de la solicitud
             const { title, description, price, thumbnail, code, status, stock } = req.body;
 
             // Agregar el nuevo producto al archivo
-            const productManager = req.app.get('productManager');
-            await productManager.addProduct(title, description, price, thumbnail, code, status, stock);
+            await new ProductManager().addProduct(title, description, price, thumbnail, code, status, stock);
 
             res.status(301).redirect('/products');
         } catch (error) {

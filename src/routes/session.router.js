@@ -4,7 +4,6 @@ const router = Router(); // Crea un enrutador
 const passport = require('passport');
 const { Controller } = require('../controller/sessions.controller');
 
-
 router.post('/register', passport.authenticate('register', { failureRedirect: '/api/sessions/failregister', session: false }), (_, res) => new Controller().redirect(res));
 
 router.post('/login', passport.authenticate('login', { failureRedirect: '/api/sessions/faillogin', session: false }), async (req, res) => new Controller().login(req, res));
