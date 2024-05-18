@@ -1,4 +1,3 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
 const passport = require('passport');
 const UserManager = require('../dao/dbManagers/UserManager');
 const { localStrategy, githubStrategy, jwtStrategy } = require('./strategies');

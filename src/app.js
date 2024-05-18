@@ -4,19 +4,8 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser')
 
-// MANAGERS
-const ProductManager = require('./dao/dbManagers/ProductManager');
-const CartManager = require('./dao/dbManagers/CartManager');
-const UserManager = require('./dao/dbManagers/UserManager');
-
 // ROUTERS
-const productsRouter = require('./routes/products.router');
-const productsViewsRouter = require('./routes/productsViews.router');
-const cartRouter = require('./routes/cart.router');
-const cartViewsRouter = require('./routes/cartViews.router');
-const createProductRouter = require('./routes/createProduct.router');
-const sessionRouter = require('./routes/session.router');
-const sessionViewsRouter = require('./routes/sessionViews.router');
+const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter } = require('./routes')
 
 const app = express();
 
@@ -52,18 +41,6 @@ app.use('/', sessionViewsRouter);
 const main = async () => {
 
     await mongoose.connect(mongoUrl, { dbName });
-
-    const productManager = new ProductManager();
-    await productManager.prepare();
-    app.set('productManager', productManager);
-
-    const cartManager = new CartManager();
-    await cartManager.prepare();
-    app.set('cartManager', cartManager);
-
-    const userManager = new UserManager();
-    await userManager.prepare();
-    app.set('userManager', userManager);
 
     app.listen(8080);
 

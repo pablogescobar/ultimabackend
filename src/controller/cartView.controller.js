@@ -8,8 +8,7 @@ class Controller {
             const isLoggedIn = req.cookies.accessToken !== undefined;
 
             const cartId = req.user.cart; // Obtiene el ID del carrito de los parámetros de la solicitud
-            const cartManager = req.app.get('cartManager');
-            const cart = await cartManager.getCartById(cartId); // Obtiene el carrito por su ID
+            const cart = await new CartManager().getCartById(cartId); // Obtiene el carrito por su ID
 
             const cartData = {
                 id: cart.id,

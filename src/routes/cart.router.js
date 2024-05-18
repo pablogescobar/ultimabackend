@@ -17,7 +17,6 @@ router.post('/:cid/product/:pid', (req, res) => new Controller().addProductToCar
 // Ruta para agregar o actualizar productos del carrito
 router.put('/:cid', (req, res) => new Controller().updatedCart(req, res));
 
-
 // Ruta para eliminar un producto del carrito
 router.delete('/:cid/product/:pid', async (req, res) => new Controller().deleteProductFromCart(req, res));
 
