@@ -1,4 +1,4 @@
-const ProductManager = require('../dao/dbManagers/ProductManager');
+const daoProducts = require('../dao/mongo/daoProducts');
 
 class Controller {
     constructor() { }
@@ -34,7 +34,7 @@ class Controller {
             const { title, description, price, thumbnail, code, status, stock } = req.body;
 
             // Agregar el nuevo producto al archivo
-            await new ProductManager().addProduct(title, description, price, thumbnail, code, status, stock);
+            await new daoProducts().addProduct(title, description, price, thumbnail, code, status, stock);
 
             res.status(301).redirect('/products');
         } catch (error) {

@@ -1,22 +1,11 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
-const { Users } = require('../models');
-const CartManager = require('./CartManager');
-const { generateToken } = require('../../utils/jwt');
+const { Users } = require('../../models');
+const daoCarts = require('./daoCarts');
+const { UserService } = require('../../services/Users.services');
 
-
-class UserManager {
+class daoUsers {
     constructor() {
-        this.adminUser = {
-            _id: 'admin',
-            firstName: 'Luciano',
-            lastName: 'Staniszewski',
-            age: 18,
-            email: process.env.ADMIN_USER,
-            password: process.env.ADMIN_PASS,
-            rol: 'admin',
-            cart: '6619078c94d150818d996ec7'
-        };
+        this.userService = new UserService();
     }
 
     async prepare() {
@@ -29,14 +18,11 @@ class UserManager {
 
     async loginUser(email, password) {
         try {
-            if (!email || !password) {
-                throw new Error('Debe ingresar su usuario y contraseña');
-            }
+            this.userService.validateLoginCredentials(email, password);
 
-            if (email === this.adminUser.email && password === this.adminUser.password) {
-                return this.adminUser;
+            if (this.userService.isAdminUser(email, password)) {
+                return this.userService.adminUser
             }
-
             const user = await Users.findOne({ email });
 
             if (!user) {
@@ -57,11 +43,8 @@ class UserManager {
 
     async registerUser(firstName, lastName, age, email, password) {
         try {
-            if (!email || !password) {
-                throw new Error('El email y la contraseña son obligatorios.');
-            }
 
-            if (email === this.adminUser.email) {
+            if (email === this.userService.adminUser.email) {
                 throw new Error('Error al registrar el usuario');
             }
 
@@ -70,27 +53,12 @@ class UserManager {
                 throw new Error('El email ya está registrado');
             }
 
-            if (age <= 0) {
-                throw new Error('La edad debe ser mayor a 1');
-            }
+            const cart = await new daoCarts().addCart();
 
-            const firstNameManager = firstName ? firstName : 'Usuario'
-            const lastNameManager = lastName ? lastName : 'Sin Identificar'
-            const newCartPromise = new CartManager().addCart();
-            const newCart = await newCartPromise;
-            const numericAge = age ? parseInt(age) : age = ""
-            const hashedPassword = hashPassword(password);
+            const user = await this.userService.generateNewUser(firstName, lastName, age, email, password, cart)
 
-            const user = await Users.create({
-                firstName: firstNameManager,
-                lastName: lastNameManager,
-                age: numericAge,
-                email,
-                password: hashedPassword,
-                cart: newCart
-            })
-            console.log(user);
-            return user;
+            const newUser = Users.create(user);
+            return newUser;
         } catch (err) {
             console.error('Error al registrar el usuario: ', err);
             throw new Error('Error al registrar el ususario.');
@@ -99,30 +67,26 @@ class UserManager {
 
     async getUser(id) {
         try {
-
-            if (id === this.adminUser._id) {
-                return this.adminUser
+            if (id === this.userService.adminUser._id) {
+                return this.userService.adminUser;
             } else {
-                const user = await Users.findOne({ _id: id })
-                return user
+                const user = await Users.findOne({ _id: id });
+                return user;
             }
-
         } catch {
-            throw new Error('Error al cargar la sesion de usuario')
+            throw new Error('Error al cargar la sesion de usuario');
         }
     }
 
     async resetPassword(email, password) {
         try {
-            if (!email || !password) {
-                throw new Error('Credenciales invalidas.');
-            }
+            this.userService.validateLoginCredentials(email, password);
             const user = await Users.findOne({ email });
             if (!user) {
                 throw new Error('El usuario no existe.');
             }
 
-            if (email === this.adminUser.email) {
+            if (email === this.userService.adminUser.email) {
                 throw new Error('No tiene permisos para actualizar ese email.');
             }
 
@@ -148,13 +112,12 @@ class UserManager {
                 const password = '123';
 
                 const newUser = await this.registerUser(firstName, lastName, age, profile._json.email, password);
-                const accessToken = generateToken({ email: newUser.email, _id: newUser._id.toString(), rol: newUser.rol, firstName: newUser.firstName, lastName: newUser.lastName, age: newUser.age, cart: newUser.cart._id });
+                const accessToken = this.userService.generateAccessToken(newUser);
 
                 return { accessToken, user: newUser };
             }
 
-            const accessToken = generateToken({ email: user.email, _id: user._id.toString(), rol: user.rol, firstName: user.firstName, lastName: user.lastName, age: user.age, cart: user.cart._id });
-
+            const accessToken = this.userService.generateAccessToken(user);
             return { accessToken, user };
 
         } catch (e) {
@@ -166,8 +129,7 @@ class UserManager {
     async deleteUser(email) {
         try {
             const user = await Users.findOne({ email });
-            const cartManager = new CartManager();
-            await cartManager.deleteCart(user.cart);
+            await new daoCarts().deleteCartById(user.cart.toString());
             await Users.deleteOne({ email });
         } catch {
             throw new Error('Hubo un error al eliminar el usuario');
@@ -175,4 +137,4 @@ class UserManager {
     }
 }
 
-module.exports = UserManager;
+module.exports = daoUsers;

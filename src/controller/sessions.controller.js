@@ -3,7 +3,7 @@ const { Router } = require('express');
 const router = Router();
 const { generateToken } = require('../utils/jwt');
 const cookieParser = require('cookie-parser');
-const UserManager = require('../dao/dbManagers/UserManager');
+const daoUsers = require('../dao/mongo/daoUsers');
 
 router.use(cookieParser());
 
@@ -80,7 +80,7 @@ class Controller {
     async deleteUser(req, res) {
         try {
             const { email } = req.body;
-            await new UserManager().deleteUser(email);
+            await new daoUsers().deleteUser(email);
             res.json({ message: 'Usuario eliminado correctamente.' });
         } catch (e) {
             res.status(500).json({ error: e.message });

@@ -1,4 +1,4 @@
-const CartManager = require('../dao/dbManagers/CartManager');
+const daoCarts = require('../dao/mongo/daoCarts');
 
 class Controller {
     constructor() { }
@@ -8,7 +8,7 @@ class Controller {
             const isLoggedIn = req.cookies.accessToken !== undefined;
 
             const cartId = req.user.cart; // Obtiene el ID del carrito de los parámetros de la solicitud
-            const cart = await new CartManager().getCartById(cartId); // Obtiene el carrito por su ID
+            const cart = await new daoCarts().getCartById(cartId); // Obtiene el carrito por su ID
 
             const cartData = {
                 id: cart.id,

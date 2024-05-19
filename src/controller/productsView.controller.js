@@ -1,5 +1,5 @@
-const CartManager = require('../dao/dbManagers/CartManager');
-const ProductManager = require('../dao/dbManagers/ProductManager');
+const daoProducts = require('../dao/mongo/daoProducts');
+const daoCarts = require('../dao/mongo/daoCarts');
 
 class Controller {
     constructor() { }
@@ -18,7 +18,7 @@ class Controller {
             const category = req.query.category;
             const availability = req.query.availability;
 
-            const products = await new ProductManager().getProducts(page, limit, sort, category, availability);
+            const products = await new daoProducts().getProducts(page, limit, sort, category, availability);
 
             const productsPayload = products.payload.map(product => ({
                 ...product,
@@ -45,7 +45,7 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const productId = req.params.pid; // Obtiene el ID del producto de los parámetros de la solicitud como una cadena
-            const product = await new ProductManager().getProductById(productId); // Obtiene el producto por su ID
+            const product = await new daoProducts().getProductById(productId); // Obtiene el producto por su ID
 
             const productData = {
                 title: product.title,
@@ -76,7 +76,7 @@ class Controller {
         try {
             const productId = req.params.pid;
             const cartId = req.user.cart;
-            await new CartManager().addProductToCart(productId, cartId)
+            await new daoCarts().addProductToCart(productId, cartId)
             res.status(301).redirect('/products');
         } catch (err) {
             res.status(500).json({ Error: err.message })
@@ -86,7 +86,7 @@ class Controller {
     async addProduct(req, res) {
         try {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body; // Obtiene los datos del producto del cuerpo de la solicitud
-            await new ProductManager().addProduct(title, description, price, thumbnail, code, status, stock, category); // Agrega el nuevo producto
+            await new daoProducts().addProduct(title, description, price, thumbnail, code, status, stock, category); // Agrega el nuevo producto
             res.status(301).redirect('/products'); // Responde con un mensaje de éxito
         } catch (error) {
             res.status(500).json({ Error: error.message }); // Responde con un error 500 si hay un error al agregar el producto

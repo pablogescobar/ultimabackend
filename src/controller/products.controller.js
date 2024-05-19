@@ -1,4 +1,4 @@
-const ProductManager = require('../dao/dbManagers/ProductManager');
+const daoProducts = require('../dao/mongo/daoProducts');
 
 class Controller {
     constructor() { }
@@ -11,7 +11,7 @@ class Controller {
             const category = req.query.category;
             const availability = req.query.availability;
 
-            const products = await new ProductManager().getProducts(page, limit, sort, category, availability);
+            const products = await new daoProducts().getProducts(page, limit, sort, category, availability);
 
             res.status(200).json(products);
         } catch (err) {
@@ -22,7 +22,7 @@ class Controller {
     async getProductsById(req, res) {
         try {
             const productId = req.params.pid;
-            const product = await new ProductManager().getProductById(productId);
+            const product = await new daoProducts().getProductById(productId);
 
             const productData = {
                 title: product.title,
@@ -43,7 +43,7 @@ class Controller {
     async addProduct(req, res) {
         try {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
-            const product = await new ProductManager().addProduct(title, description, price, thumbnail, code, status, stock, category);
+            const product = await new daoProducts().addProduct(title, description, price, thumbnail, code, status, stock, category);
             res.status(200).json({ message: 'Agregado correctamente: ', product });
         } catch (error) {
             res.status(500).json({ Error: error.message });
@@ -53,7 +53,7 @@ class Controller {
     async updateProduct(req, res) {
         try {
             const productId = req.params.pid;
-            const updatedProduct = await new ProductManager().updateProduct(productId, req.body);
+            const updatedProduct = await new daoProducts().updateProduct(productId, req.body);
             res.status(200).json({ message: 'Producto actualizado', updatedProduct });
         } catch (err) {
             res.status(500).json({ error: 'Error al actualizar el producto' });
@@ -63,7 +63,7 @@ class Controller {
     async deleteProduct(req, res) {
         try {
             const productId = req.params.pid;
-            await new ProductManager().deleteProduct(productId);
+            await new daoProducts().deleteProduct(productId);
             res.status(200).json({ message: 'Producto eliminado' });
         } catch (err) {
             res.status(500).json({ Error: err.message });
