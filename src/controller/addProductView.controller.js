@@ -7,7 +7,7 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const adminUser = req.user.rol;
-            if (adminUser !== 'admin') {
+            if (adminUser === 'user') {
                 return res.render('error', {
                     titlePage: 'Error',
                     message: 'No tiene permisos de acceso.',

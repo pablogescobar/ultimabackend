@@ -14,6 +14,17 @@ class UserService {
             rol: 'admin',
             cart: process.env.ADMIN_CART
         };
+
+        this.superAdminUser = {
+            _id: 'superAdmin',
+            firstName: 'Federico',
+            lastName: 'Di Iorio',
+            age: 28,
+            email: process.env.SADMIN_USER,
+            password: process.env.SADMIN_PASS,
+            rol: 'superAdmin',
+            cart: process.env.SADMIN_CART
+        }
     }
 
     validateLoginCredentials(email, password) {
@@ -62,6 +73,10 @@ class UserService {
 
     isAdminUser(email, password) {
         return email === this.adminUser.email && password === this.adminUser.password;
+    }
+
+    isSuperAdminUser(email, password) {
+        return email === this.superAdminUser.email && password === this.superAdminUser.password;
     }
 }
 

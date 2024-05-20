@@ -21,8 +21,13 @@ class daoUsers {
             this.userService.validateLoginCredentials(email, password);
 
             if (this.userService.isAdminUser(email, password)) {
-                return this.userService.adminUser
+                return this.userService.adminUser;
             }
+
+            if(this.userService.isSuperAdminUser(email, password)) {
+                return this.userService.superAdminUser;
+            }
+
             const user = await Users.findOne({ email });
 
             if (!user) {
@@ -44,7 +49,7 @@ class daoUsers {
     async registerUser(firstName, lastName, age, email, password) {
         try {
 
-            if (email === this.userService.adminUser.email) {
+            if (email === this.userService.adminUser.email || email === this.userService.superAdminUser.email) {
                 throw new Error('Error al registrar el usuario');
             }
 
@@ -69,6 +74,8 @@ class daoUsers {
         try {
             if (id === this.userService.adminUser._id) {
                 return this.userService.adminUser;
+            } else if(id === this.userService.superAdminUser._id){
+                return this.userService.superAdminUser;
             } else {
                 const user = await Users.findOne({ _id: id });
                 return user;
@@ -86,7 +93,7 @@ class daoUsers {
                 throw new Error('El usuario no existe.');
             }
 
-            if (email === this.userService.adminUser.email) {
+            if (email === this.userService.adminUser.email || email === this.userService.superAdminUser.email) {
                 throw new Error('No tiene permisos para actualizar ese email.');
             }
 
