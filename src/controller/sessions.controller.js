@@ -52,7 +52,15 @@ class Controller {
 
     current(req, res) {
         try {
-            res.json(req.user);
+            const user = {
+                firstName: req.user.firstName,
+                lastName: req.user.lastName,
+                age: req.user.age,
+                email: req.user.email,
+                rol: req.user.rol,
+                cart: req.user.cart
+            }
+            res.json(user);
         } catch (e) {
             res.status(500).json({ error: e.message });
         }
