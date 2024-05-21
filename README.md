@@ -23,11 +23,11 @@ cd backend_Entregas_Di-Iorio
 npm install
 ```
 
-Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/challenge6/.env.example) 
+Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/examples/.env.example) 
 
 #### Como ubicar el archivo **.env**:
 
-![Imagen de env](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/public/img/envExample.png?raw=true)
+![Imagen de env](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/examples/envExample.png)
 
 Luego de este paso podrás correr el proyecto con el siguiente comando:
 
