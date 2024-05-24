@@ -1,5 +1,5 @@
 const passport = require('passport');
-const UserManager = require('../dao/mongo/daoUsers');
+const UserManager = require('../dao/mongo/users.dao');
 const { localStrategy, githubStrategy, jwtStrategy } = require('./strategies');
 
 const initializeStrategy = () => {

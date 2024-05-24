@@ -1,6 +1,6 @@
 const passport = require('passport');
 const { Strategy } = require('passport-local');
-const UserManager = require('../../dao/mongo/daoUsers');
+const UserManager = require('../../dao/mongo/users.dao');
 
 const localStrategy = () => {
     passport.use('register', new Strategy({ passReqToCallback: true, usernameField: 'email', passwordField: 'password' },

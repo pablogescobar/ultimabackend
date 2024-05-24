@@ -2,7 +2,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-github2');
 const { verifyToken } = require('../../utils/jwt');
 const { clientID, clientSecret, callbackURL } = require('../github.private');
-const UserManager = require('../../dao/mongo/daoUsers');
+const UserManager = require('../../dao/mongo/users.dao');
 
 const githubStrategy = () => {
 

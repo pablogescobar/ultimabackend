@@ -1,4 +1,4 @@
-const daoProducts = require('../dao/mongo/daoProducts');
+const daoProducts = require('../dao/mongo/products.dao');
 
 class Controller {
     constructor() { }

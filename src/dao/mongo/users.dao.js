@@ -1,6 +1,6 @@
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
 const { Users } = require('../../models');
-const daoCarts = require('./daoCarts');
+const daoCarts = require('./carts.dao');
 const { UserService } = require('../../services/Users.services');
 
 class daoUsers {
@@ -24,7 +24,7 @@ class daoUsers {
                 return this.userService.adminUser;
             }
 
-            if(this.userService.isSuperAdminUser(email, password)) {
+            if (this.userService.isSuperAdminUser(email, password)) {
                 return this.userService.superAdminUser;
             }
 
@@ -74,7 +74,7 @@ class daoUsers {
         try {
             if (id === this.userService.adminUser._id) {
                 return this.userService.adminUser;
-            } else if(id === this.userService.superAdminUser._id){
+            } else if (id === this.userService.superAdminUser._id) {
                 return this.userService.superAdminUser;
             } else {
                 const user = await Users.findOne({ _id: id });

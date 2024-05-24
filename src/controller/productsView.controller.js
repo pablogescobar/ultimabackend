@@ -1,5 +1,5 @@
-const daoProducts = require('../dao/mongo/daoProducts');
-const daoCarts = require('../dao/mongo/daoCarts');
+const daoProducts = require('../dao/mongo/products.dao');
+const daoCarts = require('../dao/mongo/carts.dao');
 
 class Controller {
     constructor() { }
