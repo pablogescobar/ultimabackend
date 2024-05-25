@@ -1,65 +1,64 @@
+const { ProductRepository } = require('../repository/products.repository')
+
 class ProductService {
-    constructor() { }
+    constructor() {
+        this.productRepository = new ProductRepository();
+    }
 
     async validateAndFormatAddProduct(title, description, price, thumbnail, code, status, stock, category) {
-        try {
-            // Validaciones y asignaciones de valores predeterminados
+        const product = {
+            title,
+            description,
+            price,
+            thumbnail: thumbnail || 'Sin Imagen',
+            code,
+            status: status !== undefined ? status : true,
+            stock,
+            category
+        };
+        return product;
+    }
 
-            const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
+    async createProduct(data) {
+        const product = await this.validateAndFormatAddProduct(data.title, data.description, data.price, data.thumbnail, data.code, data.status, data.stock, data.category);
+        return await this.productRepository.save(product);
+    }
 
-            if (!title || !description || !code || !category || invalidOptions) {
-                throw new Error('Error al validar los datos');
-            };
+    async getProducts(page, limit, sort, category, availability) {
+        const { query, options } = await this.validateAndFormatGetProductsParams(page, limit, sort, category, availability);
+        return await this.productRepository.findAll(query, options);
+    }
 
-            const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
+    async getProductById(id) {
+        return await this.productRepository.findById(id);
+    }
 
-            // Si no se carga nada en este parámetro se generará como true por defecto
-            if (typeof status === 'undefined' || status === true || status === 'true') {
-                status = true;
-            } else {
-                status = false;
-            }
+    async updateProduct(id, data) {
+        return await this.productRepository.update(id, data);
+    }
 
-            const product = {
-                title,
-                description,
-                price,
-                thumbnail: finalThumbnail,
-                code,
-                status,
-                stock,
-                category
-            }
-
-            return product;
-        } catch (e) {
-            console.error('Error al agregar un producto en el servicio.', e);
-            throw new Error('Error al agregar un producto en el servicio.');
-        }
+    async deleteProduct(id) {
+        return await this.productRepository.delete(id);
     }
 
     async validateAndFormatGetProductsParams(page, limit, sort, category, availability) {
-        try {
-            const query = {
-                ...(category && { category }),
-                ...(availability && { status: availability === 'true' })
-            };
+        const query = {
+            ...(category && { category }),
+            ...(availability && { status: availability === 'true' })
+        };
 
-            const options = {
-                limit: limit ? parseInt(limit) : 1000,
-                page: parseInt(page),
-                sort: sort ? { price: sort } : undefined,
-                lean: true
-            };
+        const options = {
+            limit: limit ? parseInt(limit) : 1000,
+            page: parseInt(page),
+            sort: sort ? { price: sort } : undefined,
+            lean: true
+        };
 
-            if (isNaN(page)) {
-                throw new Error('Número de página no válido');
-            }
-
-            return { query, options };
-        } catch (error) {
-            throw new Error('Error al validar los parámetros de consulta');
+        if (isNaN(page)) {
+            throw new Error('Número de página no válido');
         }
+
+        return { query, options };
     }
 }
 

@@ -59,7 +59,7 @@ class getUsersDTO {
     async getUser(email, password) {
 
         this.#getAdminUser(email, password);
-        this.getSuperAdminUser(email, password);
+        this.#getSuperAdminUser(email, password);
 
         const user = await new daoUsers().loginUser(email, password)
         return user;

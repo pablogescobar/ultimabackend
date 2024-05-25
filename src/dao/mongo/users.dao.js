@@ -1,5 +1,5 @@
 const { hashPassword, isValidPassword } = require('../../utils/hashing');
-const { Users } = require('../../models');
+const { Users } = require('./models');
 const daoCarts = require('./carts.dao');
 const { UserService } = require('../../services/Users.services');
 
