@@ -3,7 +3,7 @@ const { Users } = require('./models');
 const daoCarts = require('./carts.dao');
 const { UserService } = require('../../services/Users.services');
 
-class daoUsers {
+class UserDAO {
     constructor() {
         this.userService = new UserService();
     }
@@ -19,14 +19,6 @@ class daoUsers {
     async loginUser(email, password) {
         try {
             this.userService.validateLoginCredentials(email, password);
-
-            if (this.userService.isAdminUser(email, password)) {
-                return this.userService.adminUser;
-            }
-
-            if (this.userService.isSuperAdminUser(email, password)) {
-                return this.userService.superAdminUser;
-            }
 
             const user = await Users.findOne({ email });
 
@@ -144,4 +136,4 @@ class daoUsers {
     }
 }
 
-module.exports = daoUsers;
+module.exports = UserDAO;

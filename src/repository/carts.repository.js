@@ -1,10 +1,10 @@
-const daoCart = require('../dao/mongo/carts.dao');
+const CartDAO = require('../dao/mongo/carts.dao');
 const { IRepository } = require('./IRepository.repository');
 
 class CartRepository extends IRepository {
     constructor() {
         super();
-        this.daoCart = new daoCart();
+        this.daoCart = new CartDAO();
     }
 
     async findAll() {

@@ -1,97 +1,57 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
-const { Router } = require('express');
-const router = Router();
-const { generateToken } = require('../utils/jwt');
-const cookieParser = require('cookie-parser');
-const daoUsers = require('../dao/mongo/users.dao');
-
-router.use(cookieParser());
+const { UserService } = require('../services/Users.services');
 
 class Controller {
-    constructor() { }
-
-    redirect(res) {
-        try {
-            res.redirect('/');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
-        }
+    constructor() {
+        this.userService = new UserService();
     }
 
-    logError(res) {
+    async registerUser(req, res) {
         try {
-            res.send('Hubo un error al identificar sus credenciales.');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
-        }
-    }
-
-    login(req, res) {
-        try {
-            let user;
-            if (req.user && req.user.email === process.env.ADMIN_USER) {
-                user = req.user;
-            } else {
-                user = {
-                    email: req.user.email,
-                    _id: req.user._id.toString(),
-                    rol: req.user.rol,
-                    firstName: req.user.firstName,
-                    lastName: req.user.lastName,
-                    age: req.user.age,
-                    cart: req.user.cart ? req.user.cart._id : null
-                };
-            }
-            const accessToken = generateToken(user);
-            res.cookie('accessToken', accessToken, { maxAge: 60 * 5 * 1000, httpOnly: true });
-            res.redirect('/');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
-        }
-    }
-
-    current(req, res) {
-        try {
-            const user = {
-                firstName: req.user.firstName,
-                lastName: req.user.lastName,
-                age: req.user.age,
-                email: req.user.email,
-                rol: req.user.rol,
-                cart: req.user.cart
-            }
-            res.json(user);
-        } catch (e) {
-            res.status(500).json({ error: e.message });
-        }
-    }
-
-    githubCb(req, res) {
-        try {
-            // Envía el token JWT al cliente
-            res.cookie('accessToken', req.user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-            res.redirect('/');
+            const { firstName, lastName, age, email, password } = req.body;
+            const user = await this.userService.registerUser(firstName, lastName, age, email, password);
+            res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     }
 
-    logout(res) {
+    async loginUser(req, res) {
         try {
-            res.clearCookie('accessToken'); // Elimina la cookie llamada 'accessToken'
-            res.redirect('/');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
+            const { email, password } = req.body;
+            const user = await this.userService.loginUser(email, password);
+            res.status(200).json(user);
+        } catch (err) {
+            res.status(401).json({ error: err.message });
+        }
+    }
+
+    async resetPassword(req, res) {
+        try {
+            const { email, password } = req.body;
+            const user = await this.userService.resetPassword(email, password);
+            res.status(200).json(user);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+
+    async githubLogin(req, res) {
+        try {
+            const profile = req.user;
+            const { accessToken, user } = await this.userService.githubLogin(profile);
+            res.status(200).json({ accessToken, user });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
     }
 
     async deleteUser(req, res) {
         try {
             const { email } = req.body;
-            await new daoUsers().deleteUser(email);
-            res.json({ message: 'Usuario eliminado correctamente.' });
-        } catch (e) {
-            res.status(500).json({ error: e.message });
+            await this.userService.deleteUser(email);
+            res.status(200).json({ message: 'User deleted successfully' });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
         }
     }
 }

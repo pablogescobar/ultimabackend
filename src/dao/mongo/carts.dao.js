@@ -1,6 +1,6 @@
 const { Carts, Products } = require('./models');
 
-class daoCart {
+class CartDAO {
 
     constructor() { }
 
@@ -185,4 +185,4 @@ class daoCart {
     }
 };
 
-module.exports = daoCart;
+module.exports = CartDAO;
