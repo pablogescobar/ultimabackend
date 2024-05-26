@@ -71,17 +71,17 @@ class Controller {
         }
     }
 
-    async addProductToCart(req, res) {
-        try {
-            const productId = req.params.pid;
-            const cartId = req.user.cart;
-            const cartManager = req.app.get('cartManager');
-            await cartManager.addProductToCart(productId, cartId);
-            res.status(301).redirect('/products');
-        } catch (err) {
-            res.status(500).json({ error: err.message });
-        }
-    }
+    // async addProductToCart(req, res) {
+    //     try {
+    //         const productId = req.params.pid;
+    //         const cartId = req.user.cart;
+    //         const cartManager = req.app.get('cartManager');
+    //         await cartManager.addProductToCart(productId, cartId);
+    //         res.status(301).redirect('/products');
+    //     } catch (err) {
+    //         res.status(500).json({ error: err.message });
+    //     }
+    // }
 }
 
 module.exports = { Controller };

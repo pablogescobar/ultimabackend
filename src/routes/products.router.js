@@ -7,7 +7,7 @@ const { verifyToken } = require('../utils/jwt');
 router.get('/', (req, res) => new Controller().getProducts(req, res));
 
 // Ruta para obtener un producto por su ID
-router.get('/:pid', async (req, res) => new Controller().getProductsById(req, res));
+router.get('/:pid', async (req, res) => new Controller().getProductById(req, res));
 
 // Ruta para agregar producto al carrito
 router.post('/:pid', verifyToken, async (req, res) => new Controller().addProductToCart(req, res));
