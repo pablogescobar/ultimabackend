@@ -1,10 +1,10 @@
-const { ProductService } = require('../services/products.services');
 const { ProductViewDTO } = require('../dto/productView.dto');
+const { ProductRepository } = require('../repository/products.repository');
 const daoCarts = require('../dao/mongo/carts.dao');
 
 class Controller {
     constructor() {
-        this.productService = new ProductService();
+        this.productRepository = new ProductRepository();
     }
 
     async getProducts(req, res) {
@@ -21,7 +21,7 @@ class Controller {
             const category = req.query.category;
             const availability = req.query.availability;
 
-            const products = await this.productService.getProducts(page, limit, sort, category, availability);
+            const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
 
             const productsPayload = products.map(product => new ProductViewDTO({ ...product, isLoggedIn }));
 
@@ -45,7 +45,7 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const productId = req.params.pid;
-            const product = await this.productService.getProductById(productId);
+            const product = await this.productRepository.getProductById(productId);
 
             const productData = new ProductViewDTO({ ...product, isLoggedIn });
 

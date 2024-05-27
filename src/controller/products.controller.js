@@ -1,8 +1,9 @@
-const { ProductService } = require('../services/products.services');
+// const { ProductService } = require('../services/products.services');
+const { ProductRepository } = require('../repository/products.repository');
 
 class Controller {
     constructor() {
-        this.productService = new ProductService();
+        this.productRepository = new ProductRepository();
     }
 
     async getProducts(req, res) {
@@ -13,7 +14,7 @@ class Controller {
             const category = req.query.category;
             const availability = req.query.availability;
 
-            const products = await this.productService.getProducts(page, limit, sort, category, availability);
+            const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
             res.status(200).json(products);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -23,7 +24,7 @@ class Controller {
     async getProductById(req, res) {
         try {
             const productId = req.params.pid;
-            const product = await this.productService.getProductById(productId);
+            const product = await this.productRepository.getProductById(productId);
 
             const productData = {
                 title: product.title,
@@ -44,7 +45,7 @@ class Controller {
     async addProduct(req, res) {
         try {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
-            const product = await this.productService.createProduct({ title, description, price, thumbnail, code, status, stock, category });
+            const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category });
             res.status(200).json({ message: 'Producto agregado correctamente', product });
         } catch (error) {
             res.status(500).json({ error: error.message });
@@ -54,7 +55,7 @@ class Controller {
     async updateProduct(req, res) {
         try {
             const productId = req.params.pid;
-            const updatedProduct = await this.productService.updateProduct(productId, req.body);
+            const updatedProduct = await this.productRepository.updateProduct(productId, req.body);
             res.status(200).json({ message: 'Producto actualizado', updatedProduct });
         } catch (err) {
             res.status(500).json({ error: 'Error al actualizar el producto' });
@@ -64,7 +65,7 @@ class Controller {
     async deleteProduct(req, res) {
         try {
             const productId = req.params.pid;
-            await this.productService.deleteProduct(productId);
+            await this.productRepository.deleteProduct(productId);
             res.status(200).json({ message: 'Producto eliminado' });
         } catch (err) {
             res.status(500).json({ error: err.message });
