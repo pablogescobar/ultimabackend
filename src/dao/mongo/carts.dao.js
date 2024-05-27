@@ -146,7 +146,6 @@ class CartDAO {
     async updateProductQuantityFromCart(cartId, productId, quantity) {
         try {
             const product = await this.#verifyProductExists(productId);
-            console.log(product);
 
             const cart = await this.#verifyCartExists(cartId);
 

@@ -3,6 +3,7 @@ const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { generateToken } = require('../utils/jwt');
 const { UserRepository } = require('../repository/user.repository');
 const { CartRepository } = require('../repository/carts.repository');
+const { ObjectId } = require('mongodb');
 
 class UserService {
 
@@ -23,7 +24,7 @@ class UserService {
             email: process.env.ADMIN_USER,
             password: process.env.ADMIN_PASS,
             rol: 'admin',
-            cart: { _id: process.env.ADMIN_CART }
+            cart: { _id: new ObjectId(process.env.ADMIN_CART) }
         };
 
         this.#superAdminUser = {
@@ -34,7 +35,7 @@ class UserService {
             email: process.env.SADMIN_USER,
             password: process.env.SADMIN_PASS,
             rol: 'superAdmin',
-            cart: { _id: process.env.SADMIN_CART }
+            cart: { _id: new ObjectId(process.env.SADMIN_CART) }
         };
     }
 
@@ -97,7 +98,6 @@ class UserService {
         let user;
 
         if (email === this.#adminUser.email && password === this.#adminUser.password) {
-            console.log('admin');
             user = this.#adminUser;
         } else if (email === this.#superAdminUser.email && password === this.#superAdminUser.password) {
             user = this.#superAdminUser;
@@ -118,6 +118,8 @@ class UserService {
             age: user.age,
             cart: user.cart ? user.cart._id : null
         };
+
+        console.log(userPayload);
 
         const accessToken = this.#generateAccessToken(userPayload);
 

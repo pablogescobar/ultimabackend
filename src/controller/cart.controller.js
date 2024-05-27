@@ -68,11 +68,8 @@ class Controller {
     async updateProductQuantity(req, res) {
         try {
             const cartId = req.params.cid;
-            console.log(cartId)
             const productId = req.params.pid;
-            console.log(productId)
             const { quantity } = req.body;
-            console.log(quantity)
             const cart = await this.cartService.updateProductQuantity(cartId, productId, quantity);
             res.status(200).json(cart);
         } catch (err) {

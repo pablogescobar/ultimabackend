@@ -23,7 +23,6 @@ class Controller {
             const { email, password } = req.body;
             const user = await this.#userService.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-            console.log(user);
             res.redirect('/');
             // res.status(200).json(user);
         } catch (err) {
