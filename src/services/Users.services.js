@@ -8,10 +8,12 @@ class UserService {
 
     #adminUser;
     #superAdminUser;
+    #userRepository;
+    #cartRepository;
 
     constructor() {
-        this.userRepository = new UserRepository();
-        this.cartRepository = new CartRepository();
+        this.#userRepository = new UserRepository();
+        this.#cartRepository = new CartRepository();
 
         this.#adminUser = {
             _id: 'admin',
@@ -21,7 +23,7 @@ class UserService {
             email: process.env.ADMIN_USER,
             password: process.env.ADMIN_PASS,
             rol: 'admin',
-            cart: process.env.ADMIN_CART
+            cart: { _id: process.env.ADMIN_CART }
         };
 
         this.#superAdminUser = {
@@ -32,34 +34,27 @@ class UserService {
             email: process.env.SADMIN_USER,
             password: process.env.SADMIN_PASS,
             rol: 'superAdmin',
-            cart: process.env.SADMIN_CART
+            cart: { _id: process.env.SADMIN_CART }
         };
     }
 
-    validateLoginCredentials(email, password) {
+    #validateLoginCredentials(email, password) {
         if (!email || !password) {
             throw new Error('Debe ingresar su usuario y contraseña');
         }
     }
 
-    #validateRegistrationData(age, email, password) {
-        this.validateLoginCredentials(email, password);
+    async #generateNewUser(firstName, lastName, age, email, password, cart) {
+        this.#validateLoginCredentials(email, password);
         if (age <= 0) {
             throw new Error('La edad debe ser mayor a 1');
         }
-    }
-
-    async generateNewUser(firstName, lastName, age, email, password, cart) {
-        this.#validateRegistrationData(age, email, password);
-        const firstNameManager = firstName || 'Usuario';
-        const lastNameManager = lastName || 'Sin Identificar';
-        const numericAge = age ? parseInt(age) : "";
         const hashedPassword = hashPassword(password);
 
         const user = {
-            firstName: firstNameManager,
-            lastName: lastNameManager,
-            age: numericAge,
+            firstName: firstName || 'Usuario',
+            lastName: lastName || 'Sin Identificar',
+            age: age ? parseInt(age) : "",
             email,
             password: hashedPassword,
             cart
@@ -68,7 +63,7 @@ class UserService {
         return user;
     }
 
-    generateAccessToken(user) {
+    #generateAccessToken(user) {
         return generateToken({
             email: user.email,
             _id: user._id.toString(),
@@ -80,64 +75,85 @@ class UserService {
         });
     }
 
-    #isAdminUser(email, password) {
-        return email === this.#adminUser.email && password === this.#adminUser.password;
-    }
-
-    #isSuperAdminUser(email, password) {
-        return email === this.#superAdminUser.email && password === this.#superAdminUser.password;
-    }
-
     async registerUser(firstName, lastName, age, email, password) {
-        if (this.#isAdminUser(email, password) || this.#isSuperAdminUser(email, password)) {
+        if (email === this.#adminUser.email || email === this.#superAdminUser.email) {
             throw new Error('Cannot register admin or super admin user this way');
         }
 
-        const existingUser = await this.userRepository.findByEmail(email);
+        const existingUser = await this.#userRepository.findByEmail(email);
         if (existingUser) {
             throw new Error('Email already registered');
         }
 
-        const cart = await this.cartRepository.save({ products: [] });
-        const user = await this.generateNewUser(firstName, lastName, age, email, password, cart);
+        const cart = await this.#cartRepository.save({ products: [] });
+        const user = await this.#generateNewUser(firstName, lastName, age, email, password, cart);
 
-        return await this.userRepository.save(user);
+        return await this.#userRepository.save(user);
     }
 
     async loginUser(email, password) {
-        this.validateLoginCredentials(email, password);
+        this.#validateLoginCredentials(email, password);
 
-        if (this.#isAdminUser(email, password)) {
-            return this.#adminUser;
+        let user;
+
+        if (email === this.#adminUser.email && password === this.#adminUser.password) {
+            console.log('admin');
+            user = this.#adminUser;
+        } else if (email === this.#superAdminUser.email && password === this.#superAdminUser.password) {
+            user = this.#superAdminUser;
+        } else {
+            user = await this.#userRepository.findByEmail(email);
+
+            if (!user || !isValidPassword(password, user.password)) {
+                throw new Error('Invalid credentials');
+            }
         }
 
-        if (this.#isSuperAdminUser(email, password)) {
-            return this.#superAdminUser;
-        }
+        const userPayload = {
+            email: user.email,
+            _id: user._id ? user._id.toString() : null,
+            rol: user.rol,
+            firstName: user.firstName,
+            lastName: user.lastName,
+            age: user.age,
+            cart: user.cart ? user.cart._id : null
+        };
 
-        const user = await this.userRepository.loginUser(email, password);
+        const accessToken = this.#generateAccessToken(userPayload);
 
-        if (!user || !isValidPassword(password, user.password)) {
-            throw new Error('Invalid credentials');
-        }
-
-        return user;
+        return { accessToken, userPayload };
     }
 
     async resetPassword(email, password) {
-        this.validateLoginCredentials(email, password);
-        return await this.userRepository.resetPassword(email, password);
+        this.#validateLoginCredentials(email, password);
+        await this.#userRepository.updatePassword(email, password);
     }
 
     async githubLogin(profile) {
-        return await this.userRepository.githubLogin(profile);
+        const user = await this.#userRepository.findByEmail(profile._json.email);
+
+        if (!user) {
+            const fullName = profile._json.name;
+            const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
+            const lastName = fullName.substring(fullName.lastIndexOf(' ') + 1);
+            const age = 18;
+            const password = '123';
+
+            const newUser = await this.registerUser(firstName, lastName, age, profile._json.email, password);
+            const accessToken = this.#generateAccessToken(newUser);
+
+            return { accessToken, user: newUser };
+        }
+
+        const accessToken = this.#generateAccessToken(user);
+        return { accessToken, user };
     }
 
     async deleteUser(email) {
-        const user = await this.userRepository.findByEmail(email);
+        const user = await this.#userRepository.findByEmail(email);
         if (user) {
-            await this.cartRepository.delete(user.cart);
-            await this.userRepository.delete(user._id);
+            await this.#cartRepository.delete(user.cart);
+            await this.#userRepository.deleteByEmail(email);
         }
     }
 }

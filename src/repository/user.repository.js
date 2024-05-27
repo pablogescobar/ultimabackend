@@ -8,11 +8,11 @@ class UserRepository extends IRepository {
     }
 
     async findAll() {
-        return await this.userDAO.getUsers();
+        return await this.userDAO.findAll();
     }
 
     async findById(id) {
-        return await this.userDAO.getUser(id);
+        return await this.userDAO.findById(id);
     }
 
     async findByEmail(email) {
@@ -20,27 +20,15 @@ class UserRepository extends IRepository {
     }
 
     async save(user) {
-        return await this.userDAO.registerUser(user);
+        return await this.userDAO.create(user);
     }
 
-    async update(id, user) {
-        return await this.userDAO.updateUser(id, user);
+    async updatePassword(email, password) {
+        return await this.userDAO.updatePassword(email, password);
     }
 
-    async delete(id) {
-        return await this.userDAO.deleteUser(id);
-    }
-
-    async loginUser(email, password) {
-        return await this.userDAO.loginUser(email, password);
-    }
-
-    async resetPassword(email, password) {
-        return await this.userDAO.resetPassword(email, password);
-    }
-
-    async githubLogin(profile) {
-        return await this.userDAO.githubLogin(profile);
+    async deleteByEmail(email) {
+        return await this.userDAO.deleteByEmail(email);
     }
 }
 
