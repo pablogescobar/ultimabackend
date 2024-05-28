@@ -2,6 +2,7 @@ const { Router } = require('express'); // Importa la clase Router de Express par
 const router = Router(); // Crea un enrutador
 const { Controller } = require('../controller/cart.controller');
 const { isUser } = require('../middlewares/access.middleware');
+const { verifyToken } = require('../middlewares/jwt.middleware');
 
 // Ruta para obtener todos los carritos
 router.get('/', (_, res) => new Controller().getCarts(res));
@@ -25,6 +26,8 @@ router.delete('/:cid/product/:pid', async (req, res) => new Controller().deleteP
 router.put('/:cid/product/:pid', (req, res) => new Controller().updateProductQuantity(req, res));
 
 // Ruta para vacial el carrito
-router.delete('/:cid', async (req, res) => new Controller().clearCart(req, res))
+router.delete('/:cid', async (req, res) => new Controller().clearCart(req, res));
+
+router.post('/:cid/purchase', verifyToken, async (req, res) => new Controller().generateTicket(req, res));
 
 module.exports = router; // Exporta el enrutador

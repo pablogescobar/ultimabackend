@@ -1,9 +1,10 @@
-// const { CartService } = require('../services/cart.service');
 const { CartRepository } = require('../repository/carts.repository');
+const { TicketRepository } = require('../repository/ticket.repository');
 
 class Controller {
     constructor() {
         this.cartRepository = new CartRepository();
+        this.ticketRepository = new TicketRepository();
     }
 
     async getCarts(res) {
@@ -96,6 +97,23 @@ class Controller {
             res.status(200).json({ message: 'Carrito eliminado' });
         } catch (err) {
             res.status(500).json({ Error: err.message });
+        }
+    }
+
+    async generateTicket(req, res) {
+        try {
+            const { cid } = req.params;
+            console.log(req.user)
+            const userEmail = req.user.email;
+
+            const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
+
+            res.status(200).json({
+                message: 'Compra realizada con éxito',
+                ticket
+            });
+        } catch (error) {
+            res.status(400).json({ error: error.message });
         }
     }
 }
