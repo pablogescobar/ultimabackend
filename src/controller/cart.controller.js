@@ -1,13 +1,14 @@
-const { CartService } = require('../services/cart.service');
+// const { CartService } = require('../services/cart.service');
+const { CartRepository } = require('../repository/carts.repository');
 
 class Controller {
     constructor() {
-        this.cartService = new CartService();
+        this.cartRepository = new CartRepository();
     }
 
     async getCarts(res) {
         try {
-            const carts = await this.cartService.getCarts();
+            const carts = await this.cartRepository.getCarts();
             res.status(200).json(carts);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -17,7 +18,7 @@ class Controller {
     async getCartById(req, res) {
         try {
             const cartId = req.params.cid;
-            const cart = await this.cartService.getCartById(cartId);
+            const cart = await this.cartRepository.getCartById(cartId);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -26,7 +27,7 @@ class Controller {
 
     async createCart(res) {
         try {
-            const cart = await this.cartService.createCart();
+            const cart = await this.cartRepository.addCart();
             res.status(201).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -35,8 +36,9 @@ class Controller {
 
     async addProductToCart(req, res) {
         try {
-            const { productId, cartId } = req.body;
-            const cart = await this.cartService.addProductToCart(productId, cartId);
+            const cartId = req.params.cid;
+            const productId = req.params.pid;
+            const cart = await this.cartRepository.addProductToCart(productId, cartId);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -47,7 +49,7 @@ class Controller {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid
-            await this.cartService.deleteProductFromCart(productId, cartId);
+            await this.cartRepository.deleteProductFromCart(productId, cartId);
             res.status(200).json({ message: 'Producto eliminado del carrito' });
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -58,7 +60,7 @@ class Controller {
         try {
             const cartId = req.params.cid;
             const products = req.body;
-            const cart = await this.cartService.updateCart(cartId, products);
+            const cart = await this.cartRepository.updateCart(cartId, products);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -70,7 +72,7 @@ class Controller {
             const cartId = req.params.cid;
             const productId = req.params.pid;
             const { quantity } = req.body;
-            const cart = await this.cartService.updateProductQuantity(cartId, productId, quantity);
+            const cart = await this.cartRepository.updateProductQuantity(cartId, productId, quantity);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -80,7 +82,7 @@ class Controller {
     async clearCart(req, res) {
         try {
             const cartId = req.params.cid;
-            await this.cartService.clearCart(cartId);
+            await this.cartRepository.clearCart(cartId);
             res.status(200).json({ message: 'Carrito vaciado' });
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -90,7 +92,7 @@ class Controller {
     async deleteCartById(req, res) {
         try {
             const cartId = req.params.cid;
-            await this.cartService.deleteCartById(cartId);
+            await this.cartRepository.deleteCartById(cartId);
             res.status(200).json({ message: 'Carrito eliminado' });
         } catch (err) {
             res.status(500).json({ Error: err.message });

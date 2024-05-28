@@ -1,46 +1,46 @@
 const CartDAO = require('../dao/mongo/carts.dao');
-const { IRepository } = require('./IRepository.repository');
+const { ProductRepository } = require('./products.repository');
 
-class CartRepository extends IRepository {
+class CartRepository {
     constructor() {
-        super();
-        this.daoCart = new CartDAO();
+        this.cartDAO = new CartDAO();
+        this.productRepository = new ProductRepository();
     }
 
-    async findAll() {
-        return await this.daoCart.getCarts();
+    async getCarts() {
+        return await this.cartDAO.getCarts();
     }
 
-    async findById(id) {
-        return await this.daoCart.getCartById(id);
+    async getCartById(id) {
+        return await this.cartDAO.getCartById(id);
     }
 
-    async save(cart) {
-        return await this.daoCart.addCart(cart);
+    async addCart(cart) {
+        return await this.cartDAO.addCart(cart);
     }
 
-    async update(id, cart) {
-        return await this.daoCart.updateCart(id, cart);
+    async updateCart(id, cart) {
+        return await this.cartDAO.updateCart(id, cart);
     }
 
     async delete(id) {
-        return await this.daoCart.deleteCartById(id);
+        return await this.cartDAO.deleteCartById(id);
     }
 
     async addProductToCart(productId, cartId) {
-        return await this.daoCart.addProductToCart(productId, cartId);
+        return await this.cartDAO.addProductToCart(productId, cartId)
     }
 
     async deleteProductFromCart(productId, cartId) {
-        return await this.daoCart.deleteProductFromCart(productId, cartId);
+        return await this.cartDAO.deleteProductFromCart(productId, cartId);
     }
 
     async updateProductQuantity(cartId, productId, quantity) {
-        return await this.daoCart.updateProductQuantityFromCart(cartId, productId, quantity);
+        return await this.cartDAO.updateProductQuantityFromCart(cartId, productId, quantity)
     }
 
     async clearCart(cartId) {
-        return await this.daoCart.clearCart(cartId);
+        return await this.cartDAO.clearCart(cartId);
     }
 }
 

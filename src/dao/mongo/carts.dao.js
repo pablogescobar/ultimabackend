@@ -145,7 +145,7 @@ class CartDAO {
 
     async updateProductQuantityFromCart(cartId, productId, quantity) {
         try {
-            const product = await this.#verifyProductExists(productId);
+            await this.#verifyProductExists(productId);
 
             const cart = await this.#verifyCartExists(cartId);
 
@@ -154,11 +154,12 @@ class CartDAO {
                 cart.products[existingProductIndex].quantity = quantity;
 
                 await cart.save();
-
                 console.log(`Cantidad del producto ${productId} actualizada en el carrito ${cartId}`);
+                return cart;
             } else {
                 throw new Error('No se pudo encontrar el producto en el carrito');
             }
+
         } catch (error) {
             console.error('Hubo un error al actualizar la cantidad del producto:', error);
             throw new Error('Hubo un error al actualizar la cantidad del producto.');
