@@ -1,5 +1,5 @@
 const { Router } = require('express');
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken } = require('../middlewares/jwt.middleware');
 const router = Router();
 const { Controller } = require('../controller/addProductView.controller');
 const { isAdmin } = require('../middlewares/access.middleware');

@@ -1,7 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const { Controller } = require('../controller/sessionsView.controller');
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken } = require('../middlewares/jwt.middleware');
 
 router.get('/', verifyToken, (req, res) => new Controller().index(req, res));
 

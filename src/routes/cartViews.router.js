@@ -1,5 +1,5 @@
 const { Router } = require('express'); // Importa la clase Router de Express para definir las rutas
-const { verifyToken } = require('../utils/jwt');
+const { verifyToken } = require('../middlewares/jwt.middleware');
 const router = Router(); // Crea un enrutador
 const { Controller } = require('../controller/cartView.controller');
 const { isUser } = require('../middlewares/access.middleware');

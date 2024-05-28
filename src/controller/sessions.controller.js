@@ -1,17 +1,17 @@
-const { UserService } = require('../services/Users.services');
+const { UserRepository } = require('../repository/user.repository');
 
 class Controller {
 
-    #userService
+    #userRepository
 
     constructor() {
-        this.#userService = new UserService();
+        this.#userRepository = new UserRepository();
     }
 
     async registerUser(req, res) {
         try {
             const { firstName, lastName, age, email, password } = req.body;
-            const user = await this.#userService.registerUser(firstName, lastName, age, email, password);
+            const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
             res.status(201).json(user);
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -21,7 +21,7 @@ class Controller {
     async loginUser(req, res) {
         try {
             const { email, password } = req.body;
-            const user = await this.#userService.loginUser(email, password);
+            const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             res.redirect('/');
             // res.status(200).json(user);
@@ -33,7 +33,7 @@ class Controller {
     async resetPassword(req, res) {
         try {
             const { email, password } = req.body;
-            const user = await this.#userService.resetPassword(email, password);
+            const user = await this.#userRepository.resetPassword(email, password);
             res.redirect('/');
             // res.status(200).json(user);
         } catch (err) {
@@ -44,7 +44,7 @@ class Controller {
     async githubLogin(req, res) {
         try {
             const profile = req.user;
-            const { accessToken, user } = await this.#userService.githubLogin(profile);
+            const { accessToken, user } = await this.#userRepository.githubLogin(profile);
             res.status(200).json({ accessToken, user });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -80,7 +80,7 @@ class Controller {
     async deleteUser(req, res) {
         try {
             const { email } = req.body;
-            await this.#userService.deleteUser(email);
+            await this.#userRepository.deleteUser(email);
             res.status(200).json({ message: 'User deleted successfully' });
         } catch (err) {
             res.status(500).json({ error: err.message });

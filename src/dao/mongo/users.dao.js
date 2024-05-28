@@ -1,5 +1,4 @@
 const { Users } = require('./models');
-const { hashPassword } = require('../../utils/hashing');
 
 class UserDAO {
     async findByEmail(email) {
@@ -11,7 +10,7 @@ class UserDAO {
     }
 
     async updatePassword(email, password) {
-        return await Users.updateOne({ email }, { $set: { password: hashPassword(password) } });
+        return await Users.updateOne({ email }, { $set: { password } });
     }
 
     async deleteByEmail(email) {
