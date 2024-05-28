@@ -3,6 +3,8 @@ const { Router } = require('express'); // Importa la clase Router de Express par
 const router = Router(); // Crea un enrutador
 const passport = require('passport');
 const { Controller } = require('../controller/sessions.controller');
+const { verifyToken } = require('../middlewares/jwt.middleware');
+const { isSuperAdmin } = require('../middlewares/auth.middleware');
 
 router.post('/register', passport.authenticate('register', { failureRedirect: '/', session: false }), (_, res) => new Controller().redirect(res));
 
@@ -18,6 +20,6 @@ router.post('/resetPassword', passport.authenticate('resetPassword', { failureRe
 
 router.get('/logout', (_, res) => new Controller().logout(res));
 
-router.delete('/', (req, res) => new Controller().deleteUser(req, res));
+router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 
 module.exports = router;
