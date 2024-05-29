@@ -4,6 +4,7 @@ const CartDAO = require('../dao/mongo/carts.dao');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { generateToken } = require('../middlewares/jwt.middleware');
 const { ObjectId } = require('mongodb');
+const { UserDTO } = require('../dto/userToken.dto');
 
 class UserRepository {
 
@@ -67,12 +68,12 @@ class UserRepository {
     #generateAccessToken(user) {
         return generateToken({
             email: user.email,
-            _id: user._id.toString(),
+            id: user._id,
             rol: user.rol,
             firstName: user.firstName,
             lastName: user.lastName,
             age: user.age,
-            cart: user.cart._id
+            cart: user.cart,
         });
     }
 
@@ -109,15 +110,7 @@ class UserRepository {
             }
         }
 
-        const userPayload = {
-            email: user.email,
-            _id: user._id ? user._id.toString() : null,
-            rol: user.rol,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            age: user.age,
-            cart: user.cart ? user.cart._id : null
-        };
+        const userPayload = new UserDTO(user);
 
         const accessToken = this.#generateAccessToken(userPayload);
 

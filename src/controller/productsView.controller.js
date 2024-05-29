@@ -1,6 +1,6 @@
 const { ProductViewDTO } = require('../dto/productView.dto');
 const { ProductRepository } = require('../repository/products.repository');
-const daoCarts = require('../dao/mongo/carts.dao');
+const { CartRepository } = require('../repository/carts.repository');
 
 class Controller {
     constructor() {
@@ -48,6 +48,7 @@ class Controller {
             const product = await this.productRepository.getProductById(productId);
 
             const productData = new ProductViewDTO({ ...product, isLoggedIn });
+            console.log(req.user.cart);
 
             res.status(200).render('product', {
                 product: [productData],
@@ -65,7 +66,7 @@ class Controller {
         try {
             const productId = req.params.pid;
             const cartId = req.user.cart;
-            await new daoCarts().addProductToCart(productId, cartId);
+            await new CartRepository().addProductToCart(productId, cartId);
             res.status(301).redirect('/products');
         } catch (err) {
             res.status(500).json({ error: err.message });

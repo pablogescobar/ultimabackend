@@ -40,7 +40,6 @@ class Controller {
             const cartId = req.params.cid;
             const productId = req.params.pid;
             const cart = await this.cartRepository.addProductToCart(productId, cartId);
-            console.log(cart);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -104,7 +103,6 @@ class Controller {
     async generateTicket(req, res) {
         try {
             const { cid } = req.params;
-            console.log(req.user)
             const userEmail = req.user.email;
 
             const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
