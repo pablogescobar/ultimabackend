@@ -1,14 +1,19 @@
-const daoCarts = require('../dao/mongo/carts.dao');
+const { CartRepository } = require('../repository/carts.repository');
 
 class Controller {
-    constructor() { }
+
+    #cartRepository
+
+    constructor() {
+        this.#cartRepository = new CartRepository();
+    }
 
     async getCartById(req, res) {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
 
             const cartId = req.user.cart; // Obtiene el ID del carrito de los parámetros de la solicitud
-            const cart = await new daoCarts().getCartById(cartId); // Obtiene el carrito por su ID
+            const cart = await this.#cartRepository.getCartById(cartId); // Obtiene el carrito por su ID
 
             const cartData = {
                 id: cart.id,

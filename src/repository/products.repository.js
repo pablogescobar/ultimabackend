@@ -60,7 +60,6 @@ class ProductRepository {
         }
     }
 
-
     async getProducts(page, limit, sort, category, availability) {
         const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
         const products = await this.productDAO.getProducts(query, options);

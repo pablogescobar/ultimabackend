@@ -40,6 +40,7 @@ class Controller {
             const cartId = req.params.cid;
             const productId = req.params.pid;
             const cart = await this.cartRepository.addProductToCart(productId, cartId);
+            console.log(cart);
             res.status(200).json(cart);
         } catch (err) {
             res.status(500).json({ Error: err.message });
