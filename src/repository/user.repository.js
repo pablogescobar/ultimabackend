@@ -156,6 +156,10 @@ class UserRepository {
             await this.#userDAO.deleteByEmail(email);
         }
     }
+
+    async getUserById(id) {
+        return await this.#userDAO.findById(id);
+    }
 }
 
 module.exports = { UserRepository };
