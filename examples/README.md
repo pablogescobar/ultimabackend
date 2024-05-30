@@ -26,7 +26,7 @@ Registra un usuario nuevo en la base de datos.
 
 ### `login`
 
-Loguea un usuario existente en la base de datos. Utilizando **JWT**, se genera un token que podrás encontrar en los headers de Postman como `accessToken`, figurando como una cookie. Dicha cookie puede utilizarse en otros endpoints para obtener ciertos permisos. Para esto, tendrás que ingresar a la sección de **Authorization** en tu Postman y configurar el **Auth Type** como **Bearer Token**. Seguidamente, deberás pegar el token obtenido en la cookie en el campo de **token** en el endpoint donde se soliciten permisos de acceso.
+Loguea un usuario existente en la base de datos. Hecho esto, mediante un middleware se comprobará tener los correspondientes permisos para ingresar a los distintos endpoints. En caso de no se así, utilizando **JWT**, se genera un token que podrás encontrar en los headers de Postman como `accessToken`, figurando como una cookie. Dicha cookie puede utilizarse en otros endpoints para obtener ciertos permisos. Para esto, tendrás que ingresar a la sección de **Authorization** en tu Postman y configurar el **Auth Type** como **Bearer Token**. Seguidamente, deberás pegar el token obtenido en la cookie en el campo de **token** en el endpoint donde se soliciten permisos de acceso.
 
 [**URL:**](http://localhost:8080/api/sessions/login) `http://localhost:8080/api/sessions/login`
 
@@ -175,6 +175,14 @@ La URL debe incluir el ID del carrito que desea vaciar.
 [**URL:**](http://localhost:8080/api/cart/6619078c94d150818d996ec7) `http://localhost:8080/api/cart/6619078c94d150818d996ec7`
 
 **Método** `DELETE`
+
+### `generateTicket`
+
+La URL debe incluir el ID del carrito en el que se desea ejecutar la compra para generar el ticket.
+
+[**URL:**](http://localhost:8080/api/cart/6644d99b675b7a6dfb9fec6b/purchase) `http://localhost:8080/api/cart/6644d99b675b7a6dfb9fec6b/purchase`
+
+**Método** `POST`
 
 ## Products
 

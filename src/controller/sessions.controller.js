@@ -86,6 +86,16 @@ class Controller {
             res.status(500).json({ error: err.message });
         }
     }
+
+    async current(req, res) {
+        try {
+            const user = req.user
+            console.log(user);
+            res.json(user);
+        } catch (e) {
+            res.status(500).json({ error: e.message });
+        }
+    }
 }
 
 module.exports = { Controller };
