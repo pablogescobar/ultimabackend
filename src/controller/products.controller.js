@@ -1,5 +1,5 @@
-// const { ProductService } = require('../services/products.services');
 const { ProductRepository } = require('../repository/products.repository');
+const { generateProduct } = require('../utils/generatePoduct');
 
 class Controller {
     constructor() {
@@ -39,6 +39,18 @@ class Controller {
             res.status(200).json(productData);
         } catch (err) {
             res.status(500).json({ error: err.message });
+        }
+    }
+
+    async getMockingProducts(res) {
+        try {
+            const products = [];
+            for (let i = 0; i < 100; i++) {
+                products.push(generateProduct());
+            }
+            res.json(products);
+        } catch (e) {
+            res.status(500).json({ error: e.message })
         }
     }
 

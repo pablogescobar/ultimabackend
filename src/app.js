@@ -5,7 +5,7 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser')
 
 // ROUTERS
-const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter } = require('./routes')
+const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, mockingProduct } = require('./routes')
 
 const app = express();
 
@@ -36,6 +36,7 @@ app.use('/cart', cartViewsRouter);
 app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
+app.use('/mockingproducts', mockingProduct);
 
 // Se inicia el servidor en el puerto 8080
 const main = async () => {
