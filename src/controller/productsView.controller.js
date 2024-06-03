@@ -21,9 +21,12 @@ class Controller {
             const category = req.query.category;
             const availability = req.query.availability;
 
-            const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
+            const products = await this.productRepository.getProductsForView(page, limit, sort, category, availability);
 
-            const productsPayload = products.map(product => new ProductViewDTO({ ...product, isLoggedIn }));
+            const productsPayload = products.payload.map(product => ({
+                ...product,
+                isLoggedIn
+            }));
 
             res.render('products', {
                 products: { ...products, payload: productsPayload },
@@ -33,9 +36,9 @@ class Controller {
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
                 firstName,
-                lastName,
-                cartId
+                lastName, cartId
             });
+
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -47,8 +50,16 @@ class Controller {
             const productId = req.params.pid;
             const product = await this.productRepository.getProductById(productId);
 
-            const productData = new ProductViewDTO({ ...product, isLoggedIn });
-            console.log(req.user.cart);
+            const productData = {
+                title: product.title,
+                thumbnail: product.thumbnail,
+                description: product.description,
+                price: product.price,
+                stock: product.stock,
+                code: product.code,
+                id: product.id,
+                isLoggedIn
+            };
 
             res.status(200).render('product', {
                 product: [productData],

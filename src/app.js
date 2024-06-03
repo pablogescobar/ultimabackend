@@ -3,8 +3,10 @@ const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser')
-
-// ROUTERS
+const { errorHandler } = require('./middlewares/errorHandler.middleware');
+const initializeStrategy = require('./config/passport.config');
+const { dbName, mongoUrl } = require('./dbconfig');
+const sessionMiddleware = require('./session/mongoStorage');
 const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, mockingProduct } = require('./routes')
 
 const app = express();
@@ -19,9 +21,7 @@ app.use(express.urlencoded({ extended: true })); // Middleware para parsear dato
 app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`));
 
-const initializeStrategy = require('./config/passport.config');
-const { dbName, mongoUrl } = require('./dbconfig');
-const sessionMiddleware = require('./session/mongoStorage');
+
 app.use(sessionMiddleware);
 initializeStrategy();
 app.use(passport.initialize());
@@ -37,6 +37,8 @@ app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
 app.use('/mockingproducts', mockingProduct);
+
+app.use(errorHandler);
 
 // Se inicia el servidor en el puerto 8080
 const main = async () => {

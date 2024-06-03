@@ -53,12 +53,11 @@ class CartRepository {
 
     async addCart() {
         try {
-
+            const cart = { porducts: [] }
+            return await this.#cartDAO.addCart(cart);
         } catch (e) {
             throw new Error({ error: e.message })
         }
-        const cart = { porducts: [] }
-        return await this.#cartDAO.addCart(cart);
 
     }
 
