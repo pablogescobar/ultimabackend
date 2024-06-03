@@ -24,14 +24,18 @@ class ProductRepository {
             };
 
             if (isNaN(page)) {
-                throw new Error('Número de página no válido');
+                throw CustomError.createError({
+                    name: 'La página no existe',
+                    cause: 'La página debe ser un número válido',
+                    message: 'La página no existe',
+                    code: ErrorCodes.INVALID_PAGE_NUMBER
+                });
             }
 
             return { query, options };
-        } catch {
-
+        } catch (e) {
+            throw e;
         }
-
     }
 
     async #generatePageParams(page, limit, sort, category, availability) {
@@ -40,7 +44,12 @@ class ProductRepository {
             const allProducts = await this.productDAO.getProducts(query, options);
 
             if (isNaN(page) || page > allProducts.totalPages) {
-                throw new Error('La página no existe');
+                throw CustomError.createError({
+                    name: 'La página no existe',
+                    cause: 'La página debe ser un número válido',
+                    message: 'La página no existe',
+                    code: ErrorCodes.INVALID_PAGE_NUMBER
+                });
             }
 
             const status = allProducts ? 'success' : 'error';
@@ -60,8 +69,8 @@ class ProductRepository {
                 nextLink
             };
             return result;
-        } catch {
-            throw new Error('Error al generar el paginado')
+        } catch (e) {
+            throw e;
         }
     }
 
@@ -70,8 +79,13 @@ class ProductRepository {
             const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
             if (!title || !description || !code || !category || invalidOptions) {
-                throw new Error('Error al validar los datos');
-            };
+                throw CustomError.createError({
+                    name: 'Error al agregar el producto.',
+                    cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
+                    message: 'Error al agregar el producto.',
+                    code: ErrorCodes.INVALID_PRODUCT_DATA
+                });
+            }
 
             const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
 
@@ -90,45 +104,111 @@ class ProductRepository {
                 status,
                 stock,
                 category
-            }
+            };
 
             return newProduct;
         } catch (e) {
-            console.error('Error al agregar un producto en el servicio.', e);
-            throw new Error('Error al agregar un producto en el servicio.');
+            throw e;
         }
     }
 
     async getProducts(page, limit, sort, category, availability) {
-        const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
-        const products = await this.productDAO.getProducts(query, options);
-        return products.docs.map(product => new ProductDTO(product));
+        try {
+            const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
+            const products = await this.productDAO.getProducts(query, options);
+            return products.docs.map(product => new ProductDTO(product));
+        } catch {
+            throw CustomError.createError({
+                name: 'Error fatal',
+                cause: 'Ocurrió un error al buscar los productos en la base de datos',
+                message: 'Error fatal',
+                code: ErrorCodes.DATABASE_ERROR
+            });
+        }
     }
 
     async getProductsForView(page, limit, sort, category, availability) {
-        const products = this.#generatePageParams(page, limit, sort, category, availability);
-        return products;
+        try {
+            const products = await this.#generatePageParams(page, limit, sort, category, availability);
+            return products;
+        } catch {
+            throw CustomError.createError({
+                name: 'Error de paginado',
+                cause: 'Ocurrió un error al buscar los productos en la base de datos o crear la paginacion para los mismos',
+                message: 'Error de paginado',
+                code: ErrorCodes.INVALID_PAGE_NUMBER
+            });
+        }
     }
 
     async getProductById(id) {
-        const product = await this.productDAO.getProductById(id);
-        return new ProductDTO(product);
+        try {
+            const product = await this.productDAO.getProductById(id);
+            return new ProductDTO(product);
+        } catch {
+            throw CustomError.createError({
+                name: 'El producto no existe',
+                cause: 'Debe ingresar un ID válido existente en la base de datos',
+                message: 'El producto no existe',
+                code: ErrorCodes.UNDEFINED_PRODUCT
+            });
+        }
     }
 
     async addProduct(productData) {
-        const { title, description, price, thumbnail, code, status, stock, category } = productData
-        const productHandler = this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category)
-        const product = await this.productDAO.addProduct(productHandler);
-        return new ProductDTO(product);
+        try {
+            const { title, description, price, thumbnail, code, status, stock, category } = productData;
+            const productHandler = this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category);
+            const product = await this.productDAO.addProduct(productHandler);
+            return new ProductDTO(product);
+        } catch {
+            throw CustomError.createError({
+                name: 'Error al agregar el producto.',
+                cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
+                message: 'Error al agregar el producto.',
+                code: ErrorCodes.INVALID_PRODUCT_DATA
+            });
+        }
     }
 
     async updateProduct(id, productData) {
-        const updatedProduct = await this.productDAO.updateProduct(id, productData);
-        return new ProductDTO(updatedProduct);
+        try {
+            await this.getProductById(id);
+
+            // Verificar si se proporcionaron campos para actualizar
+            const areFieldsPresent = Object.keys(productData).length > 0;
+            if (!areFieldsPresent) {
+                throw CustomError.createError({
+                    name: 'Campos inválidos',
+                    cause: 'Debe definir al menos un campo para actualizar',
+                    message: 'Campos inválidos',
+                    code: ErrorCodes.PRODUCT_UPDATE_ERROR
+                });
+            }
+
+            // Actualizar el producto
+            await this.productDAO.updateProduct(id, productData);
+
+            const updatedProduct = await this.productDAO.getProductById(id);
+            return new ProductDTO(updatedProduct);
+
+        } catch (e) {
+            throw e;
+        }
     }
 
     async deleteProduct(id) {
-        return await this.productDAO.deleteProduct(id);
+        try {
+            await this.getProductById(IDBObjectStore)
+            return await this.productDAO.deleteProduct(id);
+        } catch (e) {
+            throw CustomError.createError({
+                name: 'Error al eliminar el producto',
+                cause: 'Hubo un error al eliminar el producto de la base de datos',
+                message: 'Error al eliminar el producto',
+                code: ErrorCodes.PRODUCT_DELETION_ERROR
+            });
+        }
     }
 }
 

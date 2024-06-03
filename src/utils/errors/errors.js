@@ -8,16 +8,18 @@ const generateInvalidCartId = ({ id }) => {
     return `El carrito id ${id} no corresponde con ningún carrito cargado en la base de datos.`
 }
 
-const generateInvalidProductData = ({ title, description, price, thumbnail, code, status, stock, category }) => {
-    return `Datos del producto inválidos:
-    * titulo: No puede enviar un string vacio ${title}(${typeof title})
-    * descripcion: No puede enviar un string vacio ${description}(${typeof description})
-    * precio: No puede enviar un number vacio ${price}(${typeof price})
-    * thumbnail: No requerido ${thumbnail}
-    * code: No puede enviar un string vacio y debe ser único ${code}(${typeof code})
-    * status: No requerido ${status}
-    * stock: No puede enviar un number menor a 0 ${stock}(${typeof stock})
-    * category: No puede enviar un string vacio ${category}(${typeof category})`
+const generateInvalidProductData = (title, description, price, thumbnail, code, status, stock, category) => {
+    return `
+        Datos del producto inválidos:
+        * título: ${!title ? 'No puede enviar un string vacío' : 'Válido'} (${title})
+        * descripción: ${!description ? 'No puede enviar un string vacío' : 'Válido'} (${description})
+        * precio: ${isNaN(+price) || +price <= 0 ? 'Debe ser un número positivo' : 'Válido'} (${price})
+        * thumbnail: ${thumbnail ? 'Válido' : 'No requerido'} (${thumbnail})
+        * código: ${!code ? 'No puede enviar un string vacío y debe ser único' : 'Válido'} (${code})
+        * status: ${typeof status === 'undefined' ? 'No requerido' : 'Válido'} (${status})
+        * stock: ${isNaN(+stock) || +stock < 0 ? 'Debe ser un número mayor o igual a 0' : 'Válido'} (${stock})
+        * categoría: ${!category ? 'No puede enviar un string vacío' : 'Válido'} (${category})
+    `;
 }
 
 module.exports = { generateInvalidCredentialsUserData, generateInvalidCartId, generateInvalidProductData };
