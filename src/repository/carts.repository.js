@@ -1,5 +1,7 @@
 const CartDAO = require('../dao/mongo/carts.dao');
 const { ProductRepository } = require('./products.repository');
+const { CustomError } = require('../utils/errors/customErrors');
+const { ErrorCodes } = require('../utils/errors/errorCodes');
 
 class CartRepository {
 
@@ -12,33 +14,49 @@ class CartRepository {
     }
 
     async #verifyCartExists(cartId) {
-        const cart = await this.#cartDAO.getCartById(cartId);
-        if (!cart) {
-            throw new Error('El carrito no existe.');
+        try {
+            const cart = await this.#cartDAO.getCartById(cartId);
+            return cart;
+        } catch {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Debe ingresar un ID válido existente en la base de datos',
+                message: 'El carrito no existe',
+                code: ErrorCodes.UNDEFINED_CART
+            })
         }
-        return cart;
     }
 
     async #verifyProductExists(productId) {
-        const product = await this.#productRepository.getProductById(productId);
-        if (!product) {
-            throw new Error('El producto no existe.');
+        try {
+            const product = await this.#productRepository.getProductById(productId);
+            return product;
+        } catch {
+            throw CustomError.createError({
+                name: 'Error con los productos',
+                cause: 'Debe ingresar un ID válido existente en la base de datos',
+                message: 'El producto no existe',
+                code: ErrorCodes.UNDEFINED_PRODUCT
+            });
         }
-        return product;
     }
 
     async getCarts() {
         try {
             return await this.#cartDAO.getCarts();
-        } catch (e) {
-            throw new Error({ error: e.message });
+        } catch {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Ocurrió un error al buscar los carritos en la base de datos',
+                message: 'Error al obtener los carritos',
+                code: ErrorCodes.DATABASE_ERROR
+            });
         }
     }
 
     async getCartById(id) {
         try {
-            let cart = await this.#cartDAO.getCartById(id);
-            await this.#verifyCartExists(id);
+            let cart = await this.#verifyCartExists(id);
             // Se verifica que no se hayan eliminado de la DB los productos cargados en el carrito
             const updatedCart = cart.products.filter(i => i.product !== null);
             if (updatedCart.lenght !== cart.products.length) {
@@ -46,8 +64,8 @@ class CartRepository {
                 await this.#cartDAO.updateCart(id, { products: cart.products })
             }
             return cart;
-        } catch (e) {
-            throw new Error({ error: e.message });
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -55,8 +73,14 @@ class CartRepository {
         try {
             const cart = { porducts: [] }
             return await this.#cartDAO.addCart(cart);
-        } catch (e) {
-            throw new Error({ error: e.message })
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema al generar un nuevo carrito en la base de datos',
+                message: 'Error al agregar el carrito',
+                code: ErrorCodes.CART_CREATE_ERROR,
+                otherProblems: error
+            });
         }
 
     }
@@ -83,8 +107,13 @@ class CartRepository {
             return cart;
 
         } catch (error) {
-            console.error('Error en addProductToCart:', error);
-            throw new Error('Hubo un error al agregar un producto al carrito.');
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema ejecutar el ubicar el producto o el carrito en la base de datos',
+                message: 'Error al agregar el producto al carrito',
+                code: ErrorCodes.CART_UPDATE_ERROR,
+                otherProblems: error
+            });
         }
     }
 
@@ -113,8 +142,13 @@ class CartRepository {
             console.log(`Se actualizó el carrito ${cartId}, ${updatedCart}`);
             return updatedCart;
         } catch (error) {
-            console.error('Error al actualizar el carrito:', error);
-            throw new Error('Error al actualizar el carrito');
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema alctualizar el carrito en la base de datos.',
+                message: 'Error al actualizar el carrito',
+                code: ErrorCodes.CART_UPDATE_ERROR,
+                otherProblems: error
+            });
         }
     }
 
@@ -124,8 +158,14 @@ class CartRepository {
             const cart = this.#verifyCartExists(cartId);
             await this.#cartDAO.updateCart(cartId, { products: { product: productId } });
             return cart;
-        } catch (e) {
-            throw new Error({ error: e.message })
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema al actualizar el carrito para eliminar el producto del mismo.',
+                message: 'Error al eliminar el producto del carrito',
+                code: ErrorCodes.CART_UPDATE_ERROR,
+                otherProblems: error
+            });
         }
     }
 
@@ -141,8 +181,14 @@ class CartRepository {
                 await this.#cartDAO.updateCart(cartId, { products: cart.products });
             }
             return cart;
-        } catch (e) {
-            throw new Error({ error: e.message });
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema alctualizar la cantidad de unidades del producto en el carrito.',
+                message: 'Error al eliminar el producto del carrito',
+                code: ErrorCodes.CART_UPDATE_ERROR,
+                otherProblems: error
+            });
         }
     }
 
@@ -152,8 +198,14 @@ class CartRepository {
             await this.#cartDAO.updateCart(cartId, { products: [] });
             return cart;
 
-        } catch (e) {
-            throw new Error({ error: e.message });
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Hubo un problema alctualizar el carrito y no se pudo vaciar',
+                message: 'Error al vaciar el carrito',
+                code: ErrorCodes.CART_CLEAR_ERROR,
+                otherProblems: error
+            });
         }
 
     }

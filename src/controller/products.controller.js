@@ -17,7 +17,7 @@ class Controller {
             const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
             res.status(200).json(products);
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ err });
         }
     }
 
@@ -37,8 +37,8 @@ class Controller {
             };
 
             res.status(200).json(productData);
-        } catch (error) {
-            res.status(500).json({ error });
+        } catch (err) {
+            res.status(500).json({ err });
         }
     }
 
@@ -49,8 +49,8 @@ class Controller {
                 products.push(generateProduct());
             }
             res.json(products);
-        } catch (e) {
-            res.status(500).json({ error: e.message })
+        } catch (err) {
+            res.status(500).json({ err });
         }
     }
 
@@ -59,8 +59,8 @@ class Controller {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
             const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category });
             res.status(200).json({ message: 'Producto agregado correctamente', product });
-        } catch (error) {
-            res.status(500).json({ error });
+        } catch (err) {
+            res.status(500).json({ err });
         }
     }
 
@@ -69,8 +69,8 @@ class Controller {
             const productId = req.params.pid;
             const updatedProduct = await this.productRepository.updateProduct(productId, req.body);
             res.status(200).json({ message: 'Producto actualizado', updatedProduct });
-        } catch (error) {
-            res.status(500).json({ error });
+        } catch (err) {
+            res.status(500).json({ err });
         }
     }
 
@@ -80,7 +80,7 @@ class Controller {
             await this.productRepository.deleteProduct(productId);
             res.status(200).json({ message: 'Producto eliminado' });
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ err });
         }
     }
 
@@ -92,7 +92,7 @@ class Controller {
     //         await cartManager.addProductToCart(productId, cartId);
     //         res.status(301).redirect('/products');
     //     } catch (err) {
-    //         res.status(500).json({ error: err.message });
+    //         res.status(500).json({ err: err.message });
     //     }
     // }
 }

@@ -70,7 +70,7 @@ const errorHandler = (error, req, res, next) => {
             res.status(500).send({ status: 'Error', error: 'Desconocido' });
     }
 
-    next();
+    next(error);
 }
 
 module.exports = { errorHandler };

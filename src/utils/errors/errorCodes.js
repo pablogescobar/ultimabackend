@@ -18,7 +18,8 @@ const ErrorCodes = {
     ADMIN_USER_REGISTRATION_ERROR: 17,  // Error al registrar admin o super admin de esta manera
     PASSWORD_UPDATE_ERROR: 18,          // Error al actualizar la contraseña
     GITHUB_LOGIN_ERROR: 19,             // Error en el login de GitHub
-    USER_DELETION_ERROR: 20             // Error al eliminar el usuario
+    USER_DELETION_ERROR: 20,            // Error al eliminar el usuario
+    CART_CREATE_ERROR: 21               // Error al crear el carrito
 };
 
 module.exports = { ErrorCodes };
