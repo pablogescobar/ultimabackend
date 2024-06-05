@@ -66,6 +66,21 @@ const errorHandler = (error, req, res, next) => {
         case ErrorCodes.USER_DELETION_ERROR:
             res.status(500).send({ status: 'Error', error: error.name, cause: error.cause });
             break;
+        case ErrorCodes.CART_CREATE_ERROR:
+            res.status(500).send({ status: 'Error', error: error.name, cause: error.cause });
+            break;
+        case ErrorCodes.USER_REGISTER_ERROR:
+            res.status(500).send({ status: 'Error', error: error.name, cause: error.cause });
+            break;
+        case ErrorCodes.INVALID_PASSWORD:
+            res.status(401).send({ status: 'Error', error: error.name, cause: error.cause });
+            break;
+        case ErrorCodes.USER_LOGIN_ERROR:
+            res.status(500).send({ status: 'Error', error: error.name, cause: error.cause });
+            break;
+        case ErrorCodes.UNDEFINED_USER:
+            res.status(404).send({ status: 'Error', error: error.name, cause: error.cause });
+            break;
         default:
             res.status(500).send({ status: 'Error', error: 'Desconocido' });
     }

@@ -1,48 +1,54 @@
 const TicketDAO = require('../dao/mongo/ticket.dao');
-const CartDAO = require('../dao/mongo/carts.dao');
+const { CartRepository } = require('./carts.repository')
 const ProductDAO = require('../dao/mongo/products.dao');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
 
 class TicketRepository {
     #ticketDAO
-    #cartDAO
     #productDAO
+    #cartRepository
 
     constructor() {
         this.#ticketDAO = new TicketDAO();
-        this.#cartDAO = new CartDAO();
         this.#productDAO = new ProductDAO();
+        this.#cartRepository = new CartRepository();
     }
 
     #generateUniqueCode() {
         return Math.random().toString(36).substring(2, 10) + Date.now().toString(36);
     }
 
+    async #findCartById(cartId) {
+        try {
+            const cart = await this.#cartRepository.getCartById(cartId);
+            return cart
+        } catch {
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Debe ingresar un ID válido existente en la base de datos',
+                message: 'El carrito no existe',
+                code: ErrorCodes.UNDEFINED_CART
+            })
+        }
+    }
+
     async generateTicket(cartId, userEmail) {
         try {
-            const cart = await this.#cartDAO.getCartById(cartId);
-            if (!cart) {
-                throw CustomError.createError({
-                    name: 'Error con el carrito',
-                    cause: 'Debe ingresar un ID válido existente en la base de datos',
-                    message: 'El carrito no existe',
-                    code: ErrorCodes.UNDEFINED_CART
-                })
-            }
+            const cart = await this.#findCartById(cartId);
 
             let totalAmount = 0;
 
             for (const item of cart.products) {
                 const product = await this.#productDAO.getProductById(item.product);
                 if (product.stock < item.quantity) {
-                    // throw new Error(`No hay suficiente stock para el producto con ID ${product._id}`);
                     throw CustomError.createError({
                         name: 'Error con el stock',
                         cause: `No hay suficiente stock para el producto con ID ${product._id}`,
                         message: 'No se pudo completar la operación por falta de stock',
                         code: ErrorCodes.INSUFFICIENT_STOCK
                     })
+
                 }
             }
 
@@ -61,7 +67,7 @@ class TicketRepository {
 
             const ticket = await this.#ticketDAO.addTicket(ticketData);
 
-            await this.#cartDAO.clearCart(cartId);
+            await this.#cartRepository.clearCart(cartId)
 
             return ticket;
         } catch (error) {
@@ -73,7 +79,6 @@ class TicketRepository {
                 otherProblems: error
             })
         }
-
     }
 }
 

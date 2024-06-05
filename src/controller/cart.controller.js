@@ -105,14 +105,16 @@ class Controller {
             const { cid } = req.params;
             const userEmail = req.user.email;
 
+            console.log('test controller')
             const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
+            console.log(ticket);
 
             res.status(200).json({
                 message: 'Compra realizada con éxito',
                 ticket
             });
-        } catch (erroror) {
-            res.status(400).json({ erroror: erroror.message });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 }
