@@ -216,6 +216,14 @@ La URL debe incluir el ID del producto que desea buscar.
 
 **Método** `GET`
 
+### `getMockingProducts`
+
+Genera productos aleatorios mediante **faker-js**
+
+[**URL:**](http://localhost:8080/mockingproducts) `http://localhost:8080/mockingproducts`
+
+**Método** `GET`
+
 ### `addProduct`
 
 Añade un nuevo producto a la base de datos.
