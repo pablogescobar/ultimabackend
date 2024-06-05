@@ -4,10 +4,6 @@ const generateInvalidCredentialsUserData = ({ email, password }) => {
     * password: No puede enviar un string vacio ${password} (${typeof password})`
 }
 
-const generateInvalidCartId = ({ id }) => {
-    return `El carrito id ${id} no corresponde con ningún carrito cargado en la base de datos.`
-}
-
 const generateInvalidProductData = (title, description, price, thumbnail, code, status, stock, category) => {
     return `
         Datos del producto inválidos:
@@ -22,4 +18,4 @@ const generateInvalidProductData = (title, description, price, thumbnail, code, 
     `;
 }
 
-module.exports = { generateInvalidCredentialsUserData, generateInvalidCartId, generateInvalidProductData };
+module.exports = { generateInvalidCredentialsUserData, generateInvalidProductData };

@@ -19,7 +19,11 @@ const ErrorCodes = {
     PASSWORD_UPDATE_ERROR: 18,          // Error al actualizar la contraseña
     GITHUB_LOGIN_ERROR: 19,             // Error en el login de GitHub
     USER_DELETION_ERROR: 20,            // Error al eliminar el usuario
-    CART_CREATE_ERROR: 21               // Error al crear el carrito
+    CART_CREATE_ERROR: 21,              // Error al crear el carrito
+    USER_REGISTER_ERROR: 22,            // Error al registrar el usuario
+    INVALID_PASSWORD: 23,               // Contraseña incorrecta
+    USER_LOGIN_ERROR: 24,               // Error en el login
+    UNDEFINED_USER: 25                  // El usuario no existe
 };
 
 module.exports = { ErrorCodes };
