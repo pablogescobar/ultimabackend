@@ -3,7 +3,6 @@ const handlebars = require('express-handlebars');
 const mongoose = require('mongoose');
 const passport = require('passport');
 const cookieParser = require('cookie-parser')
-const { errorHandler } = require('./middlewares/errorHandler.middleware');
 const initializeStrategy = require('./config/passport.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
@@ -37,8 +36,6 @@ app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
 app.use('/mockingproducts', mockingProduct);
-
-app.use(errorHandler);
 
 // Se inicia el servidor en el puerto 8080
 const main = async () => {

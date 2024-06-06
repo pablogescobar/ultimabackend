@@ -39,77 +39,72 @@ class ProductRepository {
     }
 
     async #generatePageParams(page, limit, sort, category, availability) {
-        try {
-            const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
-            const allProducts = await this.productDAO.getProducts(query, options);
 
-            if (isNaN(page) || page > allProducts.totalPages) {
-                throw CustomError.createError({
-                    name: 'La página no existe',
-                    cause: 'La página debe ser un número válido',
-                    message: 'La página no existe',
-                    code: ErrorCodes.INVALID_PAGE_NUMBER
-                });
-            }
+        const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
+        const allProducts = await this.productDAO.getProducts(query, options);
 
-            const status = allProducts ? 'success' : 'error';
-            const prevLink = allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}` : null;
-            const nextLink = allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}` : null;
-
-            const result = {
-                status,
-                payload: allProducts.docs,
-                totalPages: allProducts.totalPages,
-                prevPage: allProducts.prevPage,
-                nextPage: allProducts.nextPage,
-                page: allProducts.page,
-                hasPrevPage: allProducts.hasPrevPage,
-                hasNextPage: allProducts.hasNextPage,
-                prevLink,
-                nextLink
-            };
-            return result;
-        } catch (e) {
-            throw e;
+        if (isNaN(page) || page > allProducts.totalPages) {
+            throw CustomError.createError({
+                name: 'Error en el paginado',
+                cause: 'La página debe ser un número válido',
+                message: 'La página a la que intenta acceder no existe',
+                code: ErrorCodes.INVALID_PAGE_NUMBER
+            });
         }
+
+        const status = allProducts ? 'success' : 'error';
+        const prevLink = allProducts.hasPrevPage ? `/products?page=${allProducts.prevPage}` : null;
+        const nextLink = allProducts.hasNextPage ? `/products?page=${allProducts.nextPage}` : null;
+
+        const result = {
+            status,
+            payload: allProducts.docs,
+            totalPages: allProducts.totalPages,
+            prevPage: allProducts.prevPage,
+            nextPage: allProducts.nextPage,
+            page: allProducts.page,
+            hasPrevPage: allProducts.hasPrevPage,
+            hasNextPage: allProducts.hasNextPage,
+            prevLink,
+            nextLink
+        };
+        return result;
+
     }
 
     #validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category) {
-        try {
-            const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
-            if (!title || !description || !code || !category || invalidOptions) {
-                throw CustomError.createError({
-                    name: 'Error al agregar el producto.',
-                    cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
-                    message: 'Error al agregar el producto.',
-                    code: ErrorCodes.INVALID_PRODUCT_DATA
-                });
-            }
+        const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
-            const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
-
-            if (typeof status === 'undefined' || status === true || status === 'true') {
-                status = true;
-            } else {
-                status = false;
-            }
-
-            const newProduct = {
-                title,
-                description,
-                price,
-                thumbnail: finalThumbnail,
-                code,
-                status,
-                stock,
-                category
-            };
-
-            return newProduct;
-        } catch (e) {
-            throw e;
+        if (!title || !description || !code || !category || invalidOptions) {
+            throw CustomError.createError({
+                name: 'Error al agregar el producto.',
+                cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
+                message: 'Error al agregar el producto.',
+                code: ErrorCodes.INVALID_PRODUCT_DATA
+            });
         }
+
+        const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
+
+        if (typeof status === 'undefined' || status === true || status === 'true') {
+            status = true;
+        } else {
+            status = false;
+        }
+
+        const newProduct = {
+            title,
+            description,
+            price,
+            thumbnail: finalThumbnail,
+            code,
+            status,
+            stock,
+            category
+        };
+
+        return newProduct;
     }
 
     async getProducts(page, limit, sort, category, availability) {
@@ -161,13 +156,8 @@ class ProductRepository {
             const productHandler = this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category);
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
-        } catch {
-            throw CustomError.createError({
-                name: 'Error al agregar el producto.',
-                cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
-                message: 'Error al agregar el producto.',
-                code: ErrorCodes.INVALID_PRODUCT_DATA
-            });
+        } catch (error) {
+            throw error
         }
     }
 

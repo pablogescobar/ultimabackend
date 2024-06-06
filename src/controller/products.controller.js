@@ -16,8 +16,8 @@ class Controller {
 
             const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
             res.status(200).json(products);
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -37,20 +37,20 @@ class Controller {
             };
 
             res.status(200).json(productData);
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
     async getMockingProducts(res) {
         try {
             const products = [];
-            for (let i = 0; i < 100; i++) {
+            for (let i = 0; i < 50; i++) {
                 products.push(generateProduct());
             }
             res.json(products);
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -59,8 +59,8 @@ class Controller {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
             const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category });
             res.status(200).json({ message: 'Producto agregado correctamente', product });
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -69,8 +69,8 @@ class Controller {
             const productId = req.params.pid;
             const updatedProduct = await this.productRepository.updateProduct(productId, req.body);
             res.status(200).json({ message: 'Producto actualizado', updatedProduct });
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -79,8 +79,8 @@ class Controller {
             const productId = req.params.pid;
             await this.productRepository.deleteProduct(productId);
             res.status(200).json({ message: 'Producto eliminado' });
-        } catch (err) {
-            res.status(500).json({ err });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -91,8 +91,8 @@ class Controller {
     //         const cartManager = req.app.get('cartManager');
     //         await cartManager.addProductToCart(productId, cartId);
     //         res.status(301).redirect('/products');
-    //     } catch (err) {
-    //         res.status(500).json({ err: err.message });
+    //     } catch (error) {
+    //         res.status(500).json({ error: error.message });
     //     }
     // }
 }

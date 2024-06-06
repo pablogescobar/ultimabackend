@@ -20,8 +20,9 @@ const localStrategy = () => {
             try {
                 const user = await new UserRepository().loginUser(username, password);
                 done(null, user, { message: 'Logueado correctamente.' })
-            } catch (e) {
-                done(e)
+            } catch (error) {
+                console.log(e);
+                done(error)
             }
         }
     ))
@@ -31,8 +32,8 @@ const localStrategy = () => {
             try {
                 const userUpdated = await new UserRepository().resetPassword(username, password);
                 done(null, userUpdated, { message: 'Contraseña actualizada.' })
-            } catch (e) {
-                done(e)
+            } catch (error) {
+                done(error)
             }
         }
     ))
