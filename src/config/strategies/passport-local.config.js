@@ -21,7 +21,6 @@ const localStrategy = () => {
                 const user = await new UserRepository().loginUser(username, password);
                 done(null, user, { message: 'Logueado correctamente.' })
             } catch (error) {
-                console.log(e);
                 done(error)
             }
         }

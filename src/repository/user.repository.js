@@ -28,7 +28,7 @@ class UserRepository {
             email: process.env.ADMIN_USER,
             password: process.env.ADMIN_PASS,
             rol: 'admin',
-            cart: { _id: new ObjectId(process.env.ADMIN_CART) }
+            // cart: 'noCart'
         };
 
         this.#superAdminUser = {
@@ -39,7 +39,7 @@ class UserRepository {
             email: process.env.SADMIN_USER,
             password: process.env.SADMIN_PASS,
             rol: 'superAdmin',
-            cart: { _id: new ObjectId(process.env.SADMIN_CART) }
+            // cart: { id: new ObjectId(process.env.SADMIN_CART) }
         };
     }
 
@@ -150,6 +150,7 @@ class UserRepository {
                 user = this.#superAdminUser;
             } else {
                 user = await this.#userDAO.findByEmail(email);
+
 
                 if (!user || !isValidPassword(password, user.password)) {
                     throw CustomError.createError({

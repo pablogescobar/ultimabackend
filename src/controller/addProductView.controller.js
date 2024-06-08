@@ -38,7 +38,7 @@ class Controller {
 
             res.status(301).redirect('/products');
         } catch (error) {
-            console.error(error);
+            req.logger.error(`Error fatal: ${error}`)
             res.status(500).send('Error interno del servidor');
         }
     }

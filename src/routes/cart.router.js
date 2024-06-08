@@ -17,17 +17,17 @@ router.post('/', (_, res) => new Controller().createCart(res));
 router.post('/:cid/product/:pid', verifyToken, isUser, (req, res) => new Controller().addProductToCart(req, res));
 
 // Ruta para agregar o actualizar productos del carrito
-router.put('/:cid', (req, res) => new Controller().updateCart(req, res));
+router.put('/:cid', verifyToken, isUser, (req, res) => new Controller().updateCart(req, res));
 
 // Ruta para eliminar un producto del carrito
-router.delete('/:cid/product/:pid', async (req, res) => new Controller().deleteProductFromCart(req, res));
+router.delete('/:cid/product/:pid', verifyToken, isUser, async (req, res) => new Controller().deleteProductFromCart(req, res));
 
 // Ruta para atualizar la cantidad de un producto en el carrito
-router.put('/:cid/product/:pid', (req, res) => new Controller().updateProductQuantity(req, res));
+router.put('/:cid/product/:pid', verifyToken, isUser, (req, res) => new Controller().updateProductQuantity(req, res));
 
 // Ruta para vacial el carrito
-router.delete('/:cid', async (req, res) => new Controller().clearCart(req, res));
+router.delete('/:cid', verifyToken, isUser, async (req, res) => new Controller().clearCart(req, res));
 
-router.post('/:cid/purchase', verifyToken, async (req, res) => new Controller().generateTicket(req, res));
+router.post('/:cid/purchase', verifyToken, isUser, async (req, res) => new Controller().generateTicket(req, res));
 
 module.exports = router; // Exporta el enrutador

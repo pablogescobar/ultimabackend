@@ -41,6 +41,7 @@ class Controller {
             const cartId = req.params.cid;
             const productId = req.params.pid;
             const cart = await this.cartRepository.addProductToCart(productId, cartId);
+            req.logger.info('Producto agregado al carrito de manera correcta')
             res.status(200).json(cart);
         } catch (error) {
             res.status(500).json({ error });
@@ -63,6 +64,7 @@ class Controller {
             const cartId = req.params.cid;
             const products = req.body;
             const cart = await this.cartRepository.updateCart(cartId, products);
+            req.logger.info('Se ha actualizado el carrito de manera correcta')
             res.status(200).json(cart);
         } catch (error) {
             res.status(500).json({ error });
@@ -105,10 +107,7 @@ class Controller {
         try {
             const { cid } = req.params;
             const userEmail = req.user.email;
-
-            console.log('test controller')
             const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
-            console.log(ticket);
 
             res.status(200).json({
                 message: 'Compra realizada con éxito',

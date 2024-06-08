@@ -101,7 +101,6 @@ class CartRepository {
             }
 
             // Guardar el carrito actualizado
-            console.log('Producto agregado al carrito correctamente');
             await this.#cartDAO.updateCart(cartId, { products: cart.products });
 
             return cart;
@@ -137,9 +136,8 @@ class CartRepository {
             }
 
             // Guardar los cambios en el carrito utilizando el DAO
-            const updatedCart = await this.#cartDAO.updateCart(cartId, { products: cart.products });
-
-            console.log(`Se actualizó el carrito ${cartId}, ${updatedCart}`);
+            await this.#cartDAO.updateCart(cartId, { products: cart.products });
+            const updatedCart = await this.#cartDAO.getCartById(cartId);
             return updatedCart;
         } catch (error) {
             throw CustomError.createError({

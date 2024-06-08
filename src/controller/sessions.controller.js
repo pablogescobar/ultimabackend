@@ -21,10 +21,11 @@ class Controller {
     async loginUser(req, res) {
         try {
             const { email, password } = req.body;
+            req.logger.debug(password);
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             res.redirect('/');
-            // res.status(200).json(user);
+            req.logger.info(JSON.stringify(user, null, 2))
         } catch (err) {
             res.status(401).json({ error: err.message });
         }
@@ -34,8 +35,9 @@ class Controller {
         try {
             const { email, password } = req.body;
             const user = await this.#userRepository.resetPassword(email, password);
+            req.logger.info(JSON.stringify(user, null, 2))
             res.redirect('/');
-            // res.status(200).json(user);
+
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -62,7 +64,7 @@ class Controller {
 
     logout(res) {
         try {
-            res.clearCookie('accessToken'); // Elimina la cookie llamada 'accessToken'
+            res.clearCookie('accessToken');
             res.redirect('/');
         } catch (e) {
             res.status(500).json({ error: e.message });
@@ -90,7 +92,7 @@ class Controller {
     async current(req, res) {
         try {
             const user = req.user
-            console.log(user);
+            req.logger.info(JSON.stringify(user, null, 2));
             res.json(user);
         } catch (e) {
             res.status(500).json({ error: e.message });
