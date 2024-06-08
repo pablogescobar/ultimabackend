@@ -5,7 +5,7 @@ const { isUser } = require('../middlewares/auth.middleware');
 const { verifyToken } = require('../middlewares/jwt.middleware');
 
 // Ruta para obtener todos los carritos
-router.get('/', (_, res) => new Controller().getCarts(res));
+router.get('/', (req, res) => new Controller().getCarts(req, res));
 
 // Ruta para obtener un carrito por su ID
 router.get('/:cid', (req, res) => new Controller().getCartById(req, res));

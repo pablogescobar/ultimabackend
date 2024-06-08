@@ -7,8 +7,9 @@ class Controller {
         this.ticketRepository = new TicketRepository();
     }
 
-    async getCarts(res) {
+    async getCarts(req, res) {
         try {
+            req.logger.info('Test')
             const carts = await this.cartRepository.getCarts();
             res.status(200).json(carts);
         } catch (error) {

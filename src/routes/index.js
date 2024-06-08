@@ -6,5 +6,6 @@ module.exports = {
     createProductRouter: require('./createProduct.router'),
     sessionRouter: require('./session.router'),
     sessionViewsRouter: require('./sessionViews.router'),
-    mockingProduct: require('./mockingProduct.router')
+    mockingProduct: require('./mockingProduct.router'),
+    loggerTest: require('./loggerTest.router'),
 }
