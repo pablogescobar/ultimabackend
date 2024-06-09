@@ -64,7 +64,6 @@ class ProductDAO {
         product.id = this.#getNewId();
         this.#products.push(product);
         await this.#saveFile();
-        console.log('Producto agregado correctamente');
     }
 
     async updateProduct(id, updatedProduct) {
@@ -74,7 +73,6 @@ class ProductDAO {
         if (index !== -1) {
             this.#products[index] = { ...this.#products[index], ...updatedProduct, id: numericId };
             await this.#saveFile();
-            console.log('Producto actualizado correctamente');
         } else {
             throw new Error('Not Found: El ID solicitado no existe');
         }
@@ -84,7 +82,6 @@ class ProductDAO {
         const numericId = parseInt(id);
         this.#products = this.#products.filter(p => p.id !== numericId);
         await this.#saveFile();
-        console.log('Producto eliminado correctamente');
     }
 }
 

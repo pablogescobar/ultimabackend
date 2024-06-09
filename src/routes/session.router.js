@@ -18,7 +18,7 @@ router.get('/githubcallback', passport.authenticate('github', { session: false, 
 
 router.post('/resetPassword', passport.authenticate('resetPassword', { failureRedirect: '/' }), async (_, res) => new Controller().redirect(res));
 
-router.get('/logout', (_, res) => new Controller().logout(res));
+router.get('/logout', (req, res) => new Controller().logout(req, res));
 
 router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 

@@ -12,9 +12,11 @@ class Controller {
         try {
             const { firstName, lastName, age, email, password } = req.body;
             const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
+            req.logger.info('Usuario registrado')
             res.status(201).json(user);
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
@@ -24,22 +26,24 @@ class Controller {
             req.logger.debug(password);
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
+            req.logger.info('Usuario identificado')
             res.redirect('/');
-            req.logger.info(JSON.stringify(user, null, 2))
-        } catch (err) {
-            res.status(401).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(401).json({ error });
         }
     }
 
     async resetPassword(req, res) {
         try {
             const { email, password } = req.body;
-            const user = await this.#userRepository.resetPassword(email, password);
-            req.logger.info(JSON.stringify(user, null, 2))
+            await this.#userRepository.resetPassword(email, password);
+            req.logger.info('Contraseña cambiada')
             res.redirect('/');
 
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
@@ -47,9 +51,11 @@ class Controller {
         try {
             const profile = req.user;
             const { accessToken, user } = await this.#userRepository.githubLogin(profile);
+            req.logger.info('Usuario identificado')
             res.status(200).json({ accessToken, user });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
@@ -57,25 +63,28 @@ class Controller {
         try {
             res.cookie('accessToken', req.user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             res.redirect('/');
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
-    logout(res) {
+    logout(req, res) {
         try {
             res.clearCookie('accessToken');
+            req.logger.info('Sesión finalizada')
             res.redirect('/');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
     redirect(res) {
         try {
             res.redirect('/');
-        } catch (e) {
-            res.status(500).json({ error: e.message });
+        } catch (error) {
+            res.status(500).json({ error });
         }
     }
 
@@ -83,9 +92,11 @@ class Controller {
         try {
             const { email } = req.body;
             await this.#userRepository.deleteUser(email);
+            res.logger.info('Usuario eliminado correctamente');
             res.status(200).json({ message: 'User deleted successfully' });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 
@@ -94,8 +105,9 @@ class Controller {
             const user = req.user
             req.logger.info(JSON.stringify(user, null, 2));
             res.json(user);
-        } catch (e) {
-            res.status(500).json({ error: e.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 }

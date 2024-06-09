@@ -17,6 +17,7 @@ class Controller {
             const products = await this.productRepository.getProducts(page, limit, sort, category, availability);
             res.status(200).json(products);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -38,6 +39,7 @@ class Controller {
 
             res.status(200).json(productData);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -50,6 +52,7 @@ class Controller {
             }
             res.json(products);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -58,8 +61,10 @@ class Controller {
         try {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
             const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category });
-            res.status(200).json({ message: 'Producto agregado correctamente', product });
+            req.logger.info('Producto creado de manera correcta');
+            res.status(200).json(product);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -68,8 +73,10 @@ class Controller {
         try {
             const productId = req.params.pid;
             const updatedProduct = await this.productRepository.updateProduct(productId, req.body);
-            res.status(200).json({ message: 'Producto actualizado', updatedProduct });
+            req.logger.info('Producto actualizado de manera correcta');
+            res.status(200).json(updatedProduct);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -78,23 +85,13 @@ class Controller {
         try {
             const productId = req.params.pid;
             await this.productRepository.deleteProduct(productId);
+            req.logger.info('Producto eliminado de manera correcta')
             res.status(200).json({ message: 'Producto eliminado' });
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
-
-    // async addProductToCart(req, res) {
-    //     try {
-    //         const productId = req.params.pid;
-    //         const cartId = req.user.cart;
-    //         const cartManager = req.app.get('cartManager');
-    //         await cartManager.addProductToCart(productId, cartId);
-    //         res.status(301).redirect('/products');
-    //     } catch (error) {
-    //         res.status(500).json({ error: error.message });
-    //     }
-    // }
 }
 
 module.exports = { Controller };

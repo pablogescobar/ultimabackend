@@ -16,12 +16,9 @@ class CartDAO {
         return await Carts.create(cart);
     }
 
-    async updateCart(id, data) {
-        return await Carts.updateOne({ _id: id }, { $set: data });
-    }
-
-    async updateCartPull(id, data) {
-        return await Carts.updateOne({ _id: id }, { $pull: data });
+    async updateCart(id, data, action = '$set') {
+        const updateData = { [action]: data };
+        return await Carts.updateOne({ _id: id }, updateData);
     }
 
     async deleteCart(id) {

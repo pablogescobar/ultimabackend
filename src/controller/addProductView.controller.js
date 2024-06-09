@@ -22,8 +22,9 @@ class Controller {
                 script: ['createProduct.js'],
                 isLoggedIn
             });
-        } catch (e) {
-            res.status(500).json({ error: ee.message })
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error })
         }
     }
 
@@ -38,8 +39,8 @@ class Controller {
 
             res.status(301).redirect('/products');
         } catch (error) {
-            req.logger.error(`Error fatal: ${error}`)
-            res.status(500).send('Error interno del servidor');
+            req.logger.error(error);
+            res.status(500).json({ error });
         }
     }
 }

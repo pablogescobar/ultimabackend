@@ -160,7 +160,7 @@ class CartRepository {
         try {
             await this.#verifyProductExists(productId);
             await this.#verifyCartExists(cartId);
-            await this.#cartDAO.updateCartPull(cartId, { products: { product: productId } });
+            await this.#cartDAO.updateCart(cartId, { products: { product: productId } }, '$pull');
             const cart = this.getCartById(cartId);
             return cart;
         } catch (error) {
@@ -178,7 +178,6 @@ class CartRepository {
         try {
             await this.#verifyProductExists(productId);
             const cart = await this.#verifyCartExists(cartId);
-            console.log(cart);
 
             const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
             if (existingProductIndex !== -1) {
