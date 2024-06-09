@@ -11,7 +11,7 @@ router.get('/', (req, res) => new Controller().getCarts(req, res));
 router.get('/:cid', (req, res) => new Controller().getCartById(req, res));
 
 // Ruta para agregar un nuevo carrito
-router.post('/', (_, res) => new Controller().createCart(res));
+router.post('/', (req, res) => new Controller().createCart(req, res));
 
 // Ruta para agregar un producto a un carrito
 router.post('/:cid/product/:pid', verifyToken, isUser, (req, res) => new Controller().addProductToCart(req, res));

@@ -9,10 +9,10 @@ class Controller {
 
     async getCarts(req, res) {
         try {
-            req.logger.info('Test')
             const carts = await this.cartRepository.getCarts();
             res.status(200).json(carts);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -23,6 +23,7 @@ class Controller {
             const cart = await this.cartRepository.getCartById(cartId);
             res.status(200).json(cart);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -30,8 +31,10 @@ class Controller {
     async createCart(res) {
         try {
             const cart = await this.cartRepository.addCart();
+            req.logger.info('Carrito creado de manera correcta');
             res.status(201).json(cart);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -44,6 +47,7 @@ class Controller {
             req.logger.info('Producto agregado al carrito de manera correcta')
             res.status(200).json(cart);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }
@@ -52,9 +56,11 @@ class Controller {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid
-            await this.cartRepository.deleteProductFromCart(productId, cartId);
-            res.status(200).json({ message: 'Producto eliminado del carrito' });
+            const cart = await this.cartRepository.deleteProductFromCart(productId, cartId);
+            req.logger.info('Producto eliminado del carrito.')
+            res.status(200).json(cart);
         } catch (error) {
+            req.logger.error(error);
             res.status(500).json({ error });
         }
     }

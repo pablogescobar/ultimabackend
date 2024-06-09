@@ -65,7 +65,13 @@ class CartRepository {
             }
             return cart;
         } catch (error) {
-            throw error;
+            throw CustomError.createError({
+                name: 'Error con el carrito',
+                cause: 'Ocurrió en el médtodo ocupado de obtener el carrito',
+                message: 'Error al obtener el carrito',
+                code: ErrorCodes.UNDEFINED_CART,
+                otherProblems: error
+            });
         }
     }
 
@@ -153,8 +159,9 @@ class CartRepository {
     async deleteProductFromCart(productId, cartId) {
         try {
             await this.#verifyProductExists(productId);
-            const cart = this.#verifyCartExists(cartId);
-            await this.#cartDAO.updateCart(cartId, { products: { product: productId } });
+            await this.#verifyCartExists(cartId);
+            await this.#cartDAO.updateCartPull(cartId, { products: { product: productId } });
+            const cart = this.getCartById(cartId);
             return cart;
         } catch (error) {
             throw CustomError.createError({

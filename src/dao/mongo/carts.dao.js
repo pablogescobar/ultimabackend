@@ -20,6 +20,10 @@ class CartDAO {
         return await Carts.updateOne({ _id: id }, { $set: data });
     }
 
+    async updateCartPull(id, data) {
+        return await Carts.updateOne({ _id: id }, { $pull: data });
+    }
+
     async deleteCart(id) {
         return await Carts.deleteOne({ _id: id });
     }
