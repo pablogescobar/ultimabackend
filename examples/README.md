@@ -2,6 +2,16 @@
 
 Todos los endpoints deben ser ejecutados desde Postman A continuación, se presenta la lista completa de todos los endpoints disponibles.
 
+## Testing
+
+### `logger`
+
+Permite probar todos los loggers del proyecto dependiendo de si el mismo se encuentra en un entorno productivo o de desarrollo.
+
+[**URL:**](http://localhost:8080/loggertest) `http://localhost:8080/loggertest`
+
+**Método** `GET`
+
 ## Users
 
 ### `register`

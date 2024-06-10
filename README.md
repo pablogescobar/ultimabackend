@@ -1,10 +1,12 @@
-# Desafío 8 - Coderhouse Backend
+# Desafío 9 - Coderhouse Backend
 
 ### Nuevos Cambios
 
-- Se agregó un nuevo middleware `errorHandler.middleware`.
-- Se creó un nuevo endpoint `/mockingproducts` que genera productos aleatorios.
-- Se implementaron practicas de `CustomError` para utilizar errores personalizados donde sean requeridos.
+- Se implementaron prácticas de logger al proyecto.
+- Se creó un nuevo endpoint `/loggertest` para probar todos los loggers del proyecto.
+- Se implementaron practicas de `Customlogger` para notificar al desarrollador de eventos ocurridos.
+- Se crearon diferentes niveles de notificación entre los cuales se encuentran: **debug, http, info, warning, error y fatal**
+- La respuesta devuelta por los diferentes niveles puede cambiar dependiendo de las variables de entorno. 
 
 ## Correr de manera local
 ```bash
