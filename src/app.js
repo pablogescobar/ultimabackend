@@ -6,7 +6,7 @@ const cookieParser = require('cookie-parser')
 const initializeStrategy = require('./config/passport.config');
 const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
-const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, mockingProduct, loggerTest } = require('./routes')
+const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, loggerTestRouter, mailingRouter, mockingProductRouter } = require('./routes')
 const { useLogger } = require('./middlewares/logger.middleware');
 
 const app = express();
@@ -37,8 +37,9 @@ app.use('/cart', cartViewsRouter);
 app.use('/createProduct', createProductRouter);
 app.use('/api/sessions', sessionRouter);
 app.use('/', sessionViewsRouter);
-app.use('/mockingproducts', mockingProduct);
-app.use('/loggertest', loggerTest);
+app.use('/mockingproducts', mockingProductRouter);
+app.use('/loggertest', loggerTestRouter);
+app.use('/mail', mailingRouter)
 
 // Se inicia el servidor en el puerto 8080
 const main = async () => {
