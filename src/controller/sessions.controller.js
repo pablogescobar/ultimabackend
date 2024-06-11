@@ -34,6 +34,34 @@ class Controller {
         }
     }
 
+    async verifyEmail(req, res) {
+        try {
+            const { email } = req.body;
+            const tokenPass = await this.#userRepository.resetPasswordTest(email);
+            res.cookie('passToken', tokenPass, { maxAge: 600000, httpOnly: true });
+            res.status(200).json(tokenPass);
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error })
+        }
+    }
+
+    async verifyToken(req, res) {
+        try {
+            const { verifyToken, newPassword } = req.body;
+            const cookieToken = req.cookies.passToken;
+            const updatePassword = await this.#userRepository.resetPassword(verifyToken, cookieToken, newPassword);
+            if (updatePassword) {
+                res.clearCookie('passToken');
+                res.redirect('/');
+            }
+            res.redirect('/products');
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
+        }
+    }
+
     async resetPassword(req, res) {
         try {
             const { email, password } = req.body;

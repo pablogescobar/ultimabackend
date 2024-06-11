@@ -3,11 +3,11 @@ const UserDAO = require('../dao/mongo/users.dao');
 const CartDAO = require('../dao/mongo/carts.dao');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { generateToken } = require('../middlewares/jwt.middleware');
+const { ObjectId } = require('mongodb');
 const { UserDTO } = require('../dto/userToken.dto');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
 const { generateInvalidCredentialsUserData } = require('../utils/errors/errors');
-const { MailingService } = require('../utils/mailingService');
 
 class UserRepository {
 
@@ -177,77 +177,31 @@ class UserRepository {
 
     }
 
-    async resetPasswordTest(email) {
-        if (!email) {
-            throw CustomError.createError({
-                name: 'Sin email',
-                cause: 'Es necesario que ingrese un email para poder continuar con el cambio de contraseña',
-                message: 'Debe ingresar un email',
-                code: ErrorCodes.UNDEFINED_USER
-            })
-        }
+    async resetPassword(email, password) {
+        try {
+            this.#validateLoginCredentials(email, password);
+            const user = await this.#userDAO.deleteByEmail(email);
 
-        const user = await this.#userDAO.findByEmail(email);
-
-        if (!user) {
             if (!user) {
                 throw CustomError.createError({
                     name: 'Email desconocido',
                     cause: 'Está intentando cambiar la contraseña de un email que no se encuentra registrado',
-                    message: 'El email no se encuentra registrado',
+                    message: 'El emmail no se encuentra registrado',
                     code: ErrorCodes.UNDEFINED_USER
                 })
             }
-        }
+            await this.#userDAO.updatePassword(email, hashPassword(password));
 
-        const passToken = (await new MailingService().sendMail(email));
-        const handlerPassToken = {
-            passToken: hashPassword(passToken.randomNumber.toString()),
-            email: passToken.email,
-        }
-
-        return handlerPassToken;
-    }
-
-    async resetPassword(bodyToken, cookieToken, newPassword) {
-        const { passToken, email } = cookieToken;
-        const verifyPassToken = isValidPassword(bodyToken, passToken);
-        if (!verifyPassToken) {
+        } catch (error) {
             throw CustomError.createError({
-                name: 'Token inválido',
-                cause: 'El token ingresado no coincide con el que se ha enviado a su mail',
-                message: 'El token no coincide',
-                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+                name: 'Error al eliminar el usuario',
+                cause: 'Ocurrió un problema en el manejo de sus credenciales para cambiar su contraseña',
+                message: 'Hubo un problema y no se pudo elimiar el usuario',
+                code: ErrorCodes.INVALID_CREDENTIALS,
+                otherProblems: error
             })
         }
-        await this.#userDAO.updatePassword(email, hashPassword(newPassword));
     }
-
-    // async resetPassword(email, password) {
-    //     try {
-    //         this.#validateLoginCredentials(email, password);
-    //         const user = await this.#userDAO.findByEmail(email);
-
-    //         if (!user) {
-    //             throw CustomError.createError({
-    //                 name: 'Email desconocido',
-    //                 cause: 'Está intentando cambiar la contraseña de un email que no se encuentra registrado',
-    //                 message: 'El emmail no se encuentra registrado',
-    //                 code: ErrorCodes.UNDEFINED_USER
-    //             })
-    //         }
-    //         await this.#userDAO.updatePassword(email, hashPassword(password));
-
-    //     } catch (error) {
-    //         throw CustomError.createError({
-    //             name: 'Error al eliminar el usuario',
-    //             cause: 'Ocurrió un problema en el manejo de sus credenciales para cambiar su contraseña',
-    //             message: 'Hubo un problema y no se pudo elimiar el usuario',
-    //             code: ErrorCodes.INVALID_CREDENTIALS,
-    //             otherProblems: error
-    //         })
-    //     }
-    // }
 
     async githubLogin(profile) {
         try {
