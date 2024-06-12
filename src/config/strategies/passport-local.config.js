@@ -25,17 +25,6 @@ const localStrategy = () => {
             }
         }
     ))
-
-    passport.use('resetPassword', new Strategy({ usernameField: 'email' },
-        async (username, password, done) => {
-            try {
-                const userUpdated = await new UserRepository().resetPassword(username, password);
-                done(null, userUpdated, { message: 'Contraseña actualizada.' })
-            } catch (error) {
-                done(error)
-            }
-        }
-    ))
 }
 
 module.exports = localStrategy

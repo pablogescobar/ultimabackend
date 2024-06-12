@@ -16,7 +16,9 @@ router.get('/github', passport.authenticate('github', { scope: ['user:email'] })
 
 router.get('/githubcallback', passport.authenticate('github', { session: false, failureRedirect: '/login' }), (req, res) => new Controller().githubCb(req, res));
 
-router.post('/resetPassword', passport.authenticate('resetPassword', { failureRedirect: '/' }), async (_, res) => new Controller().redirect(res));
+router.post('/resetPassword', async (req, res) => new Controller().sendMailToResetPassword(req, res));
+
+router.post('/verifyResetPassword', async (req, res) => new Controller().resetPassword(req, res));
 
 router.get('/logout', (req, res) => new Controller().logout(req, res));
 

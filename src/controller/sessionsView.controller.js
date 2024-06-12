@@ -91,7 +91,18 @@ class Controller {
 
     resetPassword(res) {
         try {
-            res.render('reset_password', {
+            res.render('sendMailToResetPassword', {
+                titlePage: 'Send Token',
+                style: ['styles.css']
+            });
+        } catch (err) {
+            res.status(500).json({ Error: err.message });
+        }
+    }
+
+    verifyResetPassword(res) {
+        try {
+            res.render('resetPassword', {
                 titlePage: 'Reset Password',
                 style: ['styles.css']
             });

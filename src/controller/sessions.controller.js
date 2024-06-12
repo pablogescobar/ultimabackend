@@ -34,19 +34,19 @@ class Controller {
         }
     }
 
-    async verifyEmail(req, res) {
+    async sendMailToResetPassword(req, res) {
         try {
             const { email } = req.body;
-            const tokenPass = await this.#userRepository.resetPasswordTest(email);
+            const tokenPass = await this.#userRepository.sendMailToResetPassword(email);
             res.cookie('passToken', tokenPass, { maxAge: 600000, httpOnly: true });
-            res.status(200).json(tokenPass);
+            res.redirect('/verifyResetPassword');
         } catch (error) {
             req.logger.error(error);
             res.status(500).json({ error })
         }
     }
 
-    async verifyToken(req, res) {
+    async resetPassword(req, res) {
         try {
             const { verifyToken, newPassword } = req.body;
             const cookieToken = req.cookies.passToken;
@@ -55,20 +55,7 @@ class Controller {
                 res.clearCookie('passToken');
                 res.redirect('/');
             }
-            res.redirect('/products');
-        } catch (error) {
-            req.logger.error(error);
-            res.status(500).json({ error });
-        }
-    }
-
-    async resetPassword(req, res) {
-        try {
-            const { email, password } = req.body;
-            await this.#userRepository.resetPassword(email, password);
-            req.logger.info('Contraseña cambiada')
-            res.redirect('/');
-
+            res.redirect('/login');
         } catch (error) {
             req.logger.error(error);
             res.status(500).json({ error });

@@ -11,6 +11,8 @@ router.get('/register', (_, res) => new Controller().register(res));
 
 router.get('/profile', verifyToken, (req, res) => new Controller().profile(req, res));
 
-router.get('/resetPassword', (_, res) => new Controller().resetPassword(res))
+router.get('/resetPassword', (_, res) => new Controller().resetPassword(res));
+
+router.get('/verifyResetPassword', (_, res) => new Controller().verifyResetPassword(res));
 
 module.exports = router;

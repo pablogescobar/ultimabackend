@@ -177,7 +177,7 @@ class UserRepository {
 
     }
 
-    async resetPasswordTest(email) {
+    async sendMailToResetPassword(email) {
         if (!email) {
             throw CustomError.createError({
                 name: 'Sin email',
@@ -211,7 +211,7 @@ class UserRepository {
 
     async resetPassword(bodyToken, cookieToken, newPassword) {
         const { passToken, email } = cookieToken;
-        const verifyPassToken = isValidPassword(bodyToken, passToken);
+        const verifyPassToken = isValidPassword(bodyToken.toString(), passToken);
         if (!verifyPassToken) {
             throw CustomError.createError({
                 name: 'Token inválido',
@@ -222,32 +222,6 @@ class UserRepository {
         }
         await this.#userDAO.updatePassword(email, hashPassword(newPassword));
     }
-
-    // async resetPassword(email, password) {
-    //     try {
-    //         this.#validateLoginCredentials(email, password);
-    //         const user = await this.#userDAO.findByEmail(email);
-
-    //         if (!user) {
-    //             throw CustomError.createError({
-    //                 name: 'Email desconocido',
-    //                 cause: 'Está intentando cambiar la contraseña de un email que no se encuentra registrado',
-    //                 message: 'El emmail no se encuentra registrado',
-    //                 code: ErrorCodes.UNDEFINED_USER
-    //             })
-    //         }
-    //         await this.#userDAO.updatePassword(email, hashPassword(password));
-
-    //     } catch (error) {
-    //         throw CustomError.createError({
-    //             name: 'Error al eliminar el usuario',
-    //             cause: 'Ocurrió un problema en el manejo de sus credenciales para cambiar su contraseña',
-    //             message: 'Hubo un problema y no se pudo elimiar el usuario',
-    //             code: ErrorCodes.INVALID_CREDENTIALS,
-    //             otherProblems: error
-    //         })
-    //     }
-    // }
 
     async githubLogin(profile) {
         try {
