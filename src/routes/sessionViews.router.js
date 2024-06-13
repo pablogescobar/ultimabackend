@@ -13,6 +13,8 @@ router.get('/profile', verifyToken, (req, res) => new Controller().profile(req, 
 
 router.get('/resetPassword', (_, res) => new Controller().resetPassword(res));
 
-router.get('/verifyResetPassword', (_, res) => new Controller().verifyResetPassword(res));
+router.get('/resetPaswordWarning', (_, res) => new Controller().resetPasswordWarning(res));
+
+router.get('/resetPassword/:tid', (req, res) => new Controller().verifyResetPassword(req, res));
 
 module.exports = router;

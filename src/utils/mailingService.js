@@ -9,7 +9,8 @@ class MailingService {
     async sendMail(email) {
         try {
 
-            const randomNumber = Math.floor(100000 + Math.random() * 900000);
+            const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
+
 
             const transport = nodemailer.createTransport({
                 service: 'gmail',
@@ -28,6 +29,7 @@ class MailingService {
             <div>
                 <h2>Clave para cambiar la contraseña</h2>
                 <h4>${randomNumber}</h4>
+                <a href="http://localhost:8080/resetPassword/${randomNumber}">Restablecer contraseña</a>
             </div>`,
                 attachments: []
             });

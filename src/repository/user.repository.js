@@ -209,19 +209,70 @@ class UserRepository {
         return handlerPassToken;
     }
 
-    async resetPassword(bodyToken, cookieToken, newPassword) {
+    async resetPassword(urlToken, cookieToken, newPassword, confirmPassword) {
         const { passToken, email } = cookieToken;
-        const verifyPassToken = isValidPassword(bodyToken.toString(), passToken);
-        if (!verifyPassToken) {
+
+        if (!newPassword || !confirmPassword) {
             throw CustomError.createError({
-                name: 'Token inválido',
-                cause: 'El token ingresado no coincide con el que se ha enviado a su mail',
-                message: 'El token no coincide',
+                name: 'Datos faltantes',
+                cause: 'Es necesario que ingrese una nueva contraseña y la confirmación de la misma',
+                message: 'Debe completar todos los cambios',
                 code: ErrorCodes.PASSWORD_UPDATE_ERROR
             })
         }
-        await this.#userDAO.updatePassword(email, hashPassword(newPassword));
+
+        const isValidToken = isValidPassword(urlToken, passToken);
+
+        if (!isValidToken) {
+            throw CustomError.createError({
+                name: 'Link inválido',
+                cause: 'El link no es válido o ha expirado. Vuelva a enviar el mail de confirmación.',
+                message: 'El link no es válido o ha expirado.',
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+            })
+        }
+
+        if (newPassword !== confirmPassword) {
+            throw CustomError.createError({
+                name: 'Contraseña inválida',
+                cause: 'Las dos contraseñas ingresadas deben coincidir para poder continuar con la actualización',
+                message: 'Las dos contraseñas no coinciden',
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+            })
+        }
+
+        const user = await this.#userDAO.findByEmail(email);
+
+        const confirmValidPassword = isValidPassword(newPassword, user.password);
+
+        if (confirmValidPassword) {
+            throw CustomError.createError({
+                name: 'Contraseña inválida',
+                cause: 'La la nueva contraseña no puede ser igual a la contraseña anterior.',
+                message: 'Debe actualizar su contraseña',
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+            })
+        }
+
+        const updatedUser = await this.#userDAO.updatePassword(email, hashPassword(newPassword));
+
+        return updatedUser;
+
     }
+
+    // async resetPassword(urlToken, cookieToken, newPassword, confirmPassword) {
+    //     const { passToken, email } = cookieToken;
+    //     const verifyPassToken = isValidPassword(bodyToken.toString(), passToken);
+    //     if (!verifyPassToken) {
+    //         throw CustomError.createError({
+    //             name: 'Token inválido',
+    //             cause: 'El token ingresado no coincide con el que se ha enviado a su mail',
+    //             message: 'El token no coincide',
+    //             code: ErrorCodes.PASSWORD_UPDATE_ERROR
+    //         })
+    //     }
+    //     await this.#userDAO.updatePassword(email, hashPassword(newPassword));
+    // }
 
     async githubLogin(profile) {
         try {

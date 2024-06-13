@@ -100,11 +100,24 @@ class Controller {
         }
     }
 
-    verifyResetPassword(res) {
+    resetPasswordWarning(res) {
         try {
-            res.render('resetPassword', {
+            res.render('resetPasswordWarning', {
                 titlePage: 'Reset Password',
                 style: ['styles.css']
+            });
+        } catch (err) {
+            res.status(500).json({ Error: err.message });
+        }
+    }
+
+    verifyResetPassword(req, res) {
+        try {
+            const tid = req.params.tid;
+            res.render('resetPassword', {
+                titlePage: 'Reset Password',
+                style: ['styles.css'],
+                tid
             });
         } catch (err) {
             res.status(500).json({ Error: err.message });
