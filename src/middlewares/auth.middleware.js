@@ -15,6 +15,14 @@ module.exports = {
         return res.status(403).json({ message: 'Acceso denegado: Solamente administradores' });
     },
 
+    isUserPremium: (req, res, next) => {
+        if (req.user && (req.user.rol === 'admin' || req.user.rol === 'superAdmin' || req.user.rol === 'premium')) {
+            return next();
+        }
+        req.logger.warning('Acceso denegado: Debe tener, al menos, permisos premium para poder acceder');
+        return res.status(403).json({ message: 'Acceso denegado: Debe tener, al menos, permisos premium' })
+    },
+
     isUser: (req, res, next) => {
         if (req.user && req.user.rol === 'user') {
             return next();

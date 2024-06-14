@@ -260,20 +260,6 @@ class UserRepository {
 
     }
 
-    // async resetPassword(urlToken, cookieToken, newPassword, confirmPassword) {
-    //     const { passToken, email } = cookieToken;
-    //     const verifyPassToken = isValidPassword(bodyToken.toString(), passToken);
-    //     if (!verifyPassToken) {
-    //         throw CustomError.createError({
-    //             name: 'Token inválido',
-    //             cause: 'El token ingresado no coincide con el que se ha enviado a su mail',
-    //             message: 'El token no coincide',
-    //             code: ErrorCodes.PASSWORD_UPDATE_ERROR
-    //         })
-    //     }
-    //     await this.#userDAO.updatePassword(email, hashPassword(newPassword));
-    // }
-
     async githubLogin(profile) {
         try {
             const user = await this.#userDAO.findByEmail(profile._json.email);

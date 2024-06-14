@@ -1,12 +1,15 @@
 const ProductDAO = require('../dao/mongo/products.dao');
+const UserDAO = require('../dao/mongo/users.dao');
 const { ProductDTO } = require('../dto/product.dto');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
 const { generateInvalidProductData } = require('../utils/errors/errors');
 
 class ProductRepository {
+    #userDAO
     constructor() {
         this.productDAO = new ProductDAO();
+        this.#userDAO = new UserDAO();
     }
 
     #validateAndFormatGetProductsParams(page, limit, sort, category, availability) {
@@ -72,7 +75,7 @@ class ProductRepository {
 
     }
 
-    #validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category) {
+    async #validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category, owner) {
 
         const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
@@ -93,6 +96,10 @@ class ProductRepository {
             status = false;
         }
 
+        const user = await this.#userDAO.findByEmail(owner);
+
+        const finalOwner = user && user.rol === 'premium' ? user.email : 'admin';
+
         const newProduct = {
             title,
             description,
@@ -101,7 +108,8 @@ class ProductRepository {
             code,
             status,
             stock,
-            category
+            category,
+            owner: finalOwner
         };
 
         return newProduct;
@@ -152,8 +160,8 @@ class ProductRepository {
 
     async addProduct(productData) {
         try {
-            const { title, description, price, thumbnail, code, status, stock, category } = productData;
-            const productHandler = this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category);
+            const { title, description, price, thumbnail, code, status, stock, category, owner } = productData;
+            const productHandler = await this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category, owner);
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
         } catch (error) {
