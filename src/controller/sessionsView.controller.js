@@ -100,11 +100,14 @@ class Controller {
         }
     }
 
-    resetPasswordWarning(res) {
+    resetPasswordWarning(req, res) {
         try {
+            const passToken = req.cookies.passToken !== undefined;
             res.render('resetPasswordWarning', {
                 titlePage: 'Reset Password',
-                style: ['styles.css']
+                style: ['styles.css'],
+                passToken,
+                notPassToken: !passToken
             });
         } catch (err) {
             res.status(500).json({ Error: err.message });
@@ -114,7 +117,11 @@ class Controller {
     verifyResetPassword(req, res) {
         try {
             const tid = req.params.tid;
-            res.render('resetPassword', {
+            const passToken = req.cookies.passToken;
+            if (!passToken) {
+                return res.redirect('/resetPasswordWarning');
+            }
+            return res.render('resetPassword', {
                 titlePage: 'Reset Password',
                 style: ['styles.css'],
                 tid

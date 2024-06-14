@@ -38,8 +38,8 @@ class Controller {
         try {
             const { email } = req.body;
             const tokenPass = await this.#userRepository.sendMailToResetPassword(email);
-            res.cookie('passToken', tokenPass, { maxAge: 600000, httpOnly: true });
-            res.redirect('/resetPaswordWarning');
+            res.cookie('passToken', tokenPass, { maxAge: 60 * 60 * 1000, httpOnly: true });
+            res.redirect('/resetPasswordWarning');
         } catch (error) {
             req.logger.error(error);
             res.status(500).json({ error })
@@ -51,12 +51,15 @@ class Controller {
             const urlToken = req.params.tid
             const { newPassword, confirmPassword } = req.body;
             const cookieToken = req.cookies.passToken;
+            if (!cookieToken) {
+                return res.redirect('/resetPassword');
+            }
             const updatePassword = await this.#userRepository.resetPassword(urlToken, cookieToken, newPassword, confirmPassword);
+            res.clearCookie('passToken');
             if (updatePassword) {
                 return res.redirect('/');
             }
-            res.clearCookie('passToken');
-            res.redirect('/login');
+            return res.redirect('/login');
         } catch (error) {
             req.logger.error(error);
             return res.status(500).json({ error });

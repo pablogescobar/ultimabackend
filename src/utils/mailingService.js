@@ -27,8 +27,8 @@ class MailingService {
                 subject: 'BackendApp | Restablecer contraseña',
                 html: `
             <div>
-                <h2>Clave para cambiar la contraseña</h2>
-                <h4>${randomNumber}</h4>
+                <h2>Ingrese al link para poder restablecer su contraseña</h2>
+                <h4>Tenga en cuenta que el link de restablecimiento tiene una duración de una hora. Si este plazo se vence deberá generar un nuevo link.</h4>
                 <a href="http://localhost:8080/resetPassword/${randomNumber}">Restablecer contraseña</a>
             </div>`,
                 attachments: []
