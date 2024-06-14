@@ -24,4 +24,6 @@ router.get('/logout', (req, res) => new Controller().logout(req, res));
 
 router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 
+router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().changeRole(req, res))
+
 module.exports = router;

@@ -13,6 +13,10 @@ class UserDAO {
         return await Users.updateOne({ email }, { $set: { password } });
     }
 
+    async updateRole(email, rol) {
+        return await Users.updateOne({ email }, { $set: { rol } });
+    }
+
     async deleteByEmail(email) {
         return await Users.deleteOne({ email });
     }

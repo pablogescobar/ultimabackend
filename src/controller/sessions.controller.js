@@ -129,6 +129,18 @@ class Controller {
             res.status(500).json({ error });
         }
     }
+
+    async changeRole(req, res) {
+        try {
+            const uid = req.params.uid;
+            const user = await this.#userRepository.changeRole(uid);
+            req.logger.info(`Rol del usuario actualizado a ${user.rol}`);
+            res.json(user);
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
+        }
+    }
 }
 
 module.exports = { Controller };

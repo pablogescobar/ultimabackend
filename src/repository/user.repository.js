@@ -329,6 +329,27 @@ class UserRepository {
             })
         }
     }
+
+    async changeRole(id) {
+        const user = await this.#userDAO.findById(id);
+        if (!user) {
+            throw CustomError.createError({
+                name: 'Usuario inválido',
+                cause: 'El ID del usuario ingresado no se ecuentra registrado en la base de datos.',
+                message: 'ID desconocido',
+                code: ErrorCodes.UNDEFINED_USER
+            })
+        }
+
+        if (user.rol === 'user') {
+            await this.#userDAO.updateRole(user.email, 'premium');
+        } else {
+            await this.#userDAO.updateRole(user.email, 'user');
+        }
+
+        const updatedUser = this.#userDAO.findById(id);
+        return updatedUser;
+    }
 }
 
 module.exports = { UserRepository };
