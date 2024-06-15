@@ -8,5 +8,4 @@ module.exports = {
     sessionViewsRouter: require('./sessionViews.router'),
     mockingProductRouter: require('./mockingProduct.router'),
     loggerTestRouter: require('./loggerTest.router'),
-    mailingRouter: require('./mailing.router'),
 }

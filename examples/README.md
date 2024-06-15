@@ -52,7 +52,7 @@ Loguea un usuario existente en la base de datos. Hecho esto, mediante un middlew
 ````
 ### `resetPassword`
 
-Resetea la contraseña de un usuario existente en la base de datos. Actualmente, no cuenta con autenticación de dos pasos.
+Envia un email al usuario ingresado para poder recuperar su contraseña.
 
 [**URL:**](http://localhost:8080/api/sessions/resetPassword) `http://localhost:8080/api/sessions/resetPassword`
 
@@ -63,11 +63,35 @@ Resetea la contraseña de un usuario existente en la base de datos. Actualmente,
 ```json
 {
     "email": "ejemplo@hotmail.com",
-    "password": "nuevaContraseña"
 }
 ````
 
-### `getToken`
+### `resetPasswordWarning`
+
+Avisa al usuario que el mail se ha enviado a su cuenta de correo o bien avisa que el link de recuperación ha expirado.
+
+[**URL:**](http://localhost:8080/resetPasswordWarning) `http://localhost:8080/resetPasswordWarning`
+
+**Método** `GET`
+
+### `verifyResetPassword`
+
+Deberá ingresar una nueva contraseña y confirmarla para poder realizar la actualización. Tenga en cuenta que el link expira y `uid` varía dependiendo lo que reciba en su mail.
+
+[**URL:**](http://localhost:8080/api/sessions/resetPassword/9950531852) `http://localhost:8080/api/sessions/resetPassword/:uid`
+
+**Método** `POST`
+
+**Cuerpo de la Solicitud (Ejemplo para `resetPassword`):**
+
+```json
+{
+    "newPassword": "nuevaContraseña",
+    "confirmPassword": "nuevaContraseña"
+}
+````
+
+### `curretUser`
 
 Muestra la información que contiene el token de logeo del usuario.
 
@@ -98,6 +122,14 @@ Elimina el usuario y su carrito según el email.
     "email": "correo@ejemplo.com"
 }
 ````
+
+### `changeRole`
+
+La URL debe contener el ID del usuario para poder variar el rol del mismo entre **user** y **premium**. 
+
+[**URL:**](http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859`
+
+**Método** `POST`
 
 ## Carts
 
