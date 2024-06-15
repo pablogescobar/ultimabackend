@@ -24,7 +24,7 @@ module.exports = {
     },
 
     isUser: (req, res, next) => {
-        if (req.user && req.user.rol === 'user') {
+        if (req.user && (req.user.rol === 'user' || req.user.rol === 'premium')) {
             return next();
         }
         req.logger.warning('Acceso denegado: Solamente usuarios')

@@ -8,8 +8,8 @@ class CustomError {
 
     }) {
         const error = new Error(message);
-        error.cause = cause;
         error.name = name;
+        error.cause = cause;
         error.code = code;
         error.otherProblems = otherProblems;
         return error;

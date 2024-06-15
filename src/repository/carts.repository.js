@@ -91,36 +91,35 @@ class CartRepository {
 
     }
 
-    async addProductToCart(productId, cartId) {
-        try {
-            await this.#verifyProductExists(productId);
-            const cart = await this.#verifyCartExists(cartId);
+    async addProductToCart(productId, cartId, user) {
 
-            // Verificar si el producto ya está en el carrito
-            const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
-            if (existingProductIndex !== -1) {
-                // Si el producto existe, aumentar su cantidad en 1
-                cart.products[existingProductIndex].quantity += 1;
-            } else {
-                // Si el producto no existe, agregarlo al carrito con cantidad 1
-                cart.products.push({ product: productId, quantity: 1 });
-            }
-
-            // Guardar el carrito actualizado
-            await this.#cartDAO.updateCart(cartId, { products: cart.products });
-
-            return cart;
-
-        } catch (error) {
+        const product = await this.#verifyProductExists(productId);
+        const cart = await this.#verifyCartExists(cartId);
+        if (product.owner && product.owner === user.email) {
             throw CustomError.createError({
                 name: 'Error con el carrito',
-                cause: 'Hubo un problema ejecutar el ubicar el producto o el carrito en la base de datos',
+                cause: 'No puede agregar al carrito productos que están creados por el mismo usuario',
                 message: 'Error al agregar el producto al carrito',
                 code: ErrorCodes.CART_UPDATE_ERROR,
-                otherProblems: error
             });
         }
+        // Verificar si el producto ya está en el carrito
+        const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
+        if (existingProductIndex !== -1) {
+            // Si el producto existe, aumentar su cantidad en 1
+            cart.products[existingProductIndex].quantity += 1;
+        } else {
+            // Si el producto no existe, agregarlo al carrito con cantidad 1
+            cart.products.push({ product: productId, quantity: 1 });
+        }
+
+        // Guardar el carrito actualizado
+        await this.#cartDAO.updateCart(cartId, { products: cart.products });
+
+        return cart;
+
     }
+
 
     async updateCart(cartId, products) {
         try {

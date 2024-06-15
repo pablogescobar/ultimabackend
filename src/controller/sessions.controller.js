@@ -91,7 +91,7 @@ class Controller {
     logout(req, res) {
         try {
             res.clearCookie('accessToken');
-            req.logger.info('Sesión finalizada')
+            req.logger.info('Sesión finalizada');
             res.redirect('/');
         } catch (error) {
             req.logger.error(error);
@@ -135,7 +135,8 @@ class Controller {
             const uid = req.params.uid;
             const user = await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado a ${user.rol}`);
-            res.json(user);
+            res.clearCookie('accessToken');
+            return res.json(user);
         } catch (error) {
             req.logger.error(error);
             res.status(500).json({ error });

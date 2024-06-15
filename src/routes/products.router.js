@@ -20,6 +20,6 @@ router.post('/', verifyToken, isUserPremium, async (req, res) => new Controller(
 router.put('/:pid', verifyToken, isAdmin, async (req, res) => new Controller().updateProduct(req, res));
 
 // Ruta para eliminar un producto por su ID
-router.delete('/:pid', verifyToken, isAdmin, async (req, res) => new Controller().deleteProduct(req, res));
+router.delete('/:pid', verifyToken, isUserPremium, async (req, res) => new Controller().deleteProduct(req, res));
 
 module.exports = router; // Exporta el enrutador

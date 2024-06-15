@@ -85,7 +85,8 @@ class Controller {
     async deleteProduct(req, res) {
         try {
             const productId = req.params.pid;
-            await this.productRepository.deleteProduct(productId);
+            const user = req.user
+            await this.productRepository.deleteProduct(productId, user);
             req.logger.info('Producto eliminado de manera correcta')
             res.status(200).json({ message: 'Producto eliminado' });
         } catch (error) {

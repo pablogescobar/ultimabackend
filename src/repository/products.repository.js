@@ -195,18 +195,22 @@ class ProductRepository {
         }
     }
 
-    async deleteProduct(id) {
-        try {
-            await this.getProductById(IDBObjectStore)
-            return await this.productDAO.deleteProduct(id);
-        } catch (e) {
+    async deleteProduct(productId, user) {
+
+        const product = await this.getProductById(productId);
+        if (user.rol === 'admin') {
+            return await this.productDAO.deleteProduct(productId);
+        } else if (product.owner && product.owner === user.email) {
+            return await this.productDAO.deleteProduct(productId);
+        } else {
             throw CustomError.createError({
-                name: 'Error al eliminar el producto',
-                cause: 'Hubo un error al eliminar el producto de la base de datos',
-                message: 'Error al eliminar el producto',
+                name: 'Solicitud rechazada',
+                cause: 'No posee los permisos correspondientes para llevar a cabo esta acción',
+                message: 'No se pudo eliminar el producto',
                 code: ErrorCodes.PRODUCT_DELETION_ERROR
-            });
+            })
         }
+
     }
 }
 

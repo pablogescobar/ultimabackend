@@ -43,7 +43,8 @@ class Controller {
         try {
             const cartId = req.params.cid;
             const productId = req.params.pid;
-            const cart = await this.cartRepository.addProductToCart(productId, cartId);
+            const user = req.user;
+            const cart = await this.cartRepository.addProductToCart(productId, cartId, user);
             req.logger.info('Producto agregado al carrito de manera correcta');
             res.status(200).json(cart);
         } catch (error) {
