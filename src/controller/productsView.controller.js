@@ -49,6 +49,7 @@ class Controller {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const productId = req.params.pid;
             const product = await this.productRepository.getProductById(productId);
+            const user = req.user
 
             const productData = {
                 title: product.title,
@@ -58,7 +59,8 @@ class Controller {
                 stock: product.stock,
                 code: product.code,
                 id: product.id,
-                isLoggedIn
+                isLoggedIn,
+                cartId: user.cart
             };
 
             res.status(200).render('product', {
@@ -67,6 +69,7 @@ class Controller {
                 style: ['styles.css'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
+                cart: user.cart
             });
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -87,7 +90,9 @@ class Controller {
     async addProduct(req, res) {
         try {
             const { title, description, price, thumbnail, code, status, stock, category } = req.body;
-            await new daoProducts().addProduct(title, description, price, thumbnail, code, status, stock, category);
+            const owner = req.user.email;
+            await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category, owner });
+            req.logger.info('Producto creado de manera correcta');
             res.status(301).redirect('/products');
         } catch (error) {
             res.status(500).json({ error: error.message });

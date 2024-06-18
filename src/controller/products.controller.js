@@ -26,6 +26,7 @@ class Controller {
         try {
             const productId = req.params.pid;
             const product = await this.productRepository.getProductById(productId);
+            const user = req.user;
 
             const productData = {
                 title: product.title,
@@ -35,6 +36,7 @@ class Controller {
                 stock: product.stock,
                 code: product.code,
                 id: product._id,
+                cart: user.cart
             };
 
             res.status(200).json(productData);

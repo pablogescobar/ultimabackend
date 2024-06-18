@@ -39,6 +39,20 @@ class Controller {
             res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el carrito
         }
     }
+
+    async addProductToCart(req, res) {
+        try {
+            const cartId = req.params.cid;
+            const productId = req.params.pid;
+            const user = req.user;
+            const cart = await this.#cartRepository.addProductToCart(productId, cartId, user);
+            req.logger.info('Producto agregado al carrito de manera correcta');
+            res.redirect('/products');
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
+        }
+    }
 }
 
 module.exports = { Controller };

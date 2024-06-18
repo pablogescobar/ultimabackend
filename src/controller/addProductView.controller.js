@@ -1,7 +1,11 @@
-const daoProducts = require('../dao/mongo/products.dao');
+// const daoProducts = require('../dao/mongo/products.dao');
+const { ProductRepository } = require('../repository/products.repository');
 
 class Controller {
-    constructor() { }
+    #productRepository
+    constructor() {
+        this.#productRepository = new ProductRepository();
+    }
 
     viewForm(req, res) {
         try {
@@ -31,12 +35,10 @@ class Controller {
     async addProduct(req, res) {
         try {
 
-            // Obtener los datos del producto del cuerpo de la solicitud
-            const { title, description, price, thumbnail, code, status, stock } = req.body;
-
-            // Agregar el nuevo producto al archivo
-            await new daoProducts().addProduct(title, description, price, thumbnail, code, status, stock);
-
+            const { title, description, price, thumbnail, code, status, stock, category } = req.body;
+            const owner = req.user.email;
+            await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category, owner });
+            req.logger.info('Producto creado de manera correcta');
             res.status(301).redirect('/products');
         } catch (error) {
             req.logger.error(error);
