@@ -49,12 +49,12 @@ class Controller {
     async resetPassword(req, res) {
         try {
             const urlToken = req.params.tid
+            const token = req.passToken;
             const { newPassword, confirmPassword } = req.body;
-            const cookieToken = req.cookies.passToken;
-            if (!cookieToken) {
+            if (!token) {
                 return res.redirect('/resetPassword');
             }
-            const updatePassword = await this.#userRepository.resetPassword(urlToken, cookieToken, newPassword, confirmPassword);
+            const updatePassword = await this.#userRepository.resetPassword(urlToken, token, newPassword, confirmPassword);
             res.clearCookie('passToken');
             if (updatePassword) {
                 return res.redirect('/');

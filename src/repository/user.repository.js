@@ -2,7 +2,7 @@ require('dotenv').config();
 const UserDAO = require('../dao/mongo/users.dao');
 const CartDAO = require('../dao/mongo/carts.dao');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
-const { generateToken } = require('../middlewares/jwt.middleware');
+const { generateToken, generatePasswordRecoveryToken } = require('../middlewares/jwt.middleware');
 const { UserDTO } = require('../dto/userToken.dto');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
@@ -201,16 +201,18 @@ class UserRepository {
         }
 
         const passToken = (await new MailingService().sendMail(email));
-        const handlerPassToken = {
-            passToken: hashPassword(passToken.randomNumber.toString()),
-            email: passToken.email,
-        }
+        // const handlerPassToken = {
+        //     passToken: hashPassword(passToken.randomNumber.toString()),
+        //     email: passToken.email,
+        // }
+
+        const handlerPassToken = generatePasswordRecoveryToken(passToken.randomNumber, passToken.email);
 
         return handlerPassToken;
     }
 
-    async resetPassword(urlToken, cookieToken, newPassword, confirmPassword) {
-        const { passToken, email } = cookieToken;
+    async resetPassword(urlToken, token, newPassword, confirmPassword) {
+        const { code, email } = token;
 
         if (!newPassword || !confirmPassword) {
             throw CustomError.createError({
@@ -221,7 +223,7 @@ class UserRepository {
             })
         }
 
-        const isValidToken = isValidPassword(urlToken, passToken);
+        const isValidToken = urlToken === code.toString();
 
         if (!isValidToken) {
             throw CustomError.createError({
