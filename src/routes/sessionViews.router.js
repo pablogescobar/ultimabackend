@@ -1,6 +1,7 @@
 const { Router } = require('express');
 const router = Router();
 const { Controller } = require('../controller/sessionsView.controller');
+const { Controller: specialController } = require('../controller/sessions.controller');
 const { verifyToken } = require('../middlewares/jwt.middleware');
 
 router.get('/', verifyToken, (req, res) => new Controller().index(req, res));
@@ -16,5 +17,7 @@ router.get('/resetPassword', (_, res) => new Controller().resetPassword(res));
 router.get('/resetPasswordWarning', (req, res) => new Controller().resetPasswordWarning(req, res));
 
 router.get('/resetPassword/:tid', (req, res) => new Controller().verifyResetPassword(req, res));
+
+router.post('/api/users/premium/:uid', async (req, res) => new specialController().changeRole(req, res));
 
 module.exports = router;

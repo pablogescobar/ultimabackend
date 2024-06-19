@@ -26,7 +26,7 @@ class Controller {
             req.logger.debug(password);
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-            req.logger.info('Usuario identificado')
+            req.logger.info('Usuario identificado');
             res.redirect('/');
         } catch (error) {
             req.logger.error(error);
@@ -39,6 +39,7 @@ class Controller {
             const { email } = req.body;
             const tokenPass = await this.#userRepository.sendMailToResetPassword(email);
             res.cookie('passToken', tokenPass, { maxAge: 60 * 60 * 1000, httpOnly: true });
+            req.logger.info('Email enviado');
             res.redirect('/resetPasswordWarning');
         } catch (error) {
             req.logger.error(error);
@@ -52,13 +53,16 @@ class Controller {
             const token = req.passToken;
             const { newPassword, confirmPassword } = req.body;
             if (!token) {
+                req.logger.info('El token ha expirado');
                 return res.redirect('/resetPassword');
             }
             const updatePassword = await this.#userRepository.resetPassword(urlToken, token, newPassword, confirmPassword);
             res.clearCookie('passToken');
-            if (updatePassword) {
+            if (!updatePassword) {
+                req.logger.info('No se pudo actualizar la contraseña');
                 return res.redirect('/');
             }
+            req.logger.info('Contraseña actualizada');
             return res.redirect('/login');
         } catch (error) {
             req.logger.error(error);

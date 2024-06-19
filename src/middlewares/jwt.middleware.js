@@ -21,10 +21,6 @@ const verifyToken = (req, res, next) => {
 
         req.user = decoded.user;
 
-        // if (decoded.user && decoded.user.cart) {
-        //     req.user.cartId = decoded.user.cart._id;
-        // }
-
         next();
     });
 };
@@ -46,8 +42,7 @@ const verifyPasswordToken = (req, res, next) => {
 
     jwt.verify(passwordRecoveryToken, PRIVATE_KEY, (err, decoded) => {
         if (err) {
-            // return res.status(301).redirect('/resetPasswordWarning');
-            return res.status(301).redirect({ error: 'Error, token invalido' });
+            return res.status(401).redirect({ error: 'Error, token invalido' });
         }
 
         req.passToken = { code: decoded.code, email: decoded.email };

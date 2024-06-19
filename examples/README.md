@@ -125,9 +125,11 @@ Elimina el usuario y su carrito según el email.
 
 ### `changeRole`
 
-La URL debe contener el ID del usuario para poder variar el rol del mismo entre **user** y **premium**. 
+La URL debe contener el ID del usuario para poder variar el rol del mismo entre **user** y **premium**. Para mantener la tendencia de los demás endpoint y tipificar con la consiga, `changeRole` tiene dos variantes en la URL
 
 [**URL:**](http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859`
+
+[**URL:**](http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859`
 
 **Método** `POST`
 
