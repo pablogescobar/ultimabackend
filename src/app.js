@@ -45,10 +45,6 @@ const main = async () => {
 
     await mongoose.connect(mongoUrl, { dbName });
 
-    // app.listen(8080);
-
-    // console.log('Servidor cargado!' + '\n' + 'http://localhost:8080')
-
     const PORT = process.env.PORT || 8080;
 
     app.listen(PORT, '0.0.0.0', () => {

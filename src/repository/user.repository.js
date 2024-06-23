@@ -201,10 +201,6 @@ class UserRepository {
         }
 
         const passToken = (await new MailingService().sendMail(email));
-        // const handlerPassToken = {
-        //     passToken: hashPassword(passToken.randomNumber.toString()),
-        //     email: passToken.email,
-        // }
 
         const handlerPassToken = generatePasswordRecoveryToken(passToken.randomNumber, passToken.email);
 
