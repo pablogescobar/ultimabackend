@@ -1,4 +1,3 @@
-const { ProductViewDTO } = require('../dto/productView.dto');
 const { ProductRepository } = require('../repository/products.repository');
 const { CartRepository } = require('../repository/carts.repository');
 

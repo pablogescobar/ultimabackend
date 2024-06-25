@@ -83,7 +83,7 @@ class ProductRepository {
             throw CustomError.createError({
                 name: 'Error al agregar el producto.',
                 cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
-                message: 'Error al agregar el producto.',
+                message: 'No se pudo agregar el producto a la base de datos.',
                 code: ErrorCodes.INVALID_PRODUCT_DATA
             });
         }
@@ -165,6 +165,14 @@ class ProductRepository {
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
         } catch (error) {
+            if (error.code === 11000) {
+                throw CustomError.createError({
+                    name: 'Error al agregar el producto.',
+                    cause: `El código de producto '${error.keyValue.code}' ya está en uso. Ingrese un código diferente.`,
+                    message: 'Código repetido.',
+                    code: ErrorCodes.DUPLICATE_PRODUCT_CODE
+                });
+            }
             throw error
         }
     }

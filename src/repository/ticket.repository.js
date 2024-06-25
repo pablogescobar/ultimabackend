@@ -27,7 +27,7 @@ class TicketRepository {
             throw CustomError.createError({
                 name: 'Error con el carrito',
                 cause: 'Debe ingresar un ID válido existente en la base de datos',
-                message: 'El carrito no existe',
+                message: 'El ID ingresado no corresponde a ningún carrito',
                 code: ErrorCodes.UNDEFINED_CART
             })
         }

@@ -12,7 +12,6 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
 
-
             const cartId = req.user.cart; // Obtiene el ID del carrito de los parámetros de la solicitud
             const cart = await this.#cartRepository.getCartById(cartId); // Obtiene el carrito por su ID
 
@@ -45,7 +44,7 @@ class Controller {
             const cartId = req.params.cid;
             const productId = req.params.pid;
             const user = req.user;
-            const cart = await this.#cartRepository.addProductToCart(productId, cartId, user);
+            await this.#cartRepository.addProductToCart(productId, cartId, user);
             req.logger.info('Producto agregado al carrito de manera correcta');
             res.redirect('/products');
         } catch (error) {

@@ -23,7 +23,6 @@ class Controller {
     async loginUser(req, res) {
         try {
             const { email, password } = req.body;
-            req.logger.debug(password);
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             req.logger.info('Usuario identificado');

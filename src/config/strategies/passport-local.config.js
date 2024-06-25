@@ -2,6 +2,7 @@ const passport = require('passport');
 const { Strategy } = require('passport-local');
 const { UserRepository } = require('../../repository/user.repository');
 
+
 const localStrategy = () => {
     passport.use('register', new Strategy({ passReqToCallback: true, usernameField: 'email', passwordField: 'password' },
         async (req, email, password, done) => {
