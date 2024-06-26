@@ -31,7 +31,8 @@ class ProductRepository {
                     name: 'La página no existe',
                     cause: 'La página debe ser un número válido',
                     message: 'La página no existe',
-                    code: ErrorCodes.INVALID_PAGE_NUMBER
+                    code: ErrorCodes.INVALID_PAGE_NUMBER,
+                    status: 400
                 });
             }
 
@@ -51,7 +52,8 @@ class ProductRepository {
                 name: 'Error en el paginado',
                 cause: 'La página debe ser un número válido',
                 message: 'La página a la que intenta acceder no existe',
-                code: ErrorCodes.INVALID_PAGE_NUMBER
+                code: ErrorCodes.INVALID_PAGE_NUMBER,
+                status: 400
             });
         }
 
@@ -84,7 +86,8 @@ class ProductRepository {
                 name: 'Error al agregar el producto.',
                 cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
                 message: 'No se pudo agregar el producto a la base de datos.',
-                code: ErrorCodes.INVALID_PRODUCT_DATA
+                code: ErrorCodes.INVALID_PRODUCT_DATA,
+                status: 400
             });
         }
 
@@ -107,7 +110,8 @@ class ProductRepository {
                 name: 'Error al agregar el producto.',
                 cause: `El código de producto '${code}' ya está en uso. Ingrese un código diferente.`,
                 message: 'Código de producto repetido.',
-                code: ErrorCodes.DUPLICATE_PRODUCT_CODE
+                code: ErrorCodes.DUPLICATE_PRODUCT_CODE,
+                status: 409
             });
         }
 
@@ -133,10 +137,11 @@ class ProductRepository {
             return products.docs.map(product => new ProductDTO(product));
         } catch {
             throw CustomError.createError({
-                name: 'Error fatal',
+                name: 'Error al conectar',
                 cause: 'Ocurrió un error al buscar los productos en la base de datos',
-                message: 'Error fatal',
-                code: ErrorCodes.DATABASE_ERROR
+                message: 'No se pudieron obtener los productos de la base de datos',
+                code: ErrorCodes.DATABASE_ERROR,
+                status: 500
             });
         }
     }
@@ -150,7 +155,8 @@ class ProductRepository {
                 name: 'Error de paginado',
                 cause: 'Ocurrió un error al buscar los productos en la base de datos o crear la paginacion para los mismos',
                 message: 'Error de paginado',
-                code: ErrorCodes.INVALID_PAGE_NUMBER
+                code: ErrorCodes.INVALID_PAGE_NUMBER,
+                status: 400
             });
         }
     }
@@ -164,7 +170,8 @@ class ProductRepository {
                 name: 'El producto no existe',
                 cause: 'Debe ingresar un ID válido existente en la base de datos',
                 message: 'El producto no existe',
-                code: ErrorCodes.UNDEFINED_PRODUCT
+                code: ErrorCodes.UNDEFINED_PRODUCT,
+                status: 404
             });
         }
     }
@@ -191,7 +198,8 @@ class ProductRepository {
                     name: 'Campos inválidos',
                     cause: 'Debe definir al menos un campo para actualizar',
                     message: 'Campos inválidos',
-                    code: ErrorCodes.PRODUCT_UPDATE_ERROR
+                    code: ErrorCodes.PRODUCT_UPDATE_ERROR,
+                    status: 500
                 });
             }
 
@@ -201,8 +209,8 @@ class ProductRepository {
             const updatedProduct = await this.productDAO.getProductById(id);
             return new ProductDTO(updatedProduct);
 
-        } catch (e) {
-            throw e;
+        } catch (error) {
+            throw error;
         }
     }
 
@@ -218,7 +226,8 @@ class ProductRepository {
                 name: 'Solicitud rechazada',
                 cause: 'No posee los permisos correspondientes para llevar a cabo esta acción',
                 message: 'No se pudo eliminar el producto',
-                code: ErrorCodes.PRODUCT_DELETION_ERROR
+                code: ErrorCodes.PRODUCT_DELETION_ERROR,
+                status: 500
             })
         }
 

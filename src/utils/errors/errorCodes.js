@@ -24,7 +24,8 @@ const ErrorCodes = {
     INVALID_PASSWORD: 23,               // Contraseña incorrecta
     USER_LOGIN_ERROR: 24,               // Error en el login
     UNDEFINED_USER: 25,                 // El usuario no existe
-    DUPLICATE_PRODUCT_CODE: 26          // El código de producto está duplecado.
+    DUPLICATE_PRODUCT_CODE: 26,         // El código de producto está duplecado.
+    INVALID_QUANTITY: 27,               // Debe ingresar un valor numerico mayor a 0
 };
 
 module.exports = { ErrorCodes };
