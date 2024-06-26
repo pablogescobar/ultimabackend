@@ -9,7 +9,6 @@ const sessionMiddleware = require('./session/mongoStorage');
 const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, loggerTestRouter, mockingProductRouter } = require('./routes')
 const { useLogger } = require('./middlewares/logger.middleware');
 const helmet = require('helmet');
-const { errorHandler } = require('./middlewares/errorHandler.middleware');
 
 const app = express();
 
@@ -31,7 +30,6 @@ app.use(passport.session());
 app.use(cookieParser())
 
 app.use(useLogger)
-app.use(errorHandler);
 // ENDPOINTS
 app.use('/api/products', productsRouter);
 app.use('/products', productsViewsRouter);
@@ -43,15 +41,14 @@ app.use('/', sessionViewsRouter);
 app.use('/mockingproducts', mockingProductRouter);
 app.use('/loggertest', loggerTestRouter);
 
-
 // Se inicia el servidor en el puerto 8080
 const main = async () => {
 
     await mongoose.connect(mongoUrl, { dbName });
 
-    const PORT = process.env.PORT;
+    const PORT = process.env.PORT || 8080;
 
-    app.listen(PORT, () => {
+    app.listen(PORT, '0.0.0.0', () => {
         console.log(`Servidor cargado! \nhttp://localhost:${PORT}`);
     });
 }
