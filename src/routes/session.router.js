@@ -8,7 +8,7 @@ const { isSuperAdmin } = require('../middlewares/auth.middleware');
 
 router.post('/register', passport.authenticate('register', { failureRedirect: '/', session: false }), (_, res) => new Controller().redirect(res));
 
-router.post('/login', passport.authenticate('login', { failureRedirect: '/', session: false }), async (_, res) => new Controller().redirect(res));
+router.post('/login', passport.authenticate('login', { failureRedirect: '/', session: false }), async (req, res) => new Controller().loginUser(req, res));
 
 router.get('/current', passport.authenticate('current', { session: false }), (req, res) => new Controller().current(req, res));
 

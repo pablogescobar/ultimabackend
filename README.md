@@ -60,6 +60,7 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Passport-local](https://www.passportjs.org/packages/passport-local/)
 - [Socket.io](https://socket.io/docs/v4/)
 - [Winston](https://www.npmjs.com/package/winston)
+- [Hamlet](https://www.npmjs.com/package/hamlet)
 
 ## Endpoints
 

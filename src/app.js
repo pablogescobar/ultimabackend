@@ -8,6 +8,7 @@ const { dbName, mongoUrl } = require('./dbconfig');
 const sessionMiddleware = require('./session/mongoStorage');
 const { productsRouter, productsViewsRouter, cartRouter, cartViewsRouter, createProductRouter, sessionRouter, sessionViewsRouter, loggerTestRouter, mockingProductRouter } = require('./routes')
 const { useLogger } = require('./middlewares/logger.middleware');
+const helmet = require('helmet');
 
 const app = express();
 
@@ -21,7 +22,7 @@ app.use(express.urlencoded({ extended: true })); // Middleware para parsear dato
 app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`));
 
-
+app.use(helmet());
 app.use(sessionMiddleware);
 initializeStrategy();
 app.use(passport.initialize());

@@ -30,7 +30,6 @@ const generatePasswordRecoveryToken = (code, email) => {
     return passwordToken;
 }
 
-
 const verifyPasswordToken = (req, res, next) => {
 
     const passwordRecoveryToken = req.cookies.passToken;
@@ -38,7 +37,6 @@ const verifyPasswordToken = (req, res, next) => {
     if (!passwordRecoveryToken) {
         return res.json({ message: 'No posee los permisos para acceder a esta dirección.' })
     }
-
 
     jwt.verify(passwordRecoveryToken, PRIVATE_KEY, (err, decoded) => {
         if (err) {

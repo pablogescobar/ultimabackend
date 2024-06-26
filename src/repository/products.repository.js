@@ -100,6 +100,17 @@ class ProductRepository {
 
         const finalOwner = user && user.rol === 'premium' ? user.email : 'admin';
 
+        const existingCode = await this.productDAO.findByCode(code);
+
+        if (existingCode) {
+            throw CustomError.createError({
+                name: 'Error al agregar el producto.',
+                cause: `El código de producto '${code}' ya está en uso. Ingrese un código diferente.`,
+                message: 'Código de producto repetido.',
+                code: ErrorCodes.DUPLICATE_PRODUCT_CODE
+            });
+        }
+
         const newProduct = {
             title,
             description,
@@ -165,14 +176,6 @@ class ProductRepository {
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
         } catch (error) {
-            if (error.code === 11000) {
-                throw CustomError.createError({
-                    name: 'Error al agregar el producto.',
-                    cause: `El código de producto '${error.keyValue.code}' ya está en uso. Ingrese un código diferente.`,
-                    message: 'Código repetido.',
-                    code: ErrorCodes.DUPLICATE_PRODUCT_CODE
-                });
-            }
             throw error
         }
     }
