@@ -229,7 +229,6 @@ class CartRepository {
                 status: error.status || 500
             });
         }
-
     }
 }
 

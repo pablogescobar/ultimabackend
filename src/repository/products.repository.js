@@ -135,13 +135,14 @@ class ProductRepository {
             const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
             const products = await this.productDAO.getProducts(query, options);
             return products.docs.map(product => new ProductDTO(product));
-        } catch {
+        } catch (error) {
             throw CustomError.createError({
                 name: 'Error al conectar',
                 cause: 'Ocurrió un error al buscar los productos en la base de datos',
                 message: 'No se pudieron obtener los productos de la base de datos',
                 code: ErrorCodes.DATABASE_ERROR,
-                status: 500
+                otherProblems: error,
+                status: error.status || 500
             });
         }
     }
@@ -183,7 +184,14 @@ class ProductRepository {
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
         } catch (error) {
-            throw error
+            throw CustomError.createError({
+                name: 'Error al crear producto',
+                cause: 'No se pudo crear el producto por falta de datos o existe un problema para cargarlo a la base de datos',
+                message: 'No se pudo cargar el producto a la base de datos',
+                code: ErrorCodes.PRODUCT_CREATION_ERROR,
+                otherProblems: error,
+                status: error.status || 500
+            })
         }
     }
 

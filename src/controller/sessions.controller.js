@@ -16,7 +16,7 @@ class Controller {
             res.status(201).json(user);
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -29,7 +29,7 @@ class Controller {
             res.redirect('/');
         } catch (error) {
             req.logger.error(error);
-            res.status(401).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -42,7 +42,7 @@ class Controller {
             res.redirect('/resetPasswordWarning');
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error })
+            res.status(error.status).json({ error })
         }
     }
 
@@ -65,7 +65,7 @@ class Controller {
             return res.redirect('/login');
         } catch (error) {
             req.logger.error(error);
-            return res.status(500).json({ error });
+            return res.status(error.status).json({ error });
         }
     }
 
@@ -77,7 +77,7 @@ class Controller {
             res.status(200).json({ accessToken, user });
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -87,7 +87,7 @@ class Controller {
             res.redirect('/');
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -98,7 +98,7 @@ class Controller {
             res.redirect('/');
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -106,7 +106,7 @@ class Controller {
         try {
             res.redirect('/');
         } catch (error) {
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -118,7 +118,7 @@ class Controller {
             res.status(200).json({ message: 'User deleted successfully' });
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -129,7 +129,7 @@ class Controller {
             res.json(user);
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -142,7 +142,7 @@ class Controller {
             return res.json(user);
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 }

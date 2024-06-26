@@ -34,8 +34,9 @@ class Controller {
                 cartId: cartData.id
             }); // Responde con el carrito obtenido
 
-        } catch (err) {
-            res.status(500).json({ Error: err.message }); // Responde con un error 500 si hay un error al obtener el carrito
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
         }
     }
 
@@ -49,7 +50,7 @@ class Controller {
             res.redirect('/products');
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 }

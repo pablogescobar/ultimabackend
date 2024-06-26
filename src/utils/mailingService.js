@@ -39,7 +39,8 @@ class MailingService {
                 name: 'Error al restablecer contraseña',
                 cause: 'Ocurrió un error y no se pudo enviar el email al destinatario.',
                 message: 'No se pudo enviar el email',
-                code: ErrorCodes.UNDEFINED_USER
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
             })
         }
     }

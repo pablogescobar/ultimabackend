@@ -47,7 +47,8 @@ class UserRepository {
                 name: 'Credenciales inválidas',
                 cause: generateInvalidCredentialsUserData(email, password),
                 message: 'Debe ingresar un usuario y contraseña válidas',
-                code: ErrorCodes.INVALID_CREDENTIALS
+                code: ErrorCodes.INVALID_CREDENTIALS,
+                status: 401
             })
         }
     }
@@ -60,7 +61,8 @@ class UserRepository {
                     name: 'Error en la edad',
                     cause: 'Debe ingresar un número válido mayor a 0',
                     message: 'Edad inválida',
-                    code: ErrorCodes.AGE_VALIDATION_ERROR
+                    code: ErrorCodes.AGE_VALIDATION_ERROR,
+                    status: 400
                 })
             }
             const hashedPassword = hashPassword(password);
@@ -81,7 +83,8 @@ class UserRepository {
                 cause: 'Ocurrió un error al registrar el usuario en la base de datos',
                 message: 'Algo salió mal al generar un nuevo usuario',
                 error: ErrorCodes.USER_REGISTER_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
 
@@ -106,7 +109,8 @@ class UserRepository {
                     name: 'Error de registro',
                     cause: 'No se puede registrar el usuario administrador o superadministrador de esta manera',
                     message: 'No tiene permisos para registrar estos usuarios',
-                    code: ErrorCodes.ADMIN_USER_REGISTRATION_ERROR
+                    code: ErrorCodes.ADMIN_USER_REGISTRATION_ERROR,
+                    status: 400
                 })
             }
 
@@ -116,7 +120,8 @@ class UserRepository {
                     name: 'Error de registro',
                     cause: 'El email se encuentra registrado en la base de datos. Intente válidar sus credenciales.',
                     message: 'El email ya está registrado',
-                    code: ErrorCodes.EMAIL_ALREADY_REGISTERED
+                    code: ErrorCodes.EMAIL_ALREADY_REGISTERED,
+                    status: 409
                 })
             }
 
@@ -130,7 +135,8 @@ class UserRepository {
                 cause: 'Algo salió mal al registrar un nuevo usuario.',
                 message: 'No se pudo crear un nuevo usuario',
                 code: ErrorCodes.USER_REGISTER_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
 
@@ -155,7 +161,8 @@ class UserRepository {
                         name: 'Error de logeo',
                         cause: 'Ingresó una contraseña incorrecta. Intenté nuevamente o cambie la misma',
                         message: 'Contraseña incorrecta',
-                        code: ErrorCodes.INVALID_PASSWORD
+                        code: ErrorCodes.INVALID_PASSWORD,
+                        status: 401
                     })
                 }
             }
@@ -171,7 +178,8 @@ class UserRepository {
                 cause: 'Ocurrio validar sus credenciales. Intente nuevamente o cambie su contraseña',
                 message: 'Contraseña incorrecta',
                 code: ErrorCodes.USER_LOGIN_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
 
@@ -183,7 +191,8 @@ class UserRepository {
                 name: 'Sin email',
                 cause: 'Es necesario que ingrese un email para poder continuar con el cambio de contraseña',
                 message: 'Debe ingresar un email',
-                code: ErrorCodes.UNDEFINED_USER
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
             })
         }
 
@@ -195,7 +204,8 @@ class UserRepository {
                     name: 'Email desconocido',
                     cause: 'Está intentando cambiar la contraseña de un email que no se encuentra registrado',
                     message: 'El email no se encuentra registrado',
-                    code: ErrorCodes.UNDEFINED_USER
+                    code: ErrorCodes.UNDEFINED_USER,
+                    status: 404
                 })
             }
         }
@@ -215,7 +225,8 @@ class UserRepository {
                 name: 'Datos faltantes',
                 cause: 'Es necesario que ingrese una nueva contraseña y la confirmación de la misma',
                 message: 'Debe completar todos los cambios',
-                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR,
+                status: 500
             })
         }
 
@@ -226,7 +237,8 @@ class UserRepository {
                 name: 'Link inválido',
                 cause: 'El link no es válido o ha expirado. Vuelva a enviar el mail de confirmación.',
                 message: 'El link no es válido o ha expirado.',
-                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR,
+                status: 500
             })
         }
 
@@ -235,7 +247,8 @@ class UserRepository {
                 name: 'Contraseña inválida',
                 cause: 'Las dos contraseñas ingresadas deben coincidir para poder continuar con la actualización',
                 message: 'Las dos contraseñas no coinciden',
-                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR,
+                status: 500
             })
         }
 
@@ -248,7 +261,8 @@ class UserRepository {
                 name: 'Contraseña inválida',
                 cause: 'La la nueva contraseña no puede ser igual a la contraseña anterior.',
                 message: 'Debe actualizar su contraseña',
-                code: ErrorCodes.PASSWORD_UPDATE_ERROR
+                code: ErrorCodes.PASSWORD_UPDATE_ERROR,
+                status: 500
             })
         }
 
@@ -283,7 +297,8 @@ class UserRepository {
                 cause: 'Ocurrió un error inesperado y no se pudo emparejar su cuenta de github en la base de datos',
                 message: 'Hubo un problema con su cuenta de github',
                 code: ErrorCodes.GITHUB_LOGIN_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
 
@@ -300,7 +315,8 @@ class UserRepository {
                     name: 'Email desconocido',
                     cause: 'Está intentando un usuario con un email que no se encuentra registrado',
                     message: 'El email no se encuentra registrado',
-                    code: ErrorCodes.UNDEFINED_USER
+                    code: ErrorCodes.UNDEFINED_USER,
+                    status: 404
                 })
             }
         } catch (error) {
@@ -309,7 +325,8 @@ class UserRepository {
                 cause: 'Su petición no fue procesada de forma correcta y no se pudo eliminar el usuario.',
                 message: 'Hubo un problema y no se pudo elimiar el usuario',
                 code: ErrorCodes.USER_DELETION_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
 
@@ -323,7 +340,8 @@ class UserRepository {
                 name: 'Email desconocido',
                 cause: 'Ha ingresado un ID inválido o el usuario no se encuentra registrado en la base de datos',
                 message: 'El emmail no se encuentra registrado',
-                code: ErrorCodes.UNDEFINED_USER
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
             })
         }
     }
@@ -335,7 +353,8 @@ class UserRepository {
                 name: 'Usuario inválido',
                 cause: 'El ID del usuario ingresado no se ecuentra registrado en la base de datos.',
                 message: 'ID desconocido',
-                code: ErrorCodes.UNDEFINED_USER
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
             })
         }
 

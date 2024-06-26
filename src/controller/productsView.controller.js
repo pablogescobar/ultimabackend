@@ -38,8 +38,9 @@ class Controller {
                 lastName, cartId
             });
 
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error)
+            res.status(error.status).json({ error });
         }
     }
 
@@ -70,8 +71,9 @@ class Controller {
                 isNotLoggedIn: !isLoggedIn,
                 cart: user.cart
             });
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
         }
     }
 
@@ -81,8 +83,9 @@ class Controller {
             const cartId = req.user.cart;
             await new CartRepository().addProductToCart(productId, cartId);
             res.status(301).redirect('/products');
-        } catch (err) {
-            res.status(500).json({ error: err.message });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
         }
     }
 
@@ -94,7 +97,8 @@ class Controller {
             req.logger.info('Producto creado de manera correcta');
             res.status(301).redirect('/products');
         } catch (error) {
-            res.status(500).json({ error: error.message });
+            req.logger.error(error);
+            res.status(error.status).json({ error });
         }
     }
 }

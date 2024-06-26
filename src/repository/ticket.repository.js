@@ -28,7 +28,8 @@ class TicketRepository {
                 name: 'Error con el carrito',
                 cause: 'Debe ingresar un ID válido existente en la base de datos',
                 message: 'El ID ingresado no corresponde a ningún carrito',
-                code: ErrorCodes.UNDEFINED_CART
+                code: ErrorCodes.UNDEFINED_CART,
+                status: 404
             })
         }
     }
@@ -46,7 +47,8 @@ class TicketRepository {
                         name: 'Error con el stock',
                         cause: `No hay suficiente stock para el producto con ID ${product._id}`,
                         message: 'No se pudo completar la operación por falta de stock',
-                        code: ErrorCodes.INSUFFICIENT_STOCK
+                        code: ErrorCodes.INSUFFICIENT_STOCK,
+                        status: 400
                     })
 
                 }
@@ -76,7 +78,8 @@ class TicketRepository {
                 cause: 'Ocurrió un error a la hora de generar su ticket de compra',
                 message: 'No se pudo generar su ticket',
                 code: ErrorCodes.TICKET_CREATION_ERROR,
-                otherProblems: error
+                otherProblems: error,
+                status: error.status || 500
             })
         }
     }
