@@ -134,6 +134,15 @@ class ProductRepository {
         try {
             const { query, options } = this.#validateAndFormatGetProductsParams(page, limit, sort, category, availability);
             const products = await this.productDAO.getProducts(query, options);
+            if (isNaN(page) || page > products.totalPages) {
+                throw CustomError.createError({
+                    name: 'Error en el paginado',
+                    cause: 'La página debe ser un número válido o la página no existe',
+                    message: 'La página a la que intenta acceder no existe',
+                    code: ErrorCodes.INVALID_PAGE_NUMBER,
+                    status: 400
+                });
+            }
             return products.docs.map(product => new ProductDTO(product));
         } catch (error) {
             throw CustomError.createError({

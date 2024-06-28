@@ -7,3 +7,28 @@
 08-06-2024 11:58:50 / Level: [FATAL] - Message: FATAL - Relevancia: 0
 08-06-2024 11:59:51 / Level: [ERROR] - Message: ERROR test - Relevancia: 1
 08-06-2024 11:59:51 / Level: [FATAL] - Message: FATAL test - Relevancia: 0
+28-06-2024 16:32:40 / Level: [ERROR] - Message: Error de paginado
+28-06-2024 16:33:19 / Level: [ERROR] - Message: Error de paginado
+28-06-2024 17:18:59 / Level: [ERROR] - Message: Error de paginado
+28-06-2024 17:34:14 / Level: [ERROR] - Message: El producto no existe
+28-06-2024 17:37:09 / Level: [ERROR] - Message: El producto no existe
+28-06-2024 17:45:02 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:45:56 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:47:19 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:47:48 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:48:33 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:49:17 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:49:57 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:51:43 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:52:33 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:53:18 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:57:46 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 17:59:04 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 18:00:29 / Level: [ERROR] - Message: Cannot read properties of null (reading 'cart')
+28-06-2024 18:34:59 / Level: [ERROR] - Message: El producto no existe
+28-06-2024 19:24:49 / Level: [ERROR] - Message: No se pudo cargar el producto a la base de datos
+28-06-2024 19:35:58 / Level: [ERROR] - Message: El producto no existe
+28-06-2024 19:36:37 / Level: [ERROR] - Message: No se pudo cargar el producto a la base de datos
+28-06-2024 19:49:35 / Level: [ERROR] - Message: No se pudieron obtener los productos de la base de datos
+28-06-2024 19:56:35 / Level: [ERROR] - Message: No se pudieron obtener los productos de la base de datos
+28-06-2024 19:56:43 / Level: [ERROR] - Message: No se pudieron obtener los productos de la base de datos

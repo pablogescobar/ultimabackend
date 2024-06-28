@@ -60,7 +60,7 @@ class Controller {
                 code: product.code,
                 id: product.id,
                 isLoggedIn,
-                cartId: user.cart
+                cartId: user ? user.cart : 'noCart'
             };
 
             res.status(200).render('product', {
@@ -69,7 +69,6 @@ class Controller {
                 style: ['styles.css'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
-                cart: user.cart
             });
         } catch (error) {
             req.logger.error(error);

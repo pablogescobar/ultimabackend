@@ -10,9 +10,6 @@ router.get('/', (req, res) => new Controller().getProducts(req, res));
 // Ruta para obtener un producto por su ID
 router.get('/:pid', async (req, res) => new Controller().getProductById(req, res));
 
-// Ruta para agregar producto al carrito
-router.post('/:pid', verifyToken, isUser, async (req, res) => new Controller().addProductToCart(req, res));
-
 // Ruta para agregar un nuevo producto
 router.post('/', verifyToken, isUserPremium, async (req, res) => new Controller().addProduct(req, res));
 
