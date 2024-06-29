@@ -29,7 +29,6 @@ router.put('/:cid/product/:pid', verifyToken, isUser, (req, res) => new Controll
 router.delete('/:cid', verifyToken, isUser, async (req, res) => new Controller().clearCart(req, res));
 
 //Ruta para generar el comprobante de compra 
-
 router.post('/:cid/purchase', verifyToken, isUser, async (req, res) => new Controller().generateTicket(req, res));
 
 module.exports = router; // Exporta el enrutador

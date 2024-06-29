@@ -70,11 +70,11 @@ class CartRepository {
         } catch (error) {
             throw CustomError.createError({
                 name: 'Error con el carrito',
-                cause: 'Ocurrió en el método ocupado de obtener el carrito',
+                cause: 'Al parecer el carrito existe pero no se puede acceder al mismo',
                 message: 'Error al obtener el carrito',
                 code: ErrorCodes.UNDEFINED_CART,
                 otherProblems: error,
-                status: error.status || 404
+                status: error.status || 500
             });
         }
     }
@@ -102,11 +102,11 @@ class CartRepository {
         const cart = await this.#verifyCartExists(cartId);
         if (product.owner && product.owner === user.email) {
             throw CustomError.createError({
-                name: 'Error con el carrito',
+                name: 'Permiso denegado',
                 cause: 'No puede agregar al carrito productos que están creados por el mismo usuario que está utilizando',
                 message: 'Error al agregar el producto al carrito',
                 code: ErrorCodes.CART_UPDATE_ERROR,
-                status: 500
+                status: 403
             });
         }
         // Verificar si el producto ya está en el carrito

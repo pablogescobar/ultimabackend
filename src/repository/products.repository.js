@@ -137,7 +137,7 @@ class ProductRepository {
             if (isNaN(page) || page > products.totalPages) {
                 throw CustomError.createError({
                     name: 'Error en el paginado',
-                    cause: 'La página debe ser un número válido o la página no existe',
+                    cause: 'La página no existe o no ha ingresado un número válido',
                     message: 'La página a la que intenta acceder no existe',
                     code: ErrorCodes.INVALID_PAGE_NUMBER,
                     status: 400
