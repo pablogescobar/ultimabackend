@@ -153,6 +153,16 @@ class CartRepository {
             for (const { product: productId, quantity } of products) {
                 await this.#verifyProductExists(productId);
 
+                if (quantity < 1 || isNaN(quantity)) {
+                    throw CustomError.createError({
+                        name: 'Error en la petición',
+                        cause: 'La cantidad ingresada debe ser un número válido mayor a 0',
+                        message: 'Petición rechazada por catidad inválida',
+                        code: ErrorCodes.CART_UPDATE_ERROR,
+                        status: 400
+                    })
+                }
+
                 // Verificar si el producto ya está en el carrito
                 const existingProductIndex = cart.products.findIndex(p => p.product.equals(productId));
                 if (existingProductIndex !== -1) {

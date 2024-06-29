@@ -89,6 +89,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Cart'
+        "400":
+          desciption: Error en la petición por cantidad inválida
         "403":
           description: No cuenta con los permisos adecuados
         "404":
