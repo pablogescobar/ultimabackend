@@ -1,12 +1,9 @@
-# Desafío Opcional 3 - Coderhouse Backend
+# Desafío 10 - Coderhouse Backend
 
 ### Nuevos Cambios
 
-- Se implementó `nodemailer` para crear una verificación de dos pasos con el fin de recuperar la contraseña del usuario.
-- Ahora los usuarios con el rol `user` pueden modificarlo a `premium` para obtener mayores permisos.
-- Se modificó el modelo de producto para contar con un campo `owner`. En caso de que un producto sea creado por un usuario `premium` su mail quedará registrado en el `owner`.
-- Los usuarios `premium` pueden eliminar los productos creados por ellos pero no pueden agregar sus productos al carrito.
-- Se creó un nuevo endpoit `/api/sessions/premium/:uid` el cual cambia el rol del usuario de `premium` a `user` y vicebersa.
+- Se implementó un nuevo endpoint `apidocs` mediante swagger para alojar la docuemntación relacionada con los productos y los carritos.
+- Para ver dicha documentación lo puede hacer desde [http://localhost:8080/apidocs](http://localhost:8080/apidocs)
 
 ## Correr de manera local
 ```bash
@@ -50,6 +47,7 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Express](https://www.npmjs.com/package/express)
 - [Express-handlebars](https://handlebarsjs.com/guide/#what-is-handlebars)
 - [Express-session](https://www.npmjs.com/package/express-session)
+- [Helmet](https://www.npmjs.com/package/helmet)
 - [Jsonwebtoken](https://jwt.io/)
 - [Mongoose](https://mongoosejs.com/docs/guide.html)
 - [Mongoose-paginate-v2](https://www.npmjs.com/package/mongoose-paginate-v2)
@@ -59,8 +57,9 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Passport-jwt](https://www.passportjs.org/packages/passport-jwt/)
 - [Passport-local](https://www.passportjs.org/packages/passport-local/)
 - [Socket.io](https://socket.io/docs/v4/)
+- [Swagger-jsdoc](https://www.npmjs.com/package/swagger-jsdoc)
+- [Swagger-ui-express](https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/)
 - [Winston](https://www.npmjs.com/package/winston)
-- [Helmet](https://www.npmjs.com/package/helmet)
 
 ## Endpoints
 
