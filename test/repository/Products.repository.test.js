@@ -4,7 +4,6 @@ const { ProductRepository } = require('../../src/repository/products.repository'
 describe('Testing Product', () => {
     let chai;
     let expect;
-    let chaiAsPromised;
     const productRepository = new ProductRepository();
     let connection = null;
 

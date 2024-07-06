@@ -81,7 +81,7 @@ class CartRepository {
 
     async addCart() {
         try {
-            const cart = { porducts: [] }
+            const cart = { products: [] }
             return await this.#cartDAO.addCart(cart);
         } catch (error) {
             throw CustomError.createError({
