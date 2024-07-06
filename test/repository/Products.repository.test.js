@@ -39,8 +39,7 @@ describe('Testing Product', () => {
         expect(Array.isArray(result)).to.be.ok;
     });
 
-    it('Se debe crear un producto correctamente', async function () {
-        this.timeout(10000);
+    it('Se debe obtener un producto según su ID', async () => {
         const mockProduct = {
             title: 'test',
             description: 'Descripcion para el produdcto',
@@ -54,15 +53,35 @@ describe('Testing Product', () => {
         }
 
         const newProduct = await productRepository.addProduct(mockProduct);
-        expect(newProduct.id).to.be.ok;
-    })
+        const newProductId = newProduct.id;
+        const findedProduct = await productRepository.getProductById(newProductId);
 
-    it('Imagen, owner y status se deben generar por defecto', async () => {
+        expect(findedProduct.id).to.be.equal(newProduct.id);
+    });
+
+    it('Se debe crear un producto correctamente', async function () {
         const mockProduct = {
             title: 'test',
             description: 'Descripcion para el produdcto',
             price: 200,
+            thumbnail: 'Imagen',
             code: 'abc124',
+            status: true,
+            stock: 20,
+            category: 'almacenamiento',
+            owner: 'admin'
+        }
+
+        const newProduct = await productRepository.addProduct(mockProduct);
+        expect(newProduct.id).to.be.ok;
+    })
+
+    it('Imagen, owner y status se deben generar por automaticamente', async () => {
+        const mockProduct = {
+            title: 'test',
+            description: 'Descripcion para el produdcto',
+            price: 200,
+            code: 'abc125',
             stock: 20,
             category: 'almacenamiento',
         }
@@ -80,7 +99,7 @@ describe('Testing Product', () => {
             title: 'test',
             description: 'Descripcion para el produdcto',
             price: '200',
-            code: 'abc125',
+            code: 'abc126',
             stock: '20',
             category: 'almacenamiento',
         }
@@ -89,5 +108,23 @@ describe('Testing Product', () => {
 
         expect(newProduct.price).to.equal(200);
         expect(newProduct.stock).to.equal(20);
-    })
+    });
+
+    it('El producto se actualiza de manera correcta', async () => {
+        const mockProduct = {
+            title: 'test',
+            description: 'Descripcion para el produdcto',
+            price: 200,
+            code: 'abc127',
+            stock: 20,
+            category: 'almacenamiento',
+        }
+
+        const newProduct = await productRepository.addProduct(mockProduct);
+        const updatedProduct = await productRepository.updateProduct(newProduct.id, { title: 'updatedProduct', stock: 40 });
+        const findedProduct = await productRepository.getProductById(newProduct.id);
+
+        expect(updatedProduct.title).to.be.equal(findedProduct.title);
+        expect(updatedProduct.stock).to.be.equal(findedProduct.stock);
+    });
 });
