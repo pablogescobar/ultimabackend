@@ -66,6 +66,7 @@ class CartRepository {
                 cart.products = updatedCart;
                 await this.#cartDAO.updateCart(id, { products: cart.products })
             }
+
             return cart;
         } catch (error) {
             throw CustomError.createError({

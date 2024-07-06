@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
 const { CartRepository } = require('../../src/repository/carts.repository');
+const { ProductRepository } = require('../../src/repository/products.repository');
 
 describe('Testing Carts', () => {
     let chai;
     let expect;
     const cartRepository = new CartRepository();
+    const productRepository = new ProductRepository();
     let connection = null;
 
     before(async function () {
@@ -47,5 +49,27 @@ describe('Testing Carts', () => {
     it('Se debe crear el carrito con un array vacio de productos', async () => {
         const result = await cartRepository.addCart();
         expect(Array.isArray(result.products)).to.be.ok;
+    })
+
+    it('Se debe agregar un producto al arreglo de products del carrito', async () => {
+        const mockProduct = {
+            title: 'test',
+            description: 'Descripcion para el produdcto',
+            price: 200,
+            code: 'abc128',
+            stock: 20,
+            category: 'almacenamiento',
+        }
+
+        const newProduct = await productRepository.addProduct(mockProduct);
+
+        const cart = await cartRepository.addCart();
+
+        const result = await cartRepository.addProductToCart(newProduct.id, cart._id, 'test@test.com');
+
+        const updatedCart = await cartRepository.getCartById(cart._id);
+
+        expect(result).to.be.ok;
+        expect(updatedCart.products[0].product._id.toString()).to.be.equal(newProduct.id);
     })
 });
