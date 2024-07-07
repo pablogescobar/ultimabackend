@@ -114,8 +114,8 @@ class Controller {
         try {
             const { email } = req.body;
             await this.#userRepository.deleteUser(email);
-            res.logger.info('Usuario eliminado correctamente');
-            res.status(200).json({ message: 'User deleted successfully' });
+            req.logger.info('Usuario eliminado correctamente');
+            res.status(204).json({ message: 'Usuario eliminado correctamente' });
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

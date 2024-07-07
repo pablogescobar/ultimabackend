@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { ProductRepository } = require('../../src/repository/products.repository');
 
-describe('Testing Product', () => {
+describe('Testing Product Repository', () => {
     let chai;
     let expect;
     const productRepository = new ProductRepository();

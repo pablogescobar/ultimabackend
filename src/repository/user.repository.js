@@ -70,7 +70,7 @@ class UserRepository {
             const user = {
                 firstName: firstName || 'Usuario',
                 lastName: lastName || 'Sin Identificar',
-                age: age ? parseInt(age) : "",
+                age: parseInt(age) || 0,
                 email,
                 password: hashedPassword,
                 cart
@@ -308,7 +308,7 @@ class UserRepository {
         try {
             const user = await this.#userDAO.findByEmail(email);
             if (user) {
-                await this.#cartDAO.deleteCartById(user.cart);
+                await this.#cartDAO.deleteCart(user.cart);
                 await this.#userDAO.deleteByEmail(email);
             } else {
                 throw CustomError.createError({
@@ -334,7 +334,8 @@ class UserRepository {
 
     async getUserById(id) {
         try {
-            return await this.#userDAO.findById(id);
+            const user = await this.#userDAO.findById(id);
+            return user;
         } catch {
             throw CustomError.createError({
                 name: 'Email desconocido',

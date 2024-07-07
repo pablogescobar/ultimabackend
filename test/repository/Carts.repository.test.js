@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { CartRepository } = require('../../src/repository/carts.repository');
 const { ProductRepository } = require('../../src/repository/products.repository');
 
-describe('Testing Carts', () => {
+describe('Testing Carts Repository', () => {
     let chai;
     let expect;
     const cartRepository = new CartRepository();
