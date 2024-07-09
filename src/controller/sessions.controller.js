@@ -102,8 +102,9 @@ class Controller {
         }
     }
 
-    redirect(res) {
+    redirect(req, res) {
         try {
+            req.logger.info('Usuario registrado correctamente');
             res.redirect('/');
         } catch (error) {
             res.status(error.status).json({ error });

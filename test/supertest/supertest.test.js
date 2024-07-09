@@ -238,5 +238,342 @@ describe('Testing Ecommerce', () => {
             expect(Array.isArray(body.products)).to.be.ok;
 
         });
+
+        it('El endpoint POST /api/cart debe agregar un nuevo carrito a la base de datos', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const { statusCode, ok, body } = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            expect(statusCode).to.equal(201);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('_id');
+            expect(Array.isArray(body.products)).to.be.ok;
+        });
+
+        it('El endpoint POST /api/cart/:cid/product/:pid debe agregar un producto al carrito', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc126',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await requester
+                .post('/api/products')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+                .send(productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const newUser = {
+                email: 'test@test.com',
+                password: '123'
+            };
+
+            await requester.post('/api/sessions/register').send(newUser);
+
+            const loginResponseUser = await requester.post('/api/sessions/login').send(newUser);
+            const cookieUser = loginResponseUser.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const { statusCode, ok, body } = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('_id');
+            expect(Array.isArray(body.products)).to.be.ok;
+            expect(body.products[0].product).to.equal(pid);
+        });
+
+        it('El endpoint DELETE /api/cart/:cid/product/:pid debe eliminar un producto del carrito', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc127',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await requester
+                .post('/api/products')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+                .send(productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const newUser = {
+                email: 'test2@test.com',
+                password: '123'
+            };
+
+            await requester.post('/api/sessions/register').send(newUser);
+
+            const loginResponseUser = await requester.post('/api/sessions/login').send(newUser);
+            const cookieUser = loginResponseUser.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const updatedCart = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(updatedCart.statusCode).to.equal(200);
+            expect(updatedCart.body.products[0].product).to.equal(pid);
+
+            const { statusCode, ok, body } = await requester
+                .delete(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('_id');
+            expect(Array.isArray(body.products)).to.be.ok;
+            expect(body.products).to.deep.equal([]);
+        });
+
+        it('El endpoint PUT /api/cart/:cid debe actualizar el carrito de forma correcta', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc128',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await requester
+                .post('/api/products')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+                .send(productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const newUser = {
+                email: 'test3@test.com',
+                password: '123'
+            };
+
+            await requester.post('/api/sessions/register').send(newUser);
+
+            const loginResponseUser = await requester.post('/api/sessions/login').send(newUser);
+            const cookieUser = loginResponseUser.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productToUpdate = [{
+                product: pid,
+                quantity: 20
+            }]
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/cart/${cid}`)
+                .set('Cookie', cookieUser) // Incluir la cookie en el encabezado
+                .send(productToUpdate);
+
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(Array.isArray(body.products)).to.be.ok;
+            expect(body.products[0].product._id).to.equal(pid);
+            expect(body.products[0].quantity).to.equal(20);
+        });
+
+        it('El endpoint PUT /api/cart/:cid/product/:pid debe actualizar la cantidad de producto en el carrito', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc129',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await requester
+                .post('/api/products')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+                .send(productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const newUser = {
+                email: 'test4@test.com',
+                password: '123'
+            };
+
+            await requester.post('/api/sessions/register').send(newUser);
+
+            const loginResponseUser = await requester.post('/api/sessions/login').send(newUser);
+            const cookieUser = loginResponseUser.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const addProduct = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(addProduct.body.products[0].quantity).to.equal(1);
+            expect(addProduct.body.products[0].product).to.equal(pid);
+
+            const quantity = {
+                quantity: 20
+            }
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+                .send(quantity);
+
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(Array.isArray(body.products)).to.be.ok;
+            expect(body.products[0].product._id).to.equal(pid);
+            expect(body.products[0].quantity).to.equal(20);
+        });
+
+        it('El endpoint DELETE /api/cart/:cid debe vaciar el carrito de forma correcta', async () => {
+            const user = {
+                email: process.env.ADMIN_USER,
+                password: process.env.ADMIN_PASS
+            };
+
+            // Realizar la autenticación y obtener la cookie
+            const loginResponse = await requester.post('/api/sessions/login').send(user);
+            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc1230',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await requester
+                .post('/api/products')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+                .send(productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await requester
+                .post('/api/cart')
+                .set('Cookie', cookie) // Incluir la cookie en el encabezado
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const newUser = {
+                email: 'test5@test.com',
+                password: '123'
+            };
+
+            await requester.post('/api/sessions/register').send(newUser);
+
+            const loginResponseUser = await requester.post('/api/sessions/login').send(newUser);
+            const cookieUser = loginResponseUser.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+
+            const updatedCart = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(updatedCart.statusCode).to.equal(200);
+            expect(updatedCart.ok).to.equal(true);
+            expect(updatedCart.body).to.have.property('_id');
+            expect(Array.isArray(updatedCart.body.products)).to.be.ok;
+            expect(updatedCart.body.products[0].product).to.equal(pid);
+
+            const { statusCode, ok, body } = await requester
+                .delete(`/api/cart/${cid}`)
+                .set('Cookie', cookieUser)
+
+            expect(statusCode).to.equal(204);
+            expect(ok).to.equal(true);
+        });
     });
 });
