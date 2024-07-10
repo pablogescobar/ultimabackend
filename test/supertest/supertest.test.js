@@ -85,6 +85,14 @@ describe('Testing Ecommerce', () => {
             expect(Array.isArray(body)).to.be.ok;
         });
 
+        it('El endpoint GET /api/products debe devolver un error si se accede a una página que no existe', async () => {
+            const { statusCode, ok, body } = await requester.get('/api/products?page=error');
+            expect(statusCode).to.equal(400);
+            expect(ok).to.equal(false);
+            expect(body.error).to.have.property('cause');
+            expect(body.error.code).to.equal(1);
+        });
+
         it('El endpoint GET /api/products/:pid debe devolver un producto según su ID', async () => {
             const cookie = await authenticateAdminUser();
 
@@ -108,6 +116,18 @@ describe('Testing Ecommerce', () => {
             expect(body.thumbnail).to.equal('Sin Imagen');
         });
 
+        it('El endpoint GET /api/product/:pid debe devolver un error si el ID no existe', async () => {
+            const pid = 'falsoPID';
+
+            const { statusCode, ok, body } = await requester.get(`/api/products/${pid}`);
+
+            expect(statusCode).to.equal(404);
+            expect(ok).to.equal(false);
+            expect(body.error).to.have.property('cause');
+            expect(body.error.name).to.equal('El producto no existe');
+            expect(body.error.code).to.equal(3);
+        });
+
         it('El endpoint POST /api/products/ debe crear un producto de manera correcta', async () => {
             const cookie = await authenticateAdminUser();
 
@@ -122,10 +142,67 @@ describe('Testing Ecommerce', () => {
 
             const { statusCode, ok, body } = await createProduct(cookie, productMock);
 
-            expect(ok).to.be.true;
+            expect(ok).to.equal(true);
             expect(statusCode).to.be.equal(201);
-            expect(body.status).to.be.equal(true);
             expect(body).to.have.property('id');
+        });
+
+        it('El endpoint POST /api/products/ debe devolver un error al intentar cargar mal un producto', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                description: 'Product description',
+                price: 300,
+                code: 'abc124df',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const { statusCode, ok, body } = await createProduct(cookie, productMock);
+
+            expect(ok).to.equal(false);
+            expect(statusCode).to.equal(400);
+            expect(body.error).to.have.property('cause');
+            expect(body.error.name).to.equal('Error al crear producto');
+            expect(body.error.code).to.equal(8)
+        });
+
+        it('El endpoint POST /api/products/ debe arrojar un error al intentar cargar un producto sin tener los permisos', async () => {
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc124',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const { statusCode, ok, body } = await requester.post('/api/products').send(productMock);
+
+            expect(ok).to.equal(false);
+            expect(statusCode).to.equal(403);
+            expect(body).to.have.property('message');
+        });
+
+        it('El endpoint POST /api/products/ debe arrojar error al intentar crear un producto con el código duplicado', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc124',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const { statusCode, ok, body } = await createProduct(cookie, productMock);
+
+            expect(ok).to.equal(false);
+            expect(statusCode).to.be.equal(409);
+            expect(body.error).to.have.property('cause');
+            expect(body.error.otherProblems.code).to.equal(26);
         });
 
         it('El endpoint PUT /api/product/:pid debe actualizar el producto de forma correcta', async () => {
@@ -163,6 +240,59 @@ describe('Testing Ecommerce', () => {
             expect(updatedProduct.ok).to.be.ok;
         });
 
+        it('El endpoint PUT /api/product/:pid debe arrojar error si no cuenta con los permisos adecuados', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc125b',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await createProduct(cookie, productMock);
+
+            const pid = product.body.id;
+
+            const updatedProductMock = {
+                title: 'Updated Product',
+                price: 350
+            };
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/products/${pid}`)
+                .send(updatedProductMock);
+
+            expect(product.body.title).to.equal('Test Product');
+            expect(product.body.price).to.equal(300);
+            expect(ok).to.equal(false);
+            expect(statusCode).to.equal(403);
+            expect(body).to.have.property('message');
+        });
+
+        it('El endpoint PUT /api/product/:pid debe arrojar error el producto no existe', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const pid = 'falsoPID';
+
+            const updatedProductMock = {
+                title: 'Updated Product',
+                price: 350
+            };
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/products/${pid}`)
+                .set('Cookie', cookie)
+                .send(updatedProductMock);
+
+            expect(ok).to.equal(false);
+            expect(statusCode).to.equal(404);
+            expect(body.error).to.have.property('cause');
+            expect(body.error.code).to.equal(3);
+        });
+
         it('El endpoint DELETE /api/products/:pid debe eliminar el producto de la base de datos', async () => {
             const cookie = await authenticateAdminUser();
 
@@ -191,6 +321,51 @@ describe('Testing Ecommerce', () => {
             expect(ok).to.equal(true);
             expect(verifyProduct.statusCode).to.equal(404);
         });
+
+        it('El endpoint DELETE /api/products/:pid debe arrojar error si no cuenta con los permisos adecuados', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc12s6',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await createProduct(cookie, productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const { statusCode, ok, body } = await requester.delete(`/api/products/${pid}`);
+
+            const verifyProduct = await requester.get(`/api/products/${pid}`);
+
+            expect(statusCode).to.equal(403);
+            expect(ok).to.equal(false);
+            expect(verifyProduct.statusCode).to.equal(200);
+            expect(body).to.have.property('message');
+
+        });
+
+        it('El endpoint DELETE /api/products/:pid debe arrojar error si el producto no existe', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const pid = 'falsoPID';
+
+            const { statusCode, ok, body } = await requester
+                .delete(`/api/products/${pid}`)
+                .set('Cookie', cookie)
+
+
+            expect(statusCode).to.equal(404);
+            expect(ok).to.equal(false);
+            expect(body.error).to.have.property('cause');
+        });
+
     });
 
     describe('Test de carts', () => {
