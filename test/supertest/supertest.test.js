@@ -52,6 +52,23 @@ describe('Testing Ecommerce', () => {
         // Se ejecuta luego de cada test dentro de esta suite
     });
 
+    // Función auxiliar para autenticación
+    const authenticateUser = async (email, password) => {
+        const user = { email, password };
+        const loginResponse = await requester.post('/api/sessions/login').send(user);
+        return loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+    };
+
+    // Función auxiliar para crear un producto
+    const createProduct = async (cookie, productData) => {
+        return requester.post('/api/products').set('Cookie', cookie).send(productData);
+    };
+
+    // Función auxiliar para crear un carrito
+    const createCart = async (cookie) => {
+        return requester.post('/api/cart').set('Cookie', cookie);
+    };
+
     describe('Test de productos', () => {
         it('El endpoint GET /api/products debe devolver todos los productos de la base de datos o un array vacio', async () => {
             const { statusCode, ok, body } = await requester.get('/api/products');
@@ -61,13 +78,7 @@ describe('Testing Ecommerce', () => {
         });
 
         it('El endpoint GET /api/products/:pid debe devolver un producto según su ID', async () => {
-            const user = {
-                email: process.env.ADMIN_USER,
-                password: process.env.ADMIN_PASS
-            };
-
-            const loginResponse = await requester.post('/api/sessions/login').send(user);
-            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+            const cookie = await authenticateUser(process.env.ADMIN_USER, process.env.ADMIN_PASS);
 
             const productMock = {
                 title: 'Test Product',
@@ -78,10 +89,7 @@ describe('Testing Ecommerce', () => {
                 category: 'almacenamiento'
             };
 
-            const product = await requester
-                .post('/api/products')
-                .set('Cookie', cookie) // Incluir la cookie en el encabezado
-                .send(productMock);
+            const product = await createProduct(cookie, productMock);
 
             const pid = product.body.id;
             const { statusCode, ok, body } = await requester.get(`/api/products/${pid}`);
@@ -93,14 +101,7 @@ describe('Testing Ecommerce', () => {
         });
 
         it('El endpoint POST /api/products/ debe crear un producto de manera correcta', async () => {
-            const user = {
-                email: process.env.ADMIN_USER,
-                password: process.env.ADMIN_PASS
-            };
-
-            // Realizar la autenticación y obtener la cookie
-            const loginResponse = await requester.post('/api/sessions/login').send(user);
-            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+            const cookie = await authenticateUser(process.env.ADMIN_USER, process.env.ADMIN_PASS);
 
             const productMock = {
                 title: 'Test Product',
@@ -111,10 +112,7 @@ describe('Testing Ecommerce', () => {
                 category: 'almacenamiento'
             };
 
-            const { statusCode, ok, body } = await requester
-                .post('/api/products')
-                .set('Cookie', cookie) // Incluir la cookie en el encabezado
-                .send(productMock);
+            const { statusCode, ok, body } = await createProduct(cookie, productMock);
 
             expect(ok).to.be.true;
             expect(statusCode).to.be.equal(201);
@@ -123,14 +121,7 @@ describe('Testing Ecommerce', () => {
         });
 
         it('El endpoint PUT /api/product/:pid debe actualizar el producto de forma correcta', async () => {
-            const user = {
-                email: process.env.ADMIN_USER,
-                password: process.env.ADMIN_PASS
-            };
-
-            // Realizar la autenticación y obtener la cookie
-            const loginResponse = await requester.post('/api/sessions/login').send(user);
-            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+            const cookie = await authenticateUser(process.env.ADMIN_USER, process.env.ADMIN_PASS);
 
             const productMock = {
                 title: 'Test Product',
@@ -141,10 +132,7 @@ describe('Testing Ecommerce', () => {
                 category: 'almacenamiento'
             };
 
-            const product = await requester
-                .post('/api/products')
-                .set('Cookie', cookie) // Incluir la cookie en el encabezado
-                .send(productMock);
+            const product = await createProduct(cookie, productMock);
 
             const pid = product.body.id;
 
@@ -168,14 +156,7 @@ describe('Testing Ecommerce', () => {
         });
 
         it('El endpoint DELETE /api/products/:pid debe eliminar el producto de la base de datos', async () => {
-            const user = {
-                email: process.env.ADMIN_USER,
-                password: process.env.ADMIN_PASS
-            };
-
-            // Realizar la autenticación y obtener la cookie
-            const loginResponse = await requester.post('/api/sessions/login').send(user);
-            const cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
+            const cookie = await authenticateUser(process.env.ADMIN_USER, process.env.ADMIN_PASS);
 
             const productMock = {
                 title: 'Test Product',
@@ -186,10 +167,7 @@ describe('Testing Ecommerce', () => {
                 category: 'almacenamiento'
             };
 
-            const product = await requester
-                .post('/api/products')
-                .set('Cookie', cookie) // Incluir la cookie en el encabezado
-                .send(productMock);
+            const product = await createProduct(cookie, productMock);
 
             const pid = product.body.id;
 
@@ -568,7 +546,7 @@ describe('Testing Ecommerce', () => {
             expect(Array.isArray(updatedCart.body.products)).to.be.ok;
             expect(updatedCart.body.products[0].product).to.equal(pid);
 
-            const { statusCode, ok, body } = await requester
+            const { statusCode, ok } = await requester
                 .delete(`/api/cart/${cid}`)
                 .set('Cookie', cookieUser)
 
