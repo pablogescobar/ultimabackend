@@ -1,9 +1,9 @@
-# Desafío 10 - Coderhouse Backend
+# Desafío Opcional 4 - Coderhouse Backend
 
 ### Nuevos Cambios
 
-- Se implementó un nuevo endpoint `apidocs` mediante swagger para alojar la docuemntación relacionada con los productos y los carritos.
-- Para ver dicha documentación lo puede hacer desde [http://localhost:8080/apidocs](http://localhost:8080/apidocs)
+- Se crearon tests para probar los diferentes endpoints de la aplicación.
+- Se crearon tests unitarios para probar algunas funcionalidades del proyecto.
 
 ## Correr de manera local
 ```bash
@@ -24,7 +24,22 @@ Luego de este paso podrás correr el proyecto con el siguiente comando:
 nodemon src/app
 ````
 
-Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos.
+Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos. y podrás acceder a la documentación y a los testeos.
+
+## Testing
+
+
+Para poder correr los tests de la aplicación deberás haber levantado el servidor en primer lugar. Una vez hecho esto, deberás abrir una nueva consola y ejecutar:
+
+````bash
+npm test
+````
+
+Luego de eso, podrás ver cómo corren los tests unitarios y los supertests sobre los diferentes endpoints de la aplicación.
+
+## Documentación
+
+Para revisar la docuemtación parcial de los **endpoints** lo puedes hacer desde [http://localhost:8080/apidocs/](http://localhost:8080/apidocs/) o bien desde [aquí](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/tree/main/examples) donde ya se encuentran listados todos los endpoint sumado a una breve descripción.
 
 ## División en Capas
 - `Config`: En esta capa se desarrollaron todas las estrategias de passport que tienen que ver con logeo y registro de usuarios.
@@ -38,6 +53,8 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - `Views`: En esta capa se manejan todo lo que tenga que ver con el HTML y CSS que se pueda llegar a devolver en algunos response.
 
 ## Construido usando
+
+#### Dependencias
 
 - [@faker-js/faker](https://fakerjs.dev/guide/)
 - [Bcrypt](https://www.npmjs.com/package/bcrypt)
@@ -61,11 +78,8 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 - [Swagger-ui-express](https://swagger.io/docs/open-source-tools/swagger-ui/usage/installation/)
 - [Winston](https://www.npmjs.com/package/winston)
 
-## Endpoints
+#### Dependencias de Desarrollo
+- [Chai](https://www.chaijs.com/)
+- [Mocha](https://mochajs.org/)
+- [Supertest](https://www.npmjs.com/package/supertest)
 
-Puedes revisar una lista completa de los **endpoints** de la API ingresando [aquí](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/tree/main/examples).
-
-
-### Nota:
-
-Si tienes problemas al conectar con la base de datos de Mongo Atlas, te aconsejo que reemplaces la dirección de Atlas por la de tu MongoDB local para probar la aplicación. Ten en cuenta que esta dirección es una variable de entorno, así que deberás reemplazar el enlace que figura en `MONGO_URL=` por el de tu MongoDB local.
