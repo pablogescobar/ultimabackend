@@ -93,7 +93,7 @@ class UserRepository {
     #generateAccessToken(user) {
         return generateToken({
             email: user.email,
-            id: user._id,
+            id: user.id,
             rol: user.rol,
             firstName: user.firstName,
             lastName: user.lastName,
