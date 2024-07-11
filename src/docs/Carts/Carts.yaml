@@ -178,7 +178,6 @@ paths:
           description: El carrito o el producto no existe
         "500":
           description: Error Interno
-  /api/cart/{cid}/product/{pid}/quantity:
     put:
       summary: Actualiza la cantidad de un producto en un carrito específico
       tags:

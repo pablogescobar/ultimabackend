@@ -216,7 +216,7 @@ class CartRepository {
             throw CustomError.createError({
                 name: 'Error con el carrito',
                 cause: 'Hubo un problema alctualizar la cantidad de unidades del producto en el carrito.',
-                message: 'Error al eliminar el producto del carrito',
+                message: 'Error al actualizar el producto del carrito',
                 code: ErrorCodes.CART_UPDATE_ERROR,
                 otherProblems: error,
                 status: error.status || 500
