@@ -403,6 +403,15 @@ describe('Testing Ecommerce', () => {
             expect(Array.isArray(body.products)).to.be.ok;
         });
 
+        it('El endpoint POST /api/cart debe arrojar error si no cuenta con los permisos adecuados', async () => {
+            const { statusCode, ok, body } = await requester
+                .post('/api/cart')
+
+            expect(statusCode).to.equal(403);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('message');
+        });
+
         it('El endpoint POST /api/cart/:cid/product/:pid debe agregar un producto al carrito', async () => {
             const cookie = await authenticateAdminUser();
 
@@ -436,6 +445,58 @@ describe('Testing Ecommerce', () => {
             expect(body).to.have.property('_id');
             expect(Array.isArray(body.products)).to.be.ok;
             expect(body.products[0].product).to.equal(pid);
+        });
+
+        it('El endpoint POST /api/cart/:cid/product/:pid debe arrojar error si no cuenta con los permisos adecuados', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc126g',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await createProduct(cookie, productMock);
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await createCart(cookie);
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const { statusCode, ok, body } = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+
+            expect(statusCode).to.equal(403);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('message');
+        });
+
+        it('El endpoint POST /api/cart/:cid/product/:pid debe arrojar error si el producto no existe', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const pid = 'falsoPID';
+
+            const cart = await createCart(cookie);
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const cookieUser = await simpleRegisterAndLoginUser('test@test,com', '123');
+
+            const { statusCode, ok, body } = await requester
+                .post(`/api/cart/${cid}/product/${pid}`)
+                .set('Cookie', cookieUser)
+
+            expect(statusCode).to.equal(404);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
         });
 
         it('El endpoint DELETE /api/cart/:cid/product/:pid debe eliminar un producto del carrito', async () => {
@@ -523,6 +584,118 @@ describe('Testing Ecommerce', () => {
             expect(Array.isArray(body.products)).to.be.ok;
             expect(body.products[0].product._id).to.equal(pid);
             expect(body.products[0].quantity).to.equal(20);
+        });
+
+        it('El endpoint PUT /api/cart/:cid debe arrojar error si la petición es inválida', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc128b',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await createProduct(cookie, productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await createCart(cookie);
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const cookieUser = await simpleRegisterAndLoginUser('test3@test.com', '123');
+
+            const productToUpdate = [{
+                product: pid,
+                quantity: -20
+            }]
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/cart/${cid}`)
+                .set('Cookie', cookieUser) // Incluir la cookie en el encabezado
+                .send(productToUpdate);
+
+            expect(statusCode).to.equal(400);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
+        });
+
+        it('El endpoint PUT /api/cart/:cid debe actualizar el carrito de forma correcta', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const productMock = {
+                title: 'Test Product',
+                description: 'Product description',
+                price: 300,
+                code: 'abc128c',
+                stock: 80,
+                category: 'almacenamiento'
+            };
+
+            const product = await createProduct(cookie, productMock);
+
+            const pid = product.body.id;
+
+            expect(product.body).to.be.property('id');
+
+            const cart = await createCart(cookie);
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const cookieUser = await simpleRegisterAndLoginUser('test3@test.com', '123');
+
+            const productToUpdate = [{
+                product: pid,
+                quantity: 20
+            }]
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/cart/${cid}`)
+                .send(productToUpdate);
+
+            expect(statusCode).to.equal(403);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('message');
+        });
+
+        it('El endpoint PUT /api/cart/:cid debe actualizar el carrito de forma correcta', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const pid = 'falsoPID';
+
+
+            const cart = await createCart(cookie);
+
+            const cid = cart.body._id;
+
+            expect(cart.body).to.have.property('_id');
+
+            const cookieUser = await simpleRegisterAndLoginUser('test3@test.com', '123');
+
+            const productToUpdate = [{
+                product: pid,
+                quantity: 20
+            }]
+
+            const { statusCode, ok, body } = await requester
+                .put(`/api/cart/${cid}`)
+                .set('Cookie', cookieUser) // Incluir la cookie en el encabezado
+                .send(productToUpdate);
+
+            expect(statusCode).to.equal(404);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
         });
 
         it('El endpoint PUT /api/cart/:cid/product/:pid debe actualizar la cantidad de producto en el carrito', async () => {

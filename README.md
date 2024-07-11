@@ -28,14 +28,13 @@ Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá
 
 ## Testing
 
-
 Para poder correr los tests de la aplicación deberás haber levantado el servidor en primer lugar. Una vez hecho esto, deberás abrir una nueva consola y ejecutar:
 
 ````bash
 npm test
 ````
 
-Luego de eso, podrás ver cómo corren los tests unitarios y los supertests sobre los diferentes endpoints de la aplicación.
+Luego de eso, podrás ver cómo corren los tests unitarios y los supertests sobre los diferentes endpoints de la aplicación. Es importante que tengas en cuenta que debes tener abierta la carpeta del proyecto en tu Visual Studio Code para que los tests corran de forma correcta, de lo contrario podrías tener errores al tratar de correrlos.
 
 ## Documentación
 
@@ -82,4 +81,3 @@ Para revisar la docuemtación parcial de los **endpoints** lo puedes hacer desde
 - [Chai](https://www.chaijs.com/)
 - [Mocha](https://mochajs.org/)
 - [Supertest](https://www.npmjs.com/package/supertest)
-
