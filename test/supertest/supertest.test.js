@@ -1027,12 +1027,63 @@ describe('Testing Ecommerce', () => {
                 password: 'mclarenmp4'
             }
 
-            const { statusCode, ok } = await requester.post('/api/sessions/register').send(user);
+            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
 
-            expect(statusCode).to.equal(302);
-            // exp
-
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('firstName');
+            expect(body.password).to.not.equal(user.password);
         });
+
+        it('El endpoint POST /api/session/register debe registrar un usuario aunque no asigne un nombre, apellido o edad', async () => {
+            const user = {
+                email: 'pepito@pepon.com',
+                password: 'pepe'
+            }
+
+            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('firstName');
+            expect(body.password).to.not.equal(user.password);
+            expect(body.firstName).to.equal('Usuario');
+            expect(body.lastName).to.equal('Sin Identificar');
+        });
+
+        it('El endpoint POST /api/session/register debe arrojar error si no se proporciona un mail', async () => {
+            const user = {
+                firstName: 'Ayrton',
+                lastName: 'Senna',
+                age: 34,
+                password: 'mclarenmp4'
+            }
+
+            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+
+            expect(statusCode).to.equal(500);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error')
+            expect(body.error).to.have.property('cause');
+        });
+
+        it('El endpoint POST /api/session/register debe arrojar error si el usuario ya está registrado', async () => {
+            const user = {
+                firstName: 'Ayrton',
+                lastName: 'Senna',
+                age: 34,
+                email: 'senna@velocidad.com',
+                password: 'mclarenmp4'
+            }
+
+            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+
+            expect(statusCode).to.equal(409);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error.otherProblems.code).to.equal(16);
+        });
+
 
         it('El endpoint POST /api/session/login logear un usuario de manera correcta', async () => {
             const user = {
@@ -1045,11 +1096,49 @@ describe('Testing Ecommerce', () => {
 
             await requester.post('/api/sessions/register').send(user);
 
-            const { statusCode, ok } = await requester
+            const { statusCode, ok, body } = await requester
                 .post('/api/sessions/login')
                 .send({ email: 'verstappen@velocidad.com', password: 'supermaxrb16b' });
 
-            expect(statusCode).to.equal(302);
+            expect(statusCode).to.equal(200);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('accessToken');
+            expect(body.userPayload).to.have.property('cart')
+            expect(body.userPayload).to.have.property('id')
+            expect(body.userPayload.firstName).to.equal(user.firstName);
+        });
+
+        it('El endpoint POST /api/session/login debe arrojar error si la contraseña es incorrecta', async () => {
+            const user = {
+                firstName: 'Max',
+                lastName: 'Verstapper',
+                age: 26,
+                email: 'verstappenn@velocidad.com',
+                password: 'supermaxrb16b'
+            }
+
+            await requester.post('/api/sessions/register').send(user);
+
+            const { statusCode, ok, body } = await requester
+                .post('/api/sessions/login')
+                .send({ email: 'verstappenn@velocidad.com', password: 'supermax' });
+
+            expect(statusCode).to.equal(401);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
+        });
+
+        it('El endpoint POST /api/session/login debe arrojar error el usuario no existe', async () => {
+
+            const { statusCode, ok, body } = await requester
+                .post('/api/sessions/login')
+                .send({ email: 'carlos@carloni.com', password: 'carloni' });
+
+            expect(statusCode).to.equal(401);
+            expect(ok).to.equal(false);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
         });
 
         it('El endpoint GET /api/session/current debe devolver el usuario que se encuentra logeado', async () => {
@@ -1077,6 +1166,15 @@ describe('Testing Ecommerce', () => {
             expect(ok).to.equal(true);
             expect(body).to.have.property('id');
             expect(body.firstName).to.equal(user.firstName);
+        });
+
+        it('El endpoint GET /api/session/current debe arrojar error si no hay un usuario logeado', async () => {
+            const { statusCode, ok, body } = await requester
+                .get('/api/sessions/current')
+
+            expect(statusCode).to.equal(401);
+            expect(ok).to.equal(false);
+            expect(body).to.deep.equal({});
         });
     });
 });

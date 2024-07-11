@@ -13,7 +13,8 @@ class Controller {
             const { firstName, lastName, age, email, password } = req.body;
             const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
             req.logger.info('Usuario registrado correctamente');
-            res.redirect('/');
+            // res.redirect('/');
+            res.status(200).json(user)
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -26,7 +27,8 @@ class Controller {
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             req.logger.info('Usuario identificado');
-            res.redirect('/');
+            // res.redirect('/');
+            res.status(200).json(user);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
