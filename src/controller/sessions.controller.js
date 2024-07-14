@@ -14,7 +14,7 @@ class Controller {
             const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
             req.logger.info('Usuario registrado correctamente');
             // res.redirect('/');
-            res.status(200).json(user)
+            res.status(201).json(user)
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

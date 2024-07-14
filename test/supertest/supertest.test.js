@@ -1029,7 +1029,7 @@ describe('Testing Ecommerce', () => {
 
             const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
 
-            expect(statusCode).to.equal(200);
+            expect(statusCode).to.equal(201);
             expect(ok).to.equal(true);
             expect(body).to.have.property('firstName');
             expect(body.password).to.not.equal(user.password);
@@ -1043,7 +1043,7 @@ describe('Testing Ecommerce', () => {
 
             const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
 
-            expect(statusCode).to.equal(200);
+            expect(statusCode).to.equal(201);
             expect(ok).to.equal(true);
             expect(body).to.have.property('firstName');
             expect(body.password).to.not.equal(user.password);

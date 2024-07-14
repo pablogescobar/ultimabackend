@@ -68,7 +68,7 @@ if (require.main === module) {
         const PORT = process.env.PORT || 8080;
 
         app.listen(PORT, '0.0.0.0', () => {
-            console.log(`Servidor cargado! \nhttp://localhost:${PORT}`);
+            console.log(`\nServidor cargado! \nhttp://localhost:${PORT}\n\nDocumentación ↓\nhttp://localhost:${PORT}/apidocs`);
         });
     };
 

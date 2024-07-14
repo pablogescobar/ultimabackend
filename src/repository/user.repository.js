@@ -226,7 +226,7 @@ class UserRepository {
                 cause: 'Es necesario que ingrese una nueva contraseña y la confirmación de la misma',
                 message: 'Debe completar todos los cambios',
                 code: ErrorCodes.PASSWORD_UPDATE_ERROR,
-                status: 500
+                status: 400
             })
         }
 
@@ -238,7 +238,7 @@ class UserRepository {
                 cause: 'El link no es válido o ha expirado. Vuelva a enviar el mail de confirmación.',
                 message: 'El link no es válido o ha expirado.',
                 code: ErrorCodes.PASSWORD_UPDATE_ERROR,
-                status: 500
+                status: 410
             })
         }
 
@@ -248,7 +248,7 @@ class UserRepository {
                 cause: 'Las dos contraseñas ingresadas deben coincidir para poder continuar con la actualización',
                 message: 'Las dos contraseñas no coinciden',
                 code: ErrorCodes.PASSWORD_UPDATE_ERROR,
-                status: 500
+                status: 400
             })
         }
 
@@ -262,7 +262,7 @@ class UserRepository {
                 cause: 'La la nueva contraseña no puede ser igual a la contraseña anterior.',
                 message: 'Debe actualizar su contraseña',
                 code: ErrorCodes.PASSWORD_UPDATE_ERROR,
-                status: 500
+                status: 400
             })
         }
 
@@ -313,7 +313,7 @@ class UserRepository {
             } else {
                 throw CustomError.createError({
                     name: 'Email desconocido',
-                    cause: 'Está intentando un usuario con un email que no se encuentra registrado',
+                    cause: 'Está intentando eliminar un usuario con un email que no se encuentra registrado',
                     message: 'El email no se encuentra registrado',
                     code: ErrorCodes.UNDEFINED_USER,
                     status: 404
@@ -365,8 +365,8 @@ class UserRepository {
             await this.#userDAO.updateRole(user.email, 'user');
         }
 
-        const updatedUser = this.#userDAO.findById(id);
-        return updatedUser;
+        const updatedUser = await this.#userDAO.findById(id);
+        return new UserDTO(updatedUser);
     }
 }
 
