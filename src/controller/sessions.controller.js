@@ -97,7 +97,8 @@ class Controller {
         try {
             res.clearCookie('accessToken');
             req.logger.info('Sesión finalizada');
-            res.redirect('/');
+            // res.redirect('/');
+            res.status(200).json({ message: 'Sessión finalizada' });
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

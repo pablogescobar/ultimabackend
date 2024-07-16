@@ -1176,5 +1176,55 @@ describe('Testing Ecommerce', () => {
             expect(ok).to.equal(false);
             expect(body).to.deep.equal({});
         });
+
+        it('El enpoint GET /api/session/logout debe cerrar la sesion de forma correcta', async () => {
+            const cookie = await authenticateAdminUser();
+
+            const log = await requester
+                .get('/api/sessions/current')
+                .set('Cookie', cookie)
+
+            expect(log.body.rol).to.equal('admin');
+            expect(log.statusCode).to.equal(200);
+            expect(log.body).to.have.property('firstName');
+
+            const logout = await requester
+                .get('/api/sessions/logout')
+
+            expect(logout.body).to.have.property('message');
+            expect(logout.body.message).to.equal('Sessión finalizada');
+            expect(logout.statusCode).to.equal(200);
+        });
+
+        it('El endpoint POST /api/sessions/premium/:uid debe cambiar el rol de usuario a premium', async () => {
+            const cookie = await simpleRegisterAndLoginUser('testRol@test.com', '123');
+
+            const currentUser = await requester
+                .get('/api/sessions/current')
+                .set('Cookie', cookie);
+
+            expect(currentUser.body.email).to.equal('testRol@test.com');
+            expect(currentUser.body.rol).to.equal('user');
+            expect(currentUser.body).to.have.property('id');
+
+            const updateRol = await requester
+                .post(`/api/sessions/premium/${currentUser.body.id}`);
+            expect(updateRol.body.firstName).to.equal(currentUser.body.firstName);
+            expect(updateRol.body.id).to.equal(currentUser.body.id);
+            expect(updateRol.body.cart).to.equal(currentUser.body.cart);
+            expect(updateRol.body.rol).to.equal('premium');
+            expect(updateRol.status).to.equal(200);
+        });
+
+        it('El endpoint POST /api/sessions/premium/:uid debe arrojar error si el usuario no existe', async () => {
+            const sinID = 'noID'
+            const { body, statusCode, ok } = await requester
+                .post(`/api/sessions/premium/${sinID}`);
+
+            expect(ok).to.equal(false);
+            expect(statusCode).to.equal(404);
+            expect(body).to.have.property('error');
+            expect(body.error).to.have.property('cause');
+        });
     });
 });

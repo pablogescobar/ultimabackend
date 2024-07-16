@@ -102,6 +102,21 @@ class UserRepository {
         });
     }
 
+    async #verifyUser(id) {
+        try {
+            const user = await this.#userDAO.findById(id);
+            return user
+        } catch {
+            throw CustomError.createError({
+                name: 'Usuario inválido',
+                cause: 'El ID del usuario ingresado no se ecuentra registrado en la base de datos.',
+                message: 'ID desconocido',
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
+            })
+        };
+    };
+
     async registerUser(firstName, lastName, age, email, password) {
         try {
             if (email === this.#adminUser.email || email === this.#superAdminUser.email) {
@@ -348,16 +363,7 @@ class UserRepository {
     }
 
     async changeRole(id) {
-        const user = await this.#userDAO.findById(id);
-        if (!user) {
-            throw CustomError.createError({
-                name: 'Usuario inválido',
-                cause: 'El ID del usuario ingresado no se ecuentra registrado en la base de datos.',
-                message: 'ID desconocido',
-                code: ErrorCodes.UNDEFINED_USER,
-                status: 404
-            })
-        }
+        const user = await this.#verifyUser(id);
 
         if (user.rol === 'user') {
             await this.#userDAO.updateRole(user.email, 'premium');
