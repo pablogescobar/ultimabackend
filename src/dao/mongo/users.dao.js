@@ -28,6 +28,10 @@ class UserDAO {
     async findAll() {
         return await Users.find();
     }
+
+    async lastConnection(email, last_connection) {
+        return await Users.updateOne({ email }, { $set: { last_connection } })
+    }
 }
 
 module.exports = UserDAO;

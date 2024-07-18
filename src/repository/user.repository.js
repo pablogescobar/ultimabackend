@@ -170,7 +170,6 @@ class UserRepository {
             } else {
                 user = await this.#userDAO.findByEmail(email);
 
-
                 if (!user || !isValidPassword(password, user.password)) {
                     throw CustomError.createError({
                         name: 'Error de logeo',
@@ -181,6 +180,9 @@ class UserRepository {
                     })
                 }
             }
+
+            const date = new Date().toLocaleString();
+            await this.#userDAO.lastConnection(email, date);
 
             const userPayload = new UserDTO(user);
 
@@ -350,12 +352,12 @@ class UserRepository {
     async getUserById(id) {
         try {
             const user = await this.#userDAO.findById(id);
-            return user;
+            return new UserDTO(user);
         } catch {
             throw CustomError.createError({
                 name: 'Email desconocido',
                 cause: 'Ha ingresado un ID inválido o el usuario no se encuentra registrado en la base de datos',
-                message: 'El emmail no se encuentra registrado',
+                message: 'El email no se encuentra registrado',
                 code: ErrorCodes.UNDEFINED_USER,
                 status: 404
             })
@@ -373,6 +375,15 @@ class UserRepository {
 
         const updatedUser = await this.#userDAO.findById(id);
         return new UserDTO(updatedUser);
+    }
+
+    async updateConnection(id) {
+        const user = await this.#userDAO.findById(id);
+        console.log(user);
+        if (user) {
+            const date = new Date().toLocaleString();
+            await this.#userDAO.lastConnection(user.email, date)
+        }
     }
 }
 

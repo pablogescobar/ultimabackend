@@ -18,7 +18,15 @@ const schema = new mongoose.Schema({
     cart: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Carts'
-    }
+    },
+    last_connection: String,
+    documents: [
+        {
+            name: String,
+            reference: String
+        }
+    ]
+
 })
 
 module.exports = mongoose.model('Users', schema, 'users')

@@ -1188,12 +1188,13 @@ describe('Testing Ecommerce', () => {
             expect(log.statusCode).to.equal(200);
             expect(log.body).to.have.property('firstName');
 
-            const logout = await requester
+            const { body, statusCode } = await requester
                 .get('/api/sessions/logout')
 
-            expect(logout.body).to.have.property('message');
-            expect(logout.body.message).to.equal('Sessión finalizada');
-            expect(logout.statusCode).to.equal(200);
+            console.log(body);
+            expect(body).to.have.property('message');
+            expect(body.message).to.equal('Sessión finalizada');
+            expect(statusCode).to.equal(200);
         });
 
         it('El endpoint POST /api/sessions/premium/:uid debe cambiar el rol de usuario a premium', async () => {

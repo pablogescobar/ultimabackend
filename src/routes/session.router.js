@@ -24,7 +24,7 @@ router.post('/resetPassword', async (req, res) => new Controller().sendMailToRes
 
 router.post('/resetPassword/:tid', verifyPasswordToken, async (req, res) => new Controller().resetPassword(req, res));
 
-router.get('/logout', (req, res) => new Controller().logout(req, res));
+router.get('/logout', verifyToken, async (req, res) => new Controller().logout(req, res));
 
 router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 

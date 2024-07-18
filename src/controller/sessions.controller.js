@@ -93,8 +93,12 @@ class Controller {
         }
     }
 
-    logout(req, res) {
+    async logout(req, res) {
         try {
+            if (req.user.rol === 'user' || req.user.rol === 'premium') {
+                const uid = req.user.id;
+                await this.#userRepository.updateConnection(uid);
+            }
             res.clearCookie('accessToken');
             req.logger.info('Sesión finalizada');
             // res.redirect('/');
@@ -128,7 +132,8 @@ class Controller {
 
     async current(req, res) {
         try {
-            const user = req.user
+            const uid = req.user.id;
+            const user = await this.#userRepository.getUserById(uid);
             req.logger.info(JSON.stringify(user, null, 2));
             res.json(user);
         } catch (error) {
