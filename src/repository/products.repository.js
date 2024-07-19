@@ -77,14 +77,14 @@ class ProductRepository {
 
     }
 
-    async #validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category, owner) {
+    async #validateAndFormatAddProductsParams(title, description, price, thumbnail, code, stock, category, owner) {
 
         const invalidOptions = isNaN(+price) || +price <= 0 || isNaN(+stock) || +stock < 0;
 
         if (!title || !description || !code || !category || invalidOptions) {
             throw CustomError.createError({
                 name: 'Error al agregar el producto.',
-                cause: generateInvalidProductData(title, description, price, thumbnail, code, status, stock, category),
+                cause: generateInvalidProductData(title, description, price, thumbnail, code, stock, category),
                 message: 'No se pudo agregar el producto a la base de datos.',
                 code: ErrorCodes.INVALID_PRODUCT_DATA,
                 status: 400
@@ -93,11 +93,7 @@ class ProductRepository {
 
         const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
 
-        if (typeof status === 'undefined' || status === true || status === 'true') {
-            status = true;
-        } else {
-            status = false;
-        }
+        const finalStatus = stock >= 1 ? true : false;
 
         const user = await this.#userDAO.findByEmail(owner);
 
@@ -121,7 +117,7 @@ class ProductRepository {
             price,
             thumbnail: finalThumbnail,
             code,
-            status,
+            status: finalStatus,
             stock,
             category,
             owner: finalOwner
@@ -195,8 +191,8 @@ class ProductRepository {
 
     async addProduct(productData) {
         try {
-            const { title, description, price, thumbnail, code, status, stock, category, owner } = productData;
-            const productHandler = await this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, status, stock, category, owner);
+            const { title, description, price, thumbnail, code, stock, category, owner } = productData;
+            const productHandler = await this.#validateAndFormatAddProductsParams(title, description, price, thumbnail, code, stock, category, owner);
             const product = await this.productDAO.addProduct(productHandler);
             return new ProductDTO(product);
         } catch (error) {

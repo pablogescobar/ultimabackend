@@ -48,9 +48,10 @@ class Controller {
 
     async addProduct(req, res) {
         try {
-            const { title, description, price, thumbnail, code, status, stock, category } = req.body;
+            const { title, description, price, code, stock, category } = req.body;
             const owner = req.user.email;
-            const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, status, stock, category, owner });
+            const thumbnail = req.file;
+            const product = await this.productRepository.addProduct({ title, description, price, thumbnail, code, stock, category, owner });
             req.logger.info('Producto creado de manera correcta');
             res.status(201).json(product);
         } catch (error) {

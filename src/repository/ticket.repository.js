@@ -59,6 +59,9 @@ class TicketRepository {
                 product.stock -= item.quantity;
                 totalAmount += product.price * item.quantity;
                 await this.#productDAO.updateProduct(product._id, { stock: product.stock });
+                if (product.stock === 0) {
+                    await this.#productDAO.updateProduct(product._id, { status: false });
+                }
             }
 
             const ticketData = {

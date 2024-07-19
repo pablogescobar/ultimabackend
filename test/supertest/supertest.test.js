@@ -1178,20 +1178,20 @@ describe('Testing Ecommerce', () => {
         });
 
         it('El enpoint GET /api/session/logout debe cerrar la sesion de forma correcta', async () => {
-            const cookie = await authenticateAdminUser();
+            const cookie = await simpleRegisterAndLoginUser('logout@test.com', '123')
 
             const log = await requester
                 .get('/api/sessions/current')
                 .set('Cookie', cookie)
 
-            expect(log.body.rol).to.equal('admin');
+            expect(log.body.rol).to.equal('user');
             expect(log.statusCode).to.equal(200);
             expect(log.body).to.have.property('firstName');
 
             const { body, statusCode } = await requester
                 .get('/api/sessions/logout')
+                .set('Cookie', cookie)
 
-            console.log(body);
             expect(body).to.have.property('message');
             expect(body.message).to.equal('Sessión finalizada');
             expect(statusCode).to.equal(200);

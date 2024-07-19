@@ -379,7 +379,6 @@ class UserRepository {
 
     async updateConnection(id) {
         const user = await this.#userDAO.findById(id);
-        console.log(user);
         if (user) {
             const date = new Date().toLocaleString();
             await this.#userDAO.lastConnection(user.email, date)
