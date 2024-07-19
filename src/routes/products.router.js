@@ -12,7 +12,7 @@ router.get('/', (req, res) => new Controller().getProducts(req, res));
 router.get('/:pid', async (req, res) => new Controller().getProductById(req, res));
 
 // Ruta para agregar un nuevo producto
-router.post('/', verifyToken, isUserPremium, uploader.single('file'), async (req, res) => new Controller().addProduct(req, res));
+router.post('/', verifyToken, isUserPremium, uploader.single('thumbnail'), async (req, res) => new Controller().addProduct(req, res));
 
 // Ruta para actualizar un producto por su ID
 router.put('/:pid', verifyToken, isAdmin, async (req, res) => new Controller().updateProduct(req, res));

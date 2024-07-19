@@ -91,7 +91,8 @@ class ProductRepository {
             });
         }
 
-        const finalThumbnail = thumbnail ? thumbnail : 'Sin Imagen';
+        console.log(thumbnail);
+        const finalThumbnail = thumbnail ? `../files/${thumbnail.originalname}` : 'Sin Imagen';
 
         const finalStatus = stock >= 1 ? true : false;
 
