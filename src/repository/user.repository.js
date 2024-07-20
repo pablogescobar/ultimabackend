@@ -293,6 +293,10 @@ class UserRepository {
         try {
             const user = await this.#userDAO.findByEmail(profile._json.email);
 
+            const currentTime = new Date().toLocaleString();
+
+            await this.#userDAO.lastConnection(profile._json.email, currentTime);
+
             if (!user) {
                 const fullName = profile._json.name;
                 const firstName = fullName.substring(0, fullName.lastIndexOf(' '));
