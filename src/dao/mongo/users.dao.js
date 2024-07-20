@@ -32,6 +32,10 @@ class UserDAO {
     async lastConnection(email, last_connection) {
         return await Users.updateOne({ email }, { $set: { last_connection } })
     }
+
+    async updateDocuments(id, documents) {
+        return await Users.findByIdAndUpdate(id, { $set: { documents } });
+    }
 }
 
 module.exports = UserDAO;

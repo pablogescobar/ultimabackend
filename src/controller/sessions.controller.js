@@ -154,6 +154,20 @@ class Controller {
             res.status(error.status).json({ error });
         }
     }
+
+    async uploadDocuments(req, res) {
+        try {
+            const userId = req.params.uid;
+            const files = req.files;
+            const updatedUser = await this.#userRepository.updateUserDocuments(userId, files);
+            req.logger.info('Documentación actualizada exitosamente');
+            res.status(201).json({ message: 'Documentos actualizado de forma correcta' });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(500).json({ error });
+        }
+
+    }
 }
 
 module.exports = { Controller };

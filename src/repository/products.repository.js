@@ -92,7 +92,7 @@ class ProductRepository {
         }
 
         console.log(thumbnail);
-        const finalThumbnail = thumbnail ? `../files/${thumbnail.originalname}` : 'Sin Imagen';
+        const finalThumbnail = thumbnail ? `../products/${thumbnail.originalname}` : 'Sin Imagen';
 
         const finalStatus = stock >= 1 ? true : false;
 

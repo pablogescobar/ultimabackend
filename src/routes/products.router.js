@@ -3,7 +3,7 @@ const router = Router(); // Crea un enrutador
 const { Controller } = require('../controller/products.controller');
 const { verifyToken } = require('../middlewares/jwt.middleware');
 const { isAdmin, isUser, isUserPremium } = require('../middlewares/auth.middleware');
-const { uploader } = require('../utils/multerUploader');
+const { productUploader } = require('../utils/multerUploader');
 
 // Ruta para obtener todos los produtos
 router.get('/', (req, res) => new Controller().getProducts(req, res));
@@ -12,7 +12,7 @@ router.get('/', (req, res) => new Controller().getProducts(req, res));
 router.get('/:pid', async (req, res) => new Controller().getProductById(req, res));
 
 // Ruta para agregar un nuevo producto
-router.post('/', verifyToken, isUserPremium, uploader.single('thumbnail'), async (req, res) => new Controller().addProduct(req, res));
+router.post('/', verifyToken, isUserPremium, productUploader.single('thumbnail'), async (req, res) => new Controller().addProduct(req, res));
 
 // Ruta para actualizar un producto por su ID
 router.put('/:pid', verifyToken, isAdmin, async (req, res) => new Controller().updateProduct(req, res));

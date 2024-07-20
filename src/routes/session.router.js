@@ -5,6 +5,7 @@ const passport = require('passport');
 const { Controller } = require('../controller/sessions.controller');
 const { verifyToken, verifyPasswordToken } = require('../middlewares/jwt.middleware');
 const { isSuperAdmin } = require('../middlewares/auth.middleware');
+const { documentUploader } = require('../utils/multerUploader');
 
 // router.post('/register', passport.authenticate('register', { failureRedirect: '/', session: false }), (req, res) => new Controller().redirect(req, res));
 
@@ -28,6 +29,12 @@ router.get('/logout', verifyToken, async (req, res) => new Controller().logout(r
 
 router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 
-router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().changeRole(req, res))
+router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().changeRole(req, res));
+
+router.post('/:uid/documents', verifyToken, documentUploader.fields([
+    { name: 'identification', maxCount: 1 },
+    { name: 'proofOfAddress', maxCount: 1 },
+    { name: 'proofOfAccount', maxCount: 1 },
+]), async (req, res) => new Controller().uploadDocuments(req, res));
 
 module.exports = router;

@@ -388,6 +388,29 @@ class UserRepository {
             await this.#userDAO.lastConnection(user.email, date)
         }
     }
+
+    async updateUserDocuments(userId, files) {
+        const documentPaths = [];
+
+        if (files.identification) {
+            documentPaths.push({
+                name: 'identification',
+                reference: `/public/documents/${files.identification[0].filename}` // Usa filename aquí
+            });
+        }
+        if (files.proofOfAddress) {
+            documentPaths.push({
+                name: 'proofOfAddress',
+                reference: `/public/documents/${files.proofOfAddress[0].filename}` // Usa filename aquí
+            });
+        }
+        if (files.proofOfAccount) {
+            documentPaths.push({
+                name: 'proofOfAccount',
+                reference: `/public/documents/${files.proofOfAccount[0].filename}` // Usa filename aquí
+            });
+        }
+    }
 }
 
 module.exports = { UserRepository };
