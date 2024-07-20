@@ -55,7 +55,7 @@ describe('Testing Ecommerce', () => {
     // Función auxiliar para autenticación
     const authenticateAdminUser = async () => {
         const user = { email: process.env.ADMIN_USER, password: process.env.ADMIN_PASS };
-        const loginResponse = await requester.post('/api/sessions/login').send(user);
+        const loginResponse = await requester.post('/api/users/login').send(user);
         return loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
     };
 
@@ -72,8 +72,8 @@ describe('Testing Ecommerce', () => {
     // Función auxiliar para crear y logear un usuario
     const simpleRegisterAndLoginUser = async (email, password) => {
         const user = { email, password };
-        await requester.post('/api/sessions/register').send(user);
-        const loginResponse = await requester.post('/api/sessions/login').send(user);
+        await requester.post('/api/users/register').send(user);
+        const loginResponse = await requester.post('/api/users/login').send(user);
         return cookie = loginResponse.headers['set-cookie'][0]; // Obtener la cookie del encabezado de la respuesta
     }
 
@@ -1027,7 +1027,7 @@ describe('Testing Ecommerce', () => {
                 password: 'mclarenmp4'
             }
 
-            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
 
             expect(statusCode).to.equal(201);
             expect(ok).to.equal(true);
@@ -1041,7 +1041,7 @@ describe('Testing Ecommerce', () => {
                 password: 'pepe'
             }
 
-            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
 
             expect(statusCode).to.equal(201);
             expect(ok).to.equal(true);
@@ -1059,7 +1059,7 @@ describe('Testing Ecommerce', () => {
                 password: 'mclarenmp4'
             }
 
-            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
 
             expect(statusCode).to.equal(500);
             expect(ok).to.equal(false);
@@ -1076,7 +1076,7 @@ describe('Testing Ecommerce', () => {
                 password: 'mclarenmp4'
             }
 
-            const { statusCode, ok, body } = await requester.post('/api/sessions/register').send(user);
+            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
 
             expect(statusCode).to.equal(409);
             expect(ok).to.equal(false);
@@ -1094,10 +1094,10 @@ describe('Testing Ecommerce', () => {
                 password: 'supermaxrb16b'
             }
 
-            await requester.post('/api/sessions/register').send(user);
+            await requester.post('/api/users/register').send(user);
 
             const { statusCode, ok, body } = await requester
-                .post('/api/sessions/login')
+                .post('/api/users/login')
                 .send({ email: 'verstappen@velocidad.com', password: 'supermaxrb16b' });
 
             expect(statusCode).to.equal(200);
@@ -1117,10 +1117,10 @@ describe('Testing Ecommerce', () => {
                 password: 'supermaxrb16b'
             }
 
-            await requester.post('/api/sessions/register').send(user);
+            await requester.post('/api/users/register').send(user);
 
             const { statusCode, ok, body } = await requester
-                .post('/api/sessions/login')
+                .post('/api/users/login')
                 .send({ email: 'verstappenn@velocidad.com', password: 'supermax' });
 
             expect(statusCode).to.equal(401);
@@ -1132,7 +1132,7 @@ describe('Testing Ecommerce', () => {
         it('El endpoint POST /api/session/login debe arrojar error el usuario no existe', async () => {
 
             const { statusCode, ok, body } = await requester
-                .post('/api/sessions/login')
+                .post('/api/users/login')
                 .send({ email: 'carlos@carloni.com', password: 'carloni' });
 
             expect(statusCode).to.equal(401);
@@ -1150,16 +1150,16 @@ describe('Testing Ecommerce', () => {
                 password: 'renaultr25'
             }
 
-            await requester.post('/api/sessions/register').send(user);
+            await requester.post('/api/users/register').send(user);
 
             const logUser = await requester
-                .post('/api/sessions/login')
+                .post('/api/users/login')
                 .send({ email: 'alonso@velocidad.com', password: 'renaultr25' });
 
             const cookie = logUser.headers['set-cookie'][0];
 
             const { statusCode, ok, body } = await requester
-                .get('/api/sessions/current')
+                .get('/api/users/current')
                 .set('Cookie', cookie)
 
             expect(statusCode).to.equal(200);
@@ -1170,7 +1170,7 @@ describe('Testing Ecommerce', () => {
 
         it('El endpoint GET /api/session/current debe arrojar error si no hay un usuario logeado', async () => {
             const { statusCode, ok, body } = await requester
-                .get('/api/sessions/current')
+                .get('/api/users/current')
 
             expect(statusCode).to.equal(401);
             expect(ok).to.equal(false);
@@ -1181,7 +1181,7 @@ describe('Testing Ecommerce', () => {
             const cookie = await simpleRegisterAndLoginUser('logout@test.com', '123')
 
             const log = await requester
-                .get('/api/sessions/current')
+                .get('/api/users/current')
                 .set('Cookie', cookie)
 
             expect(log.body.rol).to.equal('user');
@@ -1189,7 +1189,7 @@ describe('Testing Ecommerce', () => {
             expect(log.body).to.have.property('firstName');
 
             const { body, statusCode } = await requester
-                .get('/api/sessions/logout')
+                .get('/api/users/logout')
                 .set('Cookie', cookie)
 
             expect(body).to.have.property('message');
@@ -1197,11 +1197,11 @@ describe('Testing Ecommerce', () => {
             expect(statusCode).to.equal(200);
         });
 
-        it('El endpoint POST /api/sessions/premium/:uid debe cambiar el rol de usuario a premium', async () => {
+        it('El endpoint POST /api/users/premium/:uid debe cambiar el rol de usuario a premium', async () => {
             const cookie = await simpleRegisterAndLoginUser('testRol@test.com', '123');
 
             const currentUser = await requester
-                .get('/api/sessions/current')
+                .get('/api/users/current')
                 .set('Cookie', cookie);
 
             expect(currentUser.body.email).to.equal('testRol@test.com');
@@ -1209,7 +1209,7 @@ describe('Testing Ecommerce', () => {
             expect(currentUser.body).to.have.property('id');
 
             const updateRol = await requester
-                .post(`/api/sessions/premium/${currentUser.body.id}`);
+                .post(`/api/users/premium/${currentUser.body.id}`);
             expect(updateRol.body.firstName).to.equal(currentUser.body.firstName);
             expect(updateRol.body.id).to.equal(currentUser.body.id);
             expect(updateRol.body.cart).to.equal(currentUser.body.cart);
@@ -1217,10 +1217,10 @@ describe('Testing Ecommerce', () => {
             expect(updateRol.status).to.equal(200);
         });
 
-        it('El endpoint POST /api/sessions/premium/:uid debe arrojar error si el usuario no existe', async () => {
+        it('El endpoint POST /api/users/premium/:uid debe arrojar error si el usuario no existe', async () => {
             const sinID = 'noID'
             const { body, statusCode, ok } = await requester
-                .post(`/api/sessions/premium/${sinID}`);
+                .post(`/api/users/premium/${sinID}`);
 
             expect(ok).to.equal(false);
             expect(statusCode).to.equal(404);

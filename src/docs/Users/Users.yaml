@@ -3,7 +3,7 @@ info:
   title: API de Users
   version: 1.0.0
 paths:
-  /api/sessions/register:
+  /api/users/register:
     post:
       summary: Registra un usuario nuevo en la base de datos.
       tags:
@@ -39,7 +39,7 @@ paths:
           description: El email ya se encuentra registrado
         '500':
           description: Error interno
-  /api/sessions/login:
+  /api/users/login:
     post:
       summary: Loguea un usuario existente en la base de datos.
       tags:
@@ -64,7 +64,7 @@ paths:
           description: Contraseña incorrecta, email o contraseña no definido
         '500':
           description: Error interno
-  /api/sessions/resetPassword:
+  /api/users/resetPassword:
     post:
       summary: Envía un email al usuario para recuperar su contraseña.
       tags:
@@ -84,7 +84,7 @@ paths:
           description: Email enviado para recuperar la contraseña.
         '404':
           description: No propociona una dirección de email o el mismo no se encuentra registrado
-  /api/sessions/resetPassword/{uid}:
+  /api/users/resetPassword/{uid}:
     post:
       summary: Permite al usuario actualizar su contraseña.
       tags:
@@ -118,7 +118,7 @@ paths:
           description: El link de restablecimiento ha exiprado
         '500':
           description: Error interno
-  /api/sessions/current:
+  /api/users/current:
     get:
       summary: Muestra la información del token de login del usuario.
       tags:
@@ -154,7 +154,7 @@ paths:
                     example: 668ee54dbe856b5aeb3a0335
         '401':
           description: No se encuentra logeado ningún usuario
-  /api/sessions/logout:
+  /api/users/logout:
     get:
       summary: Elimina la cookie accessToken que contiene la información del usuario.
       tags:
@@ -164,7 +164,7 @@ paths:
           description: Usuario deslogueado.
         '500':
           description: Error interno
-  /api/sessions:
+  /api/users:
     delete:
       summary: Elimina el usuario y su carrito según el email.
       tags:
@@ -186,7 +186,7 @@ paths:
           description: Email no registrado
         '500':
           description: Error interno
-  /api/sessions/premium/{id}:
+  /api/users/premium/{id}:
     post:
       summary: Cambia el rol de un usuario a premium.
       tags:

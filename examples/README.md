@@ -18,7 +18,7 @@ Permite probar todos los loggers del proyecto dependiendo de si el mismo se encu
 
 Registra un usuario nuevo en la base de datos.
 
-[**URL:**](http://localhost:8080/api/sessions/register) `http://localhost:8080/api/sessions/register`
+[**URL:**](http://localhost:8080/api/users/register) `http://localhost:8080/api/users/register`
 
 **Método** `POST`
 
@@ -38,7 +38,7 @@ Registra un usuario nuevo en la base de datos.
 
 Loguea un usuario existente en la base de datos. Hecho esto, mediante un middleware se comprobará tener los correspondientes permisos para ingresar a los distintos endpoints. En caso de no se así, utilizando **JWT**, se genera un token que podrás encontrar en los headers de Postman como `accessToken`, figurando como una cookie. Dicha cookie puede utilizarse en otros endpoints para obtener ciertos permisos. Para esto, tendrás que ingresar a la sección de **Authorization** en tu Postman y configurar el **Auth Type** como **Bearer Token**. Seguidamente, deberás pegar el token obtenido en la cookie en el campo de **token** en el endpoint donde se soliciten permisos de acceso.
 
-[**URL:**](http://localhost:8080/api/sessions/login) `http://localhost:8080/api/sessions/login`
+[**URL:**](http://localhost:8080/api/users/login) `http://localhost:8080/api/users/login`
 
 **Método** `POST`
 
@@ -54,7 +54,7 @@ Loguea un usuario existente en la base de datos. Hecho esto, mediante un middlew
 
 Envia un email al usuario ingresado para poder recuperar su contraseña.
 
-[**URL:**](http://localhost:8080/api/sessions/resetPassword) `http://localhost:8080/api/sessions/resetPassword`
+[**URL:**](http://localhost:8080/api/users/resetPassword) `http://localhost:8080/api/users/resetPassword`
 
 **Método** `POST`
 
@@ -78,7 +78,7 @@ Avisa al usuario que el mail se ha enviado a su cuenta de correo o bien avisa qu
 
 Deberá ingresar una nueva contraseña y confirmarla para poder realizar la actualización. Tenga en cuenta que el link expira y `uid` varía dependiendo lo que reciba en su mail.
 
-[**URL:**](http://localhost:8080/api/sessions/resetPassword/9950531852) `http://localhost:8080/api/sessions/resetPassword/:uid`
+[**URL:**](http://localhost:8080/api/users/resetPassword/9950531852) `http://localhost:8080/api/users/resetPassword/:uid`
 
 **Método** `POST`
 
@@ -95,7 +95,7 @@ Deberá ingresar una nueva contraseña y confirmarla para poder realizar la actu
 
 Muestra la información que contiene el token de logeo del usuario.
 
-[**URL:**](http://localhost:8080/api/sessions/current) `http://localhost:8080/api/sessions/current`
+[**URL:**](http://localhost:8080/api/users/current) `http://localhost:8080/api/users/current`
 
 **Método** `GET`
 
@@ -103,7 +103,7 @@ Muestra la información que contiene el token de logeo del usuario.
 
 Elimina la cookie `accessToken` la cual contiene la información del usuario.
 
-[**URL:**](http://localhost:8080/api/sessions/logout) `http://localhost:8080/api/sessions/logout`
+[**URL:**](http://localhost:8080/api/users/logout) `http://localhost:8080/api/users/logout`
 
 **Método** `GET`
 
@@ -111,7 +111,7 @@ Elimina la cookie `accessToken` la cual contiene la información del usuario.
 
 Elimina el usuario y su carrito según el email.
 
-[**URL:**](http://localhost:8080/api/sessions) `http://localhost:8080/api/sessions`
+[**URL:**](http://localhost:8080/api/users) `http://localhost:8080/api/users`
 
 **Método** `DELETE`
 
@@ -127,7 +127,7 @@ Elimina el usuario y su carrito según el email.
 
 La URL debe contener el ID del usuario para poder variar el rol del mismo entre **user** y **premium**. Para mantener la tendencia de los demás endpoint y tipificar con la consiga, `changeRole` tiene dos variantes en la URL
 
-[**URL:**](http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/sessions/premium/6664aa9e60d9638a4b0b2859`
+[**URL:**](http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859`
 
 [**URL:**](http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859) `http://localhost:8080/api/users/premium/6664aa9e60d9638a4b0b2859`
 

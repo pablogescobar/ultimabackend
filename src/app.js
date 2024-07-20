@@ -52,7 +52,7 @@ app.use('/products', productsViewsRouter);
 app.use('/api/cart', cartRouter);
 app.use('/cart', cartViewsRouter);
 app.use('/createProduct', createProductRouter);
-app.use('/api/sessions', sessionRouter);
+app.use('/api/users', sessionRouter);
 app.use('/', sessionViewsRouter);
 app.use('/mockingproducts', mockingProductRouter);
 app.use('/loggertest', loggerTestRouter);
