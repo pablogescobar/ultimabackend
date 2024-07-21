@@ -164,7 +164,7 @@ class Controller {
             res.status(201).json({ message: 'Documentos actualizado de forma correcta' });
         } catch (error) {
             req.logger.error(error);
-            res.status(500).json({ error });
+            res.status(error.status).json({ error });
         }
 
     }

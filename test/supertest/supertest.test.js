@@ -1197,6 +1197,23 @@ describe('Testing Ecommerce', () => {
             expect(statusCode).to.equal(200);
         });
 
+        it('El endpoint POST /api/user/:uid/documents debe agregar la documentación al usuario de forma correcta', async () => {
+            const cookie = await simpleRegisterAndLoginUser('testDoc@test,com', '123');
+            const user = await requester
+                .get('/api/users/current')
+                .set('Cookie', cookie)
+            const { body, ok, statusCode } = await requester
+                .post(`/api/users/${user.body.id}/documents`)
+                .set('Cookie', cookie)
+                .field('identification', 'identificationValue')
+                .field('proofOfAddress', 'proofOfAddressValue')
+                .field('proofOfAccount', 'proofOfAccountValue')
+
+            expect(statusCode).to.equal(201);
+            expect(ok).to.equal(true);
+            expect(body).to.have.property('message');
+        });
+
         it('El endpoint POST /api/users/premium/:uid debe cambiar el rol de usuario a premium', async () => {
             const cookie = await simpleRegisterAndLoginUser('testRol@test.com', '123');
 
@@ -1207,6 +1224,13 @@ describe('Testing Ecommerce', () => {
             expect(currentUser.body.email).to.equal('testRol@test.com');
             expect(currentUser.body.rol).to.equal('user');
             expect(currentUser.body).to.have.property('id');
+
+            await requester
+                .post(`/api/users/${currentUser.body.id}/documents`)
+                .set('Cookie', cookie)
+                .field('identification', 'identificationValue')
+                .field('proofOfAddress', 'proofOfAddressValue')
+                .field('proofOfAccount', 'proofOfAccountValue')
 
             const updateRol = await requester
                 .post(`/api/users/premium/${currentUser.body.id}`);

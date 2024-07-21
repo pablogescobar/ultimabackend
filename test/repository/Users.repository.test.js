@@ -80,14 +80,4 @@ describe('Testing Users Repository', () => {
         expect(userById.firstName).to.be.equal('Fernando');
         expect(userById.id).to.be.equal(user.userPayload.id);
     });
-
-    it('El rol del usuario se cambia de forma correcta', async () => {
-        const email = 'current@test.com';
-        const password = '123988';
-        await userRepository.registerUser('Max', 'Verstappen', 33, email, password);
-        const user = await userRepository.loginUser(email, password);
-        expect(user.userPayload.rol).to.be.equal('user');
-        const updatedUser = await userRepository.changeRole(user.userPayload.id);
-        expect(updatedUser.rol).to.be.equal('premium');
-    });
 });

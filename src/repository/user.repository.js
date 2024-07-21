@@ -384,7 +384,7 @@ class UserRepository {
                 name: 'No se puede actualizar',
                 cause: 'No se ha podido actualizar el rol del usuario por falta de documentación',
                 message: 'Falta de documentación',
-                code: ErrorCodes.UNDEFINED_USER,
+                code: ErrorCodes.UNDEFINED_DATA,
                 status: 400
             })
         }
@@ -402,24 +402,36 @@ class UserRepository {
         await this.#verifyUser(userId)
         const documentPaths = [];
 
+        if (files === undefined) {
+            throw CustomError.createError({
+                name: 'Campos vacios',
+                cause: 'No se pudo completar la operación, debe cargar al menos un archivo a la documentación.',
+                message: 'No puede enviar un formaulario vacio',
+                code: ErrorCodes.UNDEFINED_DATA,
+                status: 400
+            })
+        }
+
         if (files.identification) {
             documentPaths.push({
                 name: 'identification',
-                reference: `/public/documents/${files.identification[0].filename}` // Usa filename aquí
+                reference: `/public/documents/${files.identification[0].filename}`
             });
         }
         if (files.proofOfAddress) {
             documentPaths.push({
                 name: 'proofOfAddress',
-                reference: `/public/documents/${files.proofOfAddress[0].filename}` // Usa filename aquí
+                reference: `/public/documents/${files.proofOfAddress[0].filename}`
             });
         }
         if (files.proofOfAccount) {
             documentPaths.push({
                 name: 'proofOfAccount',
-                reference: `/public/documents/${files.proofOfAccount[0].filename}` // Usa filename aquí
+                reference: `/public/documents/${files.proofOfAccount[0].filename}`
             });
         }
+
+
 
         const updatedUser = await this.#userDAO.updateDocuments(userId, documentPaths);
         return new UserDTO(updatedUser);
