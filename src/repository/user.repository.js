@@ -371,14 +371,23 @@ class UserRepository {
     async changeRole(id) {
         const user = await this.#verifyUser(id);
 
-        if (user.rol === 'user') {
+        if (user.rol === 'user' && user.documents.length === 3) {
             await this.#userDAO.updateRole(user.email, 'premium');
-        } else {
+            const updatedUser = await this.#userDAO.findById(id);
+            return new UserDTO(updatedUser);
+        } else if (user.rol === 'premium') {
             await this.#userDAO.updateRole(user.email, 'user');
+            const updatedUser = await this.#userDAO.findById(id);
+            return new UserDTO(updatedUser);
+        } else {
+            throw CustomError.createError({
+                name: 'No se puede actualizar',
+                cause: 'No se ha podido actualizar el rol del usuario por falta de documentación',
+                message: 'Falta de documentación',
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 400
+            })
         }
-
-        const updatedUser = await this.#userDAO.findById(id);
-        return new UserDTO(updatedUser);
     }
 
     async updateConnection(id) {
@@ -410,6 +419,9 @@ class UserRepository {
                 reference: `/public/documents/${files.proofOfAccount[0].filename}` // Usa filename aquí
             });
         }
+
+        const updatedUser = await this.#userDAO.updateDocuments(userId, documentPaths);
+        return updatedUser;
     }
 }
 

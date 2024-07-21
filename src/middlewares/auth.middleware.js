@@ -28,7 +28,7 @@ module.exports = {
             return next();
         }
         req.logger.warning('Acceso denegado: Solamente usuarios')
-        return res.status(403).json({ message: 'Acceso denegado: Solamente usuarios' });
+        return res.status(403).json({ message: 'Acceso denegado: Debe estar registrado para continuar' });
     }
 }
 

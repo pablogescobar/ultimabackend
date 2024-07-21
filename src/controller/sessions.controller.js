@@ -146,7 +146,7 @@ class Controller {
         try {
             const uid = req.params.uid;
             const user = await this.#userRepository.changeRole(uid);
-            req.logger.info(`Rol del usuario actualizado a ${user.rol}`);
+            req.logger.info(`Rol del usuario actualizado`);
             res.clearCookie('accessToken');
             return res.json(user);
         } catch (error) {

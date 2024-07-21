@@ -19,8 +19,7 @@ const documentStorage = multer.diskStorage({
         cb(null, dest);
     },
     filename: function (req, file, cb) {
-        // Obtén el userId desde los parámetros de la solicitud o el objeto req.user
-        const userId = req.user.id; // Asegúrate de que el userId esté disponible en req.user
+        const userId = req.params.uid;
 
         // Genera el nuevo nombre del archivo basado en el campo y el userId
         const fileExtension = path.extname(file.originalname); // Obtén la extensión del archivo
