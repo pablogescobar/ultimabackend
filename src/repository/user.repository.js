@@ -399,6 +399,7 @@ class UserRepository {
     }
 
     async updateUserDocuments(userId, files) {
+        await this.#verifyUser(userId)
         const documentPaths = [];
 
         if (files.identification) {
@@ -421,7 +422,7 @@ class UserRepository {
         }
 
         const updatedUser = await this.#userDAO.updateDocuments(userId, documentPaths);
-        return updatedUser;
+        return new UserDTO(updatedUser);
     }
 }
 

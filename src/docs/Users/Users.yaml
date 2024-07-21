@@ -186,7 +186,7 @@ paths:
           description: Email no registrado
         '500':
           description: Error interno
-  /api/users/premium/{id}:
+  /api/users/premium/{uid}:
     post:
       summary: Cambia el rol de un usuario a premium.
       tags:
@@ -227,8 +227,48 @@ paths:
                   cart:
                     type: string
                     example: 668ee54dbe856b5aeb3a0335
+        '400':
+          description: Falta agregar la documentación correspondiente para realizar la actualización
         '404':
           description: ID inválido
+  /api/users/{uid}/documents:
+    post:
+      summary: Actualiza la documentación del usuario
+      tags:
+        - Users
+      parameters:
+        - name: uid
+          in: path
+          required: true
+          description: ID del usuario
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                identification:
+                  type: string
+                  format: binary
+                  description: Identificación
+                proofOfAddress:
+                  type: string
+                  format: binary
+                  description: Comprobante de domicilio
+                proofOfAccount:
+                  type: string
+                  format: binary
+                  description: Comprobante de estado de cuenta
+      responses:
+        '201':
+          description: La documentación se ha actualizado de manera correcta
+        '400':
+          description: Campo de archivo inesperado. Verifique los campos permitidos
+        '404':
+          description: El ID del usuario no existe
 components:
   schemas:
     User:

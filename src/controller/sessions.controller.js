@@ -159,7 +159,7 @@ class Controller {
         try {
             const userId = req.params.uid;
             const files = req.files;
-            const updatedUser = await this.#userRepository.updateUserDocuments(userId, files);
+            await this.#userRepository.updateUserDocuments(userId, files);
             req.logger.info('Documentación actualizada exitosamente');
             res.status(201).json({ message: 'Documentos actualizado de forma correcta' });
         } catch (error) {
