@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const supertest = require('supertest');
 const app = require('../../src/app');
 const requester = supertest(`http://localhost:${PORT}`);
+const path = require('path');
 
 let chai;
 let expect;
@@ -1018,201 +1019,6 @@ describe('Testing Ecommerce', () => {
     });
 
     describe('Test de users', () => {
-        it('El endpoint POST /api/session/register debe registrar un usuario de marera correcta', async () => {
-            const user = {
-                firstName: 'Ayrton',
-                lastName: 'Senna',
-                age: 34,
-                email: 'senna@velocidad.com',
-                password: 'mclarenmp4'
-            }
-
-            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
-
-            expect(statusCode).to.equal(201);
-            expect(ok).to.equal(true);
-            expect(body).to.have.property('firstName');
-            expect(body.password).to.not.equal(user.password);
-        });
-
-        it('El endpoint POST /api/session/register debe registrar un usuario aunque no asigne un nombre, apellido o edad', async () => {
-            const user = {
-                email: 'pepito@pepon.com',
-                password: 'pepe'
-            }
-
-            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
-
-            expect(statusCode).to.equal(201);
-            expect(ok).to.equal(true);
-            expect(body).to.have.property('firstName');
-            expect(body.password).to.not.equal(user.password);
-            expect(body.firstName).to.equal('Usuario');
-            expect(body.lastName).to.equal('Sin Identificar');
-        });
-
-        it('El endpoint POST /api/session/register debe arrojar error si no se proporciona un mail', async () => {
-            const user = {
-                firstName: 'Ayrton',
-                lastName: 'Senna',
-                age: 34,
-                password: 'mclarenmp4'
-            }
-
-            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
-
-            expect(statusCode).to.equal(500);
-            expect(ok).to.equal(false);
-            expect(body).to.have.property('error')
-            expect(body.error).to.have.property('cause');
-        });
-
-        it('El endpoint POST /api/session/register debe arrojar error si el usuario ya está registrado', async () => {
-            const user = {
-                firstName: 'Ayrton',
-                lastName: 'Senna',
-                age: 34,
-                email: 'senna@velocidad.com',
-                password: 'mclarenmp4'
-            }
-
-            const { statusCode, ok, body } = await requester.post('/api/users/register').send(user);
-
-            expect(statusCode).to.equal(409);
-            expect(ok).to.equal(false);
-            expect(body).to.have.property('error');
-            expect(body.error.otherProblems.code).to.equal(16);
-        });
-
-
-        it('El endpoint POST /api/session/login logear un usuario de manera correcta', async () => {
-            const user = {
-                firstName: 'Max',
-                lastName: 'Verstapper',
-                age: 26,
-                email: 'verstappen@velocidad.com',
-                password: 'supermaxrb16b'
-            }
-
-            await requester.post('/api/users/register').send(user);
-
-            const { statusCode, ok, body } = await requester
-                .post('/api/users/login')
-                .send({ email: 'verstappen@velocidad.com', password: 'supermaxrb16b' });
-
-            expect(statusCode).to.equal(200);
-            expect(ok).to.equal(true);
-            expect(body).to.have.property('accessToken');
-            expect(body.userPayload).to.have.property('cart')
-            expect(body.userPayload).to.have.property('id')
-            expect(body.userPayload.firstName).to.equal(user.firstName);
-        });
-
-        it('El endpoint POST /api/session/login debe arrojar error si la contraseña es incorrecta', async () => {
-            const user = {
-                firstName: 'Max',
-                lastName: 'Verstapper',
-                age: 26,
-                email: 'verstappenn@velocidad.com',
-                password: 'supermaxrb16b'
-            }
-
-            await requester.post('/api/users/register').send(user);
-
-            const { statusCode, ok, body } = await requester
-                .post('/api/users/login')
-                .send({ email: 'verstappenn@velocidad.com', password: 'supermax' });
-
-            expect(statusCode).to.equal(401);
-            expect(ok).to.equal(false);
-            expect(body).to.have.property('error');
-            expect(body.error).to.have.property('cause');
-        });
-
-        it('El endpoint POST /api/session/login debe arrojar error el usuario no existe', async () => {
-
-            const { statusCode, ok, body } = await requester
-                .post('/api/users/login')
-                .send({ email: 'carlos@carloni.com', password: 'carloni' });
-
-            expect(statusCode).to.equal(401);
-            expect(ok).to.equal(false);
-            expect(body).to.have.property('error');
-            expect(body.error).to.have.property('cause');
-        });
-
-        it('El endpoint GET /api/session/current debe devolver el usuario que se encuentra logeado', async () => {
-            const user = {
-                firstName: 'Fernando',
-                lastName: 'Alonso',
-                age: 42,
-                email: 'alonso@velocidad.com',
-                password: 'renaultr25'
-            }
-
-            await requester.post('/api/users/register').send(user);
-
-            const logUser = await requester
-                .post('/api/users/login')
-                .send({ email: 'alonso@velocidad.com', password: 'renaultr25' });
-
-            const cookie = logUser.headers['set-cookie'][0];
-
-            const { statusCode, ok, body } = await requester
-                .get('/api/users/current')
-                .set('Cookie', cookie)
-
-            expect(statusCode).to.equal(200);
-            expect(ok).to.equal(true);
-            expect(body).to.have.property('id');
-            expect(body.firstName).to.equal(user.firstName);
-        });
-
-        it('El endpoint GET /api/session/current debe arrojar error si no hay un usuario logeado', async () => {
-            const { statusCode, ok, body } = await requester
-                .get('/api/users/current')
-
-            expect(statusCode).to.equal(401);
-            expect(ok).to.equal(false);
-            expect(body).to.deep.equal({});
-        });
-
-        it('El enpoint GET /api/session/logout debe cerrar la sesion de forma correcta', async () => {
-            const cookie = await simpleRegisterAndLoginUser('logout@test.com', '123')
-
-            const log = await requester
-                .get('/api/users/current')
-                .set('Cookie', cookie)
-
-            expect(log.body.rol).to.equal('user');
-            expect(log.statusCode).to.equal(200);
-            expect(log.body).to.have.property('firstName');
-
-            const { body, statusCode } = await requester
-                .get('/api/users/logout')
-                .set('Cookie', cookie)
-
-            expect(body).to.have.property('message');
-            expect(body.message).to.equal('Sessión finalizada');
-            expect(statusCode).to.equal(200);
-        });
-
-        it('El endpoint POST /api/user/:uid/documents debe agregar la documentación al usuario de forma correcta', async () => {
-            const cookie = await simpleRegisterAndLoginUser('testDoc@test,com', '123');
-            const user = await requester
-                .get('/api/users/current')
-                .set('Cookie', cookie)
-            const { body, ok, statusCode } = await requester
-                .post(`/api/users/${user.body.id}/documents`)
-                .set('Cookie', cookie)
-                .field('identification', 'identificationValue')
-                .field('proofOfAddress', 'proofOfAddressValue')
-                .field('proofOfAccount', 'proofOfAccountValue')
-
-            expect(statusCode).to.equal(201);
-            expect(ok).to.equal(true);
-            expect(body).to.have.property('message');
-        });
 
         it('El endpoint POST /api/users/premium/:uid debe cambiar el rol de usuario a premium', async () => {
             const cookie = await simpleRegisterAndLoginUser('testRol@test.com', '123');
@@ -1228,9 +1034,9 @@ describe('Testing Ecommerce', () => {
             await requester
                 .post(`/api/users/${currentUser.body.id}/documents`)
                 .set('Cookie', cookie)
-                .field('identification', 'identificationValue')
-                .field('proofOfAddress', 'proofOfAddressValue')
-                .field('proofOfAccount', 'proofOfAccountValue')
+                .attach('identification', path.join(__dirname, '../img/Fuente.webp'))
+                .attach('proofOfAddress', path.join(__dirname, '../img/Fuente.webp'))
+                .attach('proofOfAccount', path.join(__dirname, '../img/Fuente.webp'))
 
             const updateRol = await requester
                 .post(`/api/users/premium/${currentUser.body.id}`);

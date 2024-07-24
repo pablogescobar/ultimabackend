@@ -431,8 +431,7 @@ class UserRepository {
             });
         }
 
-        const updatedUser = await this.#userDAO.updateDocuments(userId, documentPaths);
-        return new UserDTO(updatedUser);
+        return await this.#userDAO.updateDocuments(userId, documentPaths);
     }
 
     async updatePicture(userId, file) {

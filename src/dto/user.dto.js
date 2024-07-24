@@ -7,7 +7,7 @@ class UserDTO {
         this.email = user.email;
         this.rol = user.rol;
         this.cart = user.cart ? user.cart._id.toString() : 'noCart';
-        this.picture = user.picture
+        this.picture = user.picture || 'noPicture'
     }
 }
 
