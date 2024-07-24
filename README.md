@@ -7,6 +7,7 @@
 - Se creó el endpoint `/api/users/:uid/documents` para actualizar la documentación del usuario.
 - Se incluyó **multer** para permitir la inclusión de imágenes en el proyecto, diferenciando entre documentos, fotos de productos o fotos de perfil.
 - Se modificó el endpoint `/api/users/premium/:uid` para que solo actualice a **premium** si tiene toda la documentación actualizada.
+- Se incorporó el endpoint `/api/user/picture` para poder actualizar la foto de perfil del usuario.
 
 ## Correr de manera local
 ```bash
@@ -15,23 +16,23 @@ cd backend_Entregas_Di-Iorio
 npm install
 ```
 
-Para finalizar la instalación deberá crear un archivo `.env` y agregar las respectivas varialbles de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/examples/.env.example) 
+Para finalizar la instalación, deberá crear un archivo `.env` y agregar las respectivas variables de entorno. Puedes ver un ejemplo [aquí.](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/examples/.env.example) 
 
-#### Como ubicar el archivo **.env**:
+#### Cómo ubicar el archivo **.env**:
 
 ![Imagen de env](https://github.com/Fede-Diiorio/backend_Entregas_Di-Iorio/blob/main/examples/envExample.png?raw=true)
 
-Luego de este paso podrás correr el proyecto con el siguiente comando:
+Luego de este paso, podrás correr el proyecto con el siguiente comando:
 
 ````bash
 nodemon src/app
 ````
 
-Una vez ejecutados estos comandos en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos. y podrás acceder a la documentación y a los testeos.
+Una vez ejecutados estos comandos, en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos y acceder a la documentación y a los test.
 
 ## Testing
 
-Para poder correr los tests de la aplicación deberás haber levantado el servidor en primer lugar. Una vez hecho esto, deberás abrir una nueva consola y ejecutar:
+Para poder correr los tests de la aplicación, deberás haber levantado el servidor en primer lugar. Una vez hecho esto, deberás abrir una nueva consola y ejecutar:
 
 ````bash
 npm test
@@ -41,17 +42,17 @@ Luego de eso, podrás ver cómo se ejecutan los tests unitarios y los supertests
 
 ## Documentación
 
-Para revisar la docuemtación de los **endpoints** lo puedes hacer desde [aquí](http://localhost:8080/apidocs/).
+Para revisar la documentación de los **endpoints**, lo puedes hacer desde [aquí](http://localhost:8080/apidocs/).
 ## División en Capas
-- `Config`: En esta capa se desarrollaron todas las estrategias de passport que tienen que ver con logeo y registro de usuarios.
+- `Config`: En esta capa se desarrollaron todas las estrategias de passport que tienen que ver con login y registro de usuarios.
 - `Controller`: En esta capa se lleva a cabo todo el manejo relacionado a los request y response que vienen desde la capa de **router**.
 - `DAO`: En esta capa se implementó todo lo relacionado con la persistencia en la base de datos.
 - `DTO`: Esta capa se ocupa de formatear datos como, por ejemplo, los usuarios.
 - `Repository`: Esta capa se encarga de realizar las comprobaciones que tienen que ver con la lógica de negocio para enviar la información al **DAO**.
-- `Middlewares`: Ofrece funciones y servicios comunes que se implementan en el código con el fin de hacerlo más performante.
-- `Routes`: Esta capa se encarga de enviar el request y el response, tanto desde la API y de las **views**, a la capa de **controller**.
-- `Utils`: En esta capa se úbican algunas funciones a modo de "helpers" que se pueden utilizar en el resto del código. Similar a la capa de **middlewares**.
-- `Views`: En esta capa se manejan todo lo que tenga que ver con el HTML y CSS que se pueda llegar a devolver en algunos response.
+- `Middlewares`: Ofrece funciones y servicios comunes que se implementan en el código con el fin de hacerlo más eficiente.
+- `Routes`: Esta capa se encarga de enviar el request y el response, tanto desde la API como de las **views**, a la capa de **controller**.
+- `Utils`: En esta capa se ubican algunas funciones a modo de "helpers" que se pueden utilizar en el resto del código. Similar a la capa de **middlewares**.
+- `Views`: En esta capa se maneja todo lo relacionado con el HTML y CSS que se pueda llegar a devolver en algunas responses.
 
 ## Construido usando
 
@@ -59,7 +60,7 @@ Para revisar la docuemtación de los **endpoints** lo puedes hacer desde [aquí]
 
 - [@faker-js/faker](https://fakerjs.dev/guide/)
 - [Bcrypt](https://www.npmjs.com/package/bcrypt)
-- [Connet-mongo](https://www.npmjs.com/package/connect-mongo)
+- [Connect-mongo](https://www.npmjs.com/package/connect-mongo)
 - [Cookie-parser](https://www.npmjs.com/package/cookie-parser)
 - [Dotenv](https://www.npmjs.com/package/dotenv)
 - [Express](https://www.npmjs.com/package/express)
