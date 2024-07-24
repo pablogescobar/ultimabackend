@@ -25,7 +25,8 @@ const schema = new mongoose.Schema({
             name: String,
             reference: String
         }
-    ]
+    ],
+    picture: String
 
 })
 

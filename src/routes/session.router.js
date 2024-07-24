@@ -5,7 +5,7 @@ const passport = require('passport');
 const { Controller } = require('../controller/sessions.controller');
 const { verifyToken, verifyPasswordToken } = require('../middlewares/jwt.middleware');
 const { isSuperAdmin, isUser } = require('../middlewares/auth.middleware');
-const { documentUploader } = require('../utils/multerUploader');
+const { documentUploader, profileUploader } = require('../utils/multerUploader');
 const { multerErrorHandler } = require('../middlewares/multerErrorHandler.middleware');
 
 // router.post('/register', passport.authenticate('register', { failureRedirect: '/', session: false }), (req, res) => new Controller().redirect(req, res));
@@ -37,5 +37,7 @@ router.post('/:uid/documents', verifyToken, documentUploader.fields([
     { name: 'proofOfAddress', maxCount: 1 },
     { name: 'proofOfAccount', maxCount: 1 },
 ]), multerErrorHandler, async (req, res) => new Controller().uploadDocuments(req, res));
+
+router.post('/picture', verifyToken, isUser, profileUploader.single('profilePicture'), async (req, res) => new Controller().updatePicture(req, res));
 
 module.exports = router;

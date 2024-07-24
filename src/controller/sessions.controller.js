@@ -166,7 +166,20 @@ class Controller {
             req.logger.error(error);
             res.status(error.status).json({ error });
         }
+    }
 
+    async updatePicture(req, res) {
+        try {
+            const userId = req.user.id;
+            const picture = req.file;
+            console.log(req.file);
+            await this.#userRepository.updatePicture(userId, picture);
+            req.logger.info('Imagen de perfil actualizada correctamente');
+            res.status(200).json({ message: 'Su imagen de perfil se actualizó de manera exitosa.' });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
     }
 }
 

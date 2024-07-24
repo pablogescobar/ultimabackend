@@ -36,6 +36,10 @@ class UserDAO {
     async updateDocuments(id, documents) {
         return await Users.findByIdAndUpdate(id, { $set: { documents } });
     }
+
+    async updatePicture(id, picture) {
+        return await Users.findByIdAndUpdate(id, { $set: { picture } })
+    }
 }
 
 module.exports = UserDAO;
