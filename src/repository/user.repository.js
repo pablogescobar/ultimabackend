@@ -431,10 +431,26 @@ class UserRepository {
             });
         }
 
-
-
         const updatedUser = await this.#userDAO.updateDocuments(userId, documentPaths);
         return new UserDTO(updatedUser);
+    }
+
+    async updatePicture(userId, file) {
+        await this.#verifyUser(userId);
+
+        if (file === undefined) {
+            throw CustomError.createError({
+                name: 'Campo vacio',
+                cause: 'No se pudo completar la operación, debe seleccionar un archivo para actulizar su perfil',
+                message: 'No puede enviar un formaulario vacio',
+                code: ErrorCodes.UNDEFINED_DATA,
+                status: 400
+            })
+        }
+
+        const picture = `/public/profile/${file.filename}`
+
+        await this.#userDAO.updatePicture(userId, picture);
     }
 }
 

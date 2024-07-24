@@ -269,6 +269,29 @@ paths:
           description: Campo de archivo inesperado. Verifique los campos permitidos
         '404':
           description: El ID del usuario no existe
+  /api/users/picture:
+    post:
+      summary: Actualiza la foto de perfil del usuario
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content: 
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                profilePicture:
+                  type: string
+                  format: binary
+                  description: Foto de perfil
+      responses:
+        '200':
+          description: La imagen se ha cargado de manera correcta
+        '400':
+          description: Campo de archivo inesperado
+        '403':
+          description: No cuenta con los permisos adecuados
 components:
   schemas:
     User:
