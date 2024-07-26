@@ -133,12 +133,12 @@ class Controller {
 
     changeRole(req, res) {
         try {
-            const passToken = req.cookies.passToken !== undefined;
+            const isLoggedIn = req.cookies.accessToken !== undefined;
             res.render('changeRole', {
                 titlePage: 'Change Role',
                 style: ['styles.css'],
-                passToken,
-                notPassToken: !passToken
+                isLoggedIn,
+                isNotLoggedIn: !isLoggedIn
             });
         } catch (error) {
             res.status(500).json({ Error: error.message });
