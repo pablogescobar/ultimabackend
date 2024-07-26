@@ -130,6 +130,20 @@ class Controller {
             res.status(500).json({ Error: err.message });
         }
     }
+
+    changeRole(req, res) {
+        try {
+            const passToken = req.cookies.passToken !== undefined;
+            res.render('changeRole', {
+                titlePage: 'Change Role',
+                style: ['styles.css'],
+                passToken,
+                notPassToken: !passToken
+            });
+        } catch (error) {
+            res.status(500).json({ Error: error.message });
+        }
+    }
 }
 
 module.exports = { Controller };

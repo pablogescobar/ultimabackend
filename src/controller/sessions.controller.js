@@ -11,10 +11,9 @@ class Controller {
     async registerUser(req, res) {
         try {
             const { firstName, lastName, age, email, password } = req.body;
-            const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
+            await this.#userRepository.registerUser(firstName, lastName, age, email, password);
             req.logger.info('Usuario registrado correctamente');
-            // res.redirect('/');
-            res.status(201).json(user)
+            res.status(201).redirect('/');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -27,8 +26,7 @@ class Controller {
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             req.logger.info('Usuario identificado');
-            // res.redirect('/');
-            res.status(200).json(user);
+            res.status(200).redirect('/');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -95,25 +93,15 @@ class Controller {
 
     async logout(req, res) {
         try {
-            if (req.user.rol === 'user' || req.user.rol === 'premium') {
+            if (req.user && (req.user.rol === 'user' || req.user.rol === 'premium')) {
                 const uid = req.user.id;
                 await this.#userRepository.updateConnection(uid);
             }
             res.clearCookie('accessToken');
             req.logger.info('Sesión finalizada');
-            // res.redirect('/');
-            res.status(200).json({ message: 'Sessión finalizada' });
+            res.status(200).redirect('/');
         } catch (error) {
             req.logger.error(error);
-            res.status(error.status).json({ error });
-        }
-    }
-
-    redirect(req, res) {
-        try {
-            req.logger.info('Usuario registrado correctamente');
-            res.redirect('/');
-        } catch (error) {
             res.status(error.status).json({ error });
         }
     }
