@@ -8,11 +8,7 @@ const { isSuperAdmin, isUser } = require('../middlewares/auth.middleware');
 const { documentUploader, profileUploader } = require('../utils/multerUploader');
 const { multerErrorHandler } = require('../middlewares/multerErrorHandler.middleware');
 
-// router.post('/register', passport.authenticate('register', { failureRedirect: '/', session: false }), (req, res) => new Controller().redirect(req, res));
-
 router.post('/register', async (req, res) => new Controller().registerUser(req, res));
-
-// router.post('/login', passport.authenticate('login', { failureRedirect: '/', session: false }), async (req, res) => new Controller().loginUser(req, res));
 
 router.post('/login', async (req, res) => new Controller().loginUser(req, res));
 

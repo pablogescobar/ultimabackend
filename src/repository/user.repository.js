@@ -437,7 +437,9 @@ class UserRepository {
         const updatedDocuments = user.documents.filter(doc => !newDocuments.some(newDoc => newDoc.name === doc.name));
         updatedDocuments.push(...newDocuments);
 
-        return await this.#userDAO.updateDocuments(userId, updatedDocuments);
+        await this.#userDAO.updateDocuments(userId, updatedDocuments);
+
+        return await this.#userDAO.findById(userId);
     }
 
     async updatePicture(userId, file) {

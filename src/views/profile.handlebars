@@ -9,7 +9,7 @@
         <a href="/documents">Actualizar Documentación</a>
     </div>
     {{#if documents}}
-    <form action="/api/users/premium/{{user.id}}">
+    <form action="/api/users/premium/{{user.id}}" method="post">
         <input type="submit" value="Actualizar Rol">
     </form>
     {{/if}}

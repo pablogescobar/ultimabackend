@@ -58,7 +58,7 @@ class Controller {
     profile(req, res) {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
-            const documents = req.user.documents.length === 3;
+            const documents = req.user.documents.length === 3 || req.user.rol === 'premium';
             if (isLoggedIn) {
                 const cartId = req.user.cart
                 const user = {

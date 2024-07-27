@@ -136,7 +136,7 @@ class Controller {
             const user = await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
             res.clearCookie('accessToken');
-            return res.json(user);
+            return res.redirect('/');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -147,8 +147,13 @@ class Controller {
         try {
             const userId = req.params.uid;
             const files = req.files;
-            await this.#userRepository.updateUserDocuments(userId, files);
+            const user = await this.#userRepository.updateUserDocuments(userId, files);
             req.logger.info('Documentación actualizada exitosamente');
+            console.log(user.documents)
+            if (user.documents.length === 3) {
+                res.clearCookie('accessToken');
+                return res.status(201).redirect('/')
+            }
             res.status(201).redirect('/profile');
         } catch (error) {
             req.logger.error(error);
