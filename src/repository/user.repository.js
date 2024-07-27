@@ -99,6 +99,8 @@ class UserRepository {
             lastName: user.lastName,
             age: user.age,
             cart: user.cart,
+            documents: user.documents,
+            picture: user.picture
         });
     }
 
@@ -399,39 +401,43 @@ class UserRepository {
     }
 
     async updateUserDocuments(userId, files) {
-        await this.#verifyUser(userId)
-        const documentPaths = [];
+        const user = await this.#verifyUser(userId);
 
-        if (files === undefined) {
+        if (!files) {
             throw CustomError.createError({
-                name: 'Campos vacios',
+                name: 'Campos vacíos',
                 cause: 'No se pudo completar la operación, debe cargar al menos un archivo a la documentación.',
-                message: 'No puede enviar un formaulario vacio',
+                message: 'No puede enviar un formulario vacío',
                 code: ErrorCodes.UNDEFINED_DATA,
                 status: 400
-            })
+            });
         }
 
+        const newDocuments = [];
+
         if (files.identification) {
-            documentPaths.push({
+            newDocuments.push({
                 name: 'identification',
                 reference: `/public/documents/${files.identification[0].filename}`
             });
         }
         if (files.proofOfAddress) {
-            documentPaths.push({
+            newDocuments.push({
                 name: 'proofOfAddress',
                 reference: `/public/documents/${files.proofOfAddress[0].filename}`
             });
         }
         if (files.proofOfAccount) {
-            documentPaths.push({
+            newDocuments.push({
                 name: 'proofOfAccount',
                 reference: `/public/documents/${files.proofOfAccount[0].filename}`
             });
         }
 
-        return await this.#userDAO.updateDocuments(userId, documentPaths);
+        const updatedDocuments = user.documents.filter(doc => !newDocuments.some(newDoc => newDoc.name === doc.name));
+        updatedDocuments.push(...newDocuments);
+
+        return await this.#userDAO.updateDocuments(userId, updatedDocuments);
     }
 
     async updatePicture(userId, file) {

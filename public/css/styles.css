@@ -3,6 +3,11 @@
     padding: 0;
 }
 
+h1,
+h2 {
+    text-align: center;
+}
+
 .margin {
     margin: 1rem auto;
 }

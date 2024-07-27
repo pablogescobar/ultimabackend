@@ -58,6 +58,7 @@ class Controller {
     profile(req, res) {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
+            const documents = req.user.documents.length === 3;
             if (isLoggedIn) {
                 const cartId = req.user.cart
                 const user = {
@@ -66,6 +67,7 @@ class Controller {
                     age: req.user.age,
                     email: req.user.email,
                     rol: req.user.rol,
+                    id: req.user.id
                 }
 
                 res.render('profile', {
@@ -76,10 +78,12 @@ class Controller {
                         lastName: user.lastName,
                         age: user.age,
                         email: user.email,
-                        rol: user.rol
+                        rol: user.rol,
+                        id: user.id
                     },
                     isLoggedIn,
-                    cartId
+                    cartId,
+                    documents
                 });
             } else {
                 return res.status(403).json({ Error: 'Debe logearse para poder acceder.' })
@@ -142,6 +146,22 @@ class Controller {
             });
         } catch (error) {
             res.status(500).json({ Error: error.message });
+        }
+    }
+
+    documents(req, res) {
+        try {
+            const isLoggedIn = req.cookies.accessToken !== undefined;
+            const userId = req.user.id;
+            res.render('documents', {
+                titlePage: 'Actualizar Documentos',
+                style: ['styles.css'],
+                isLoggedIn,
+                isNotLoggedIn: !isLoggedIn,
+                userId
+            });
+        } catch (error) {
+            res.status(500).json({ Error: error.message })
         }
     }
 }
