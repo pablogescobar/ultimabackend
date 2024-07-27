@@ -29,6 +29,7 @@ class Controller {
                 cart: cartData,
                 titlePage: 'Carrito',
                 style: ['styles.css'],
+                script: ['scripts.js'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
                 cartId: cartData.id

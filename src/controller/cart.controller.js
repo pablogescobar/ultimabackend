@@ -59,7 +59,7 @@ class Controller {
             const productId = req.params.pid
             const cart = await this.cartRepository.deleteProductFromCart(productId, cartId);
             req.logger.info('Producto eliminado del carrito.');
-            res.status(200).json(cart);
+            res.status(200).redirect(`/cart/${cartId}`);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

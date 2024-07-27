@@ -31,7 +31,6 @@ class Controller {
                 products: { ...products, payload: productsPayload },
                 titlePage: 'Productos',
                 style: ['styles.css'],
-                script: ['products.js'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
                 firstName,

@@ -11,6 +11,7 @@ const { useLogger } = require('./middlewares/logger.middleware');
 const helmet = require('helmet');
 const swaggerJSDoc = require('swagger-jsdoc');
 const { serve, setup } = require('swagger-ui-express');
+const methodOverride = require('method-override');
 
 const app = express();
 
@@ -23,6 +24,9 @@ app.set('view engine', 'handlebars')
 app.use(express.urlencoded({ extended: true })); // Middleware para parsear datos de formularios
 app.use(express.json()); // Middleware para parsear datos JSON
 app.use(express.static(`${__dirname}/../public`));
+
+// Configura method-override para ver el campo _method en los formularios
+app.use(methodOverride('_method'));
 
 app.use(helmet());
 app.use(sessionMiddleware);
@@ -45,6 +49,7 @@ const swaggerOptions = {
 
 const specs = swaggerJSDoc(swaggerOptions);
 app.use('/apidocs', serve, setup(specs));
+
 
 // ENDPOINTS
 app.use('/api/products', productsRouter);
