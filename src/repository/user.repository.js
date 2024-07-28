@@ -4,6 +4,7 @@ const CartDAO = require('../dao/mongo/carts.dao');
 const { hashPassword, isValidPassword } = require('../utils/hashing');
 const { generateToken, generatePasswordRecoveryToken } = require('../middlewares/jwt.middleware');
 const { UserDTO } = require('../dto/user.dto');
+const { getUsersDTO } = require('../dto/getUsers.dto');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
 const { generateInvalidCredentialsUserData } = require('../utils/errors/errors');
@@ -183,7 +184,7 @@ class UserRepository {
                 }
             }
 
-            const date = new Date().toLocaleString();
+            const date = new Date();
             await this.#userDAO.lastConnection(email, date);
 
             const userPayload = new UserDTO(user);
@@ -295,7 +296,7 @@ class UserRepository {
         try {
             const user = await this.#userDAO.findByEmail(profile._json.email);
 
-            const currentTime = new Date().toLocaleString();
+            const currentTime = new Date();
 
             await this.#userDAO.lastConnection(profile._json.email, currentTime);
 
@@ -395,7 +396,7 @@ class UserRepository {
     async updateConnection(id) {
         const user = await this.#userDAO.findById(id);
         if (user) {
-            const date = new Date().toLocaleString();
+            const date = new Date();
             await this.#userDAO.lastConnection(user.email, date)
         }
     }
@@ -458,6 +459,46 @@ class UserRepository {
         const picture = `/public/profile/${file.filename}`
 
         await this.#userDAO.updatePicture(userId, picture);
+    }
+
+    async getUsers() {
+        const users = await this.#userDAO.findAll();
+        if (!users) {
+            throw CustomError.createError({
+                name: 'Error de usuarios',
+                cause: 'Ha ocurrido un error inesperado y no se han podido retornas los usuarios de la base de datos',
+                message: 'No se pudieron retornar los productos de la base de datos',
+                code: ErrorCodes.DATABASE_ERROR,
+                status: 50
+            })
+        }
+        const usersPayload = users.map(user => new getUsersDTO(user));
+        return usersPayload;
+    }
+
+    async deleteUsers() {
+        const users = await this.#userDAO.findAll();
+        const currentTime = new Date();
+        const thirtyMinutesInMs = 30 * 60 * 1000;
+        const inactiveUsers = [];
+
+        users.forEach(user => {
+            const lastConnectionDate = new Date(user.last_connection);
+
+            const timeDifference = currentTime - lastConnectionDate;
+
+            if (timeDifference > thirtyMinutesInMs) {
+                inactiveUsers.push(user);
+            }
+        });
+
+        for (const user of inactiveUsers) {
+            await this.deleteUser(user.email);
+
+            await new MailingService().sendDeletionNotification(user.email, user.firstName, user.lastName);
+        }
+
+        return inactiveUsers;
     }
 }
 

@@ -4,7 +4,7 @@ const router = Router(); // Crea un enrutador
 const passport = require('passport');
 const { Controller } = require('../controller/sessions.controller');
 const { verifyToken, verifyPasswordToken } = require('../middlewares/jwt.middleware');
-const { isSuperAdmin, isUser } = require('../middlewares/auth.middleware');
+const { isSuperAdmin, isUser, isAdmin } = require('../middlewares/auth.middleware');
 const { documentUploader, profileUploader } = require('../utils/multerUploader');
 const { multerErrorHandler } = require('../middlewares/multerErrorHandler.middleware');
 
@@ -24,7 +24,7 @@ router.post('/resetPassword/:tid', verifyPasswordToken, async (req, res) => new 
 
 router.get('/logout', verifyToken, async (req, res) => new Controller().logout(req, res));
 
-router.delete('/', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
+router.delete('/deleteUser', verifyToken, isSuperAdmin, (req, res) => new Controller().deleteUser(req, res));
 
 router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().changeRole(req, res));
 
@@ -35,5 +35,9 @@ router.post('/:uid/documents', verifyToken, documentUploader.fields([
 ]), multerErrorHandler, async (req, res) => new Controller().uploadDocuments(req, res));
 
 router.post('/picture', verifyToken, isUser, profileUploader.single('profilePicture'), async (req, res) => new Controller().updatePicture(req, res));
+
+router.get('/', verifyToken, isAdmin, async (req, res) => new Controller().getUsers(req, res));
+
+router.delete('/', verifyToken, isAdmin, async (req, res) => new Controller().deleteUsers(req, res));
 
 module.exports = router;

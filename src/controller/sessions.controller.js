@@ -133,7 +133,7 @@ class Controller {
     async changeRole(req, res) {
         try {
             const uid = req.params.uid;
-            const user = await this.#userRepository.changeRole(uid);
+            await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
             res.clearCookie('accessToken');
             return res.redirect('/');
@@ -149,7 +149,6 @@ class Controller {
             const files = req.files;
             const user = await this.#userRepository.updateUserDocuments(userId, files);
             req.logger.info('Documentación actualizada exitosamente');
-            console.log(user.documents)
             if (user.documents.length === 3) {
                 res.clearCookie('accessToken');
                 return res.status(201).redirect('/')
@@ -165,10 +164,31 @@ class Controller {
         try {
             const userId = req.user.id;
             const picture = req.file;
-            console.log(req.file);
             await this.#userRepository.updatePicture(userId, picture);
             req.logger.info('Imagen de perfil actualizada correctamente');
             res.status(200).json({ message: 'Su imagen de perfil se actualizó de manera exitosa.' });
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
+    }
+
+    async getUsers(req, res) {
+        try {
+            const users = await this.#userRepository.getUsers();
+            req.logger.info('Usuarios retornados');
+            res.status(200).json(users);
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
+    }
+
+    async deleteUsers(req, res) {
+        try {
+            const users = await this.#userRepository.deleteUsers();
+            req.logger.info('Se las cuentas que se encontraban en desuso');
+            res.status(200).json(users);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

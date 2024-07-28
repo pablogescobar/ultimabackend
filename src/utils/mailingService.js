@@ -45,6 +45,40 @@ class MailingService {
             })
         }
     }
+
+    async sendDeletionNotification(email, firstName, lastName) {
+        try {
+            const transport = nodemailer.createTransport({
+                service: 'gmail',
+                port: 587,
+                auth: {
+                    user: process.env.GOOGLE_MAIL,
+                    pass: process.env.GOOGLE_PASS
+                }
+            });
+
+            await transport.sendMail({
+                from: 'Servicio Backend App',
+                to: email,
+                subject: 'BackendApp | Cuenta eliminada',
+                html: `
+            <div>
+                <h2>Cuenta eliminada</h2>
+                <h4>Estimado ${firstName} ${lastName}, por medio de la presente le informamos que su cuenta ha sido eliminada de nuestro servicio de Ecommerce debido a inactividad en la misma.</h4>
+            </div>`,
+                attachments: []
+            });
+            return { email }
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error al restablecer contraseña',
+                cause: 'Ocurrió un error y no se pudo enviar el email al destinatario.',
+                message: 'No se pudo enviar el email',
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
+            })
+        }
+    }
 }
 
 module.exports = { MailingService };
