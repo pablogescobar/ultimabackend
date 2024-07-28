@@ -111,9 +111,11 @@ class Controller {
             const userEmail = req.user.email;
             const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
             req.logger.info('Compra finalizada!');
-            res.status(201).json({
-                message: 'Compra realizada con éxito',
-                ticket
+            console.log(ticket);
+            res.status(201).render('ticket', {
+                ticket,
+                style: ['styles.css'],
+                titlePage: 'Ticket de compra'
             });
         } catch (error) {
             req.logger.error(error);
