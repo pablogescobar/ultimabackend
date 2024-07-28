@@ -18,7 +18,9 @@
         {{/each}}
     </ul>
     <a href="/">Volver</a>
+    {{#if showButton}}
     <form action="/api/cart/{{cartId}}/purchase" method="post">
         <input type="submit" value="Finalizar Compra">
     </form>
+    {{/if}}
 </div>

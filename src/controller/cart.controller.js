@@ -109,9 +109,9 @@ class Controller {
         try {
             const { cid } = req.params;
             const userEmail = req.user.email;
-            const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
+            const { code, amount, purchase_datetime, purchaser } = await this.ticketRepository.generateTicket(cid, userEmail);
+            const ticket = { code, amount, purchase_datetime, purchaser };
             req.logger.info('Compra finalizada!');
-            console.log(ticket);
             res.status(201).render('ticket', {
                 ticket,
                 style: ['styles.css'],

@@ -25,6 +25,8 @@ class Controller {
                 }))
             };
 
+            const showButton = cartData.products.length !== 0;
+
             res.status(200).render('cart', {
                 cart: cartData,
                 titlePage: 'Carrito',
@@ -32,7 +34,8 @@ class Controller {
                 script: ['scripts.js'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
-                cartId: cartData.id
+                cartId: cartData.id,
+                showButton
             }); // Responde con el carrito obtenido
 
         } catch (error) {
