@@ -59,6 +59,7 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const documents = req.user.documents.length === 3 || req.user.rol === 'premium';
+            const adminOptions = req.user.rol === 'admin' || req.user.rol === 'superAdmins';
             if (isLoggedIn) {
                 const cartId = req.user.cart
                 const user = {
@@ -83,7 +84,9 @@ class Controller {
                     },
                     isLoggedIn,
                     cartId,
-                    documents
+                    documents,
+                    adminOptions,
+                    notAdminOptions: !adminOptions
                 });
             } else {
                 return res.status(403).json({ Error: 'Debe logearse para poder acceder.' })

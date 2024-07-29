@@ -6,11 +6,18 @@
     <p>Rol: {{user.rol}}</p>
     <div>
         <a href="/">Inicio</a>
+        {{#if notAdminOptions}}
         <a href="/documents">Actualizar Documentación</a>
+        {{/if}}
     </div>
     {{#if documents}}
     <form action="/api/users/premium/{{user.id}}" method="post">
         <input type="submit" value="Actualizar Rol">
     </form>
+    {{/if}}
+
+    {{#if adminOptions}}
+    <h3>Menú de administrador</h3>
+    <a href="/api/users">Ver todos los usuarios</a>
     {{/if}}
 </div>

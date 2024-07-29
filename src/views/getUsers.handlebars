@@ -1,0 +1,13 @@
+<div class="container">
+    <h2>Lista de usuarios</h2>
+    {{#each users}}
+    <div class="margin">
+        <p><span>Nombre: </span>{{this.firstName}}</p>
+        <p><span>Apellido: </span>{{this.lastName}}</p>
+        <p><span>Email: </span>{{this.email}}</p>
+        <p><span>ID: </span>{{this.id}}</p>
+        <p><span>Rol: </span>{{this.rol}}</p>
+    </div>
+    {{/each}}
+    <a href="/profile">Volver</a>
+</div>

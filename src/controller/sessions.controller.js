@@ -175,12 +175,19 @@ class Controller {
 
     async getUsers(req, res) {
         try {
+            const isLoggedIn = req.cookies.accessToken !== undefined;
             const users = await this.#userRepository.getUsers();
+            const usersPayload = users.map(user => ({ id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, rol: user.rol }));
             req.logger.info('Usuarios retornados');
-            res.status(200).json(users);
+            res.status(200).render('getUsers', {
+                users: usersPayload,
+                style: ['styles.css'],
+                isLoggedIn,
+                isNotLoggedIn: !isLoggedIn
+            });
         } catch (error) {
             req.logger.error(error);
-            res.status(error.status).json({ error });
+            res.status(error).json({ error });
         }
     }
 

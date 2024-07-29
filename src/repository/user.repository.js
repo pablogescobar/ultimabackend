@@ -29,6 +29,7 @@ class UserRepository {
             email: process.env.ADMIN_USER,
             password: process.env.ADMIN_PASS,
             rol: 'admin',
+            documents: []
         };
 
         this.#superAdminUser = {
@@ -39,6 +40,7 @@ class UserRepository {
             email: process.env.SADMIN_USER,
             password: process.env.SADMIN_PASS,
             rol: 'superAdmin',
+            documents: []
         };
     }
 
