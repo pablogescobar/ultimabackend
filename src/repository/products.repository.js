@@ -4,6 +4,7 @@ const { ProductDTO } = require('../dto/product.dto');
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
 const { generateInvalidProductData } = require('../utils/errors/errors');
+const { MailingService } = require('../utils/mailingService');
 
 class ProductRepository {
     #userDAO
@@ -91,7 +92,6 @@ class ProductRepository {
             });
         }
 
-        console.log(thumbnail);
         const finalThumbnail = thumbnail ? `../products/${thumbnail.originalname}` : 'Sin Imagen';
 
         const finalStatus = stock >= 1 ? true : false;
@@ -238,7 +238,11 @@ class ProductRepository {
     async deleteProduct(productId, user) {
 
         const product = await this.getProductById(productId);
-        if (user.rol === 'admin') {
+        if (user.rol === 'admin' || user.rol === 'superAdmin') {
+            const userPayload = await this.#userDAO.findByEmail(product.owner);
+            if (userPayload) {
+                await new MailingService().sendNotificationOfProductRemoved(userPayload.email, userPayload.firstName, userPayload.lastName, product.title, product.id);
+            }
             return await this.productDAO.deleteProduct(productId);
         } else if (product.owner && product.owner === user.email) {
             return await this.productDAO.deleteProduct(productId);

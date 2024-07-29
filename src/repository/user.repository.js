@@ -359,9 +359,16 @@ class UserRepository {
     }
 
     async getUserById(id) {
+        console.log(id);
         try {
-            const user = await this.#userDAO.findById(id);
-            return new UserDTO(user);
+            if (id === 'admin') {
+                return new UserDTO(this.#adminUser);
+            } else if (id === 'superAdmin') {
+                return new UserDTO(this.#superAdminUser);
+            } else {
+                const user = await this.#userDAO.findById(id);
+                return new UserDTO(user);
+            }
         } catch {
             throw CustomError.createError({
                 name: 'Email desconocido',

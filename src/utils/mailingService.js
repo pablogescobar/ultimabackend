@@ -71,9 +71,43 @@ class MailingService {
             return { email }
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error al restablecer contraseña',
-                cause: 'Ocurrió un error y no se pudo enviar el email al destinatario.',
-                message: 'No se pudo enviar el email',
+                name: 'Error al notificar a los usuarios',
+                cause: 'Ocurrió un error y no se pudieron enviar los emails a los destinatarios.',
+                message: 'No se pudieron enviar los emails',
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
+            })
+        }
+    }
+
+    async sendNotificationOfProductRemoved(email, firstName, lastName, productName, productId) {
+        try {
+            const transport = nodemailer.createTransport({
+                service: 'gmail',
+                port: 587,
+                auth: {
+                    user: process.env.GOOGLE_MAIL,
+                    pass: process.env.GOOGLE_PASS
+                }
+            });
+
+            await transport.sendMail({
+                from: 'Servicio Backend App',
+                to: email,
+                subject: 'BackendApp | Producto eliminado',
+                html: `
+            <div>
+                <h2>Cuenta eliminada</h2>
+                <h4>Estimado ${firstName} ${lastName}, por medio de la presente le informamos que su producto ${productName} ID: ${productId} fue eliminado de nuestro servicio de Ecommerce.</h4>
+            </div>`,
+                attachments: []
+            });
+            return { email }
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error al notificar a los usuarios',
+                cause: 'Ocurrió un error y no se pudieron enviar los emails a los destinatarios.',
+                message: 'No se pudieron enviar los emails',
                 code: ErrorCodes.UNDEFINED_USER,
                 status: 404
             })
