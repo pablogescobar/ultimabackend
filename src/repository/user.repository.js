@@ -34,8 +34,8 @@ class UserRepository {
 
         this.#superAdminUser = {
             _id: 'superAdmin',
-            firstName: 'Federico',
-            lastName: 'Di Iorio',
+            firstName: 'Lucas',
+            lastName: 'Pereyra',
             age: 28,
             email: process.env.SADMIN_USER,
             password: process.env.SADMIN_PASS,
@@ -478,7 +478,7 @@ class UserRepository {
                 cause: 'Ha ocurrido un error inesperado y no se han podido retornas los usuarios de la base de datos',
                 message: 'No se pudieron retornar los productos de la base de datos',
                 code: ErrorCodes.DATABASE_ERROR,
-                status: 50
+                status: 500
             })
         }
         const usersPayload = users.map(user => new getUsersDTO(user));

@@ -187,7 +187,7 @@ class Controller {
             });
         } catch (error) {
             req.logger.error(error);
-            res.status(error).json({ error });
+            res.status(error.status).json({ error });
         }
     }
 
@@ -195,7 +195,7 @@ class Controller {
         try {
             const users = await this.#userRepository.deleteUsers();
             req.logger.info('Se las cuentas que se encontraban en desuso');
-            res.status(200).json(users);
+            res.status(204).json(users);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
