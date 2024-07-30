@@ -59,7 +59,7 @@ class Controller {
             const productId = req.params.pid
             const cart = await this.cartRepository.deleteProductFromCart(productId, cartId);
             req.logger.info('Producto eliminado del carrito.');
-            res.status(200).redirect(`/cart/${cartId}`);
+            res.status(200).json(cart);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -109,14 +109,9 @@ class Controller {
         try {
             const { cid } = req.params;
             const userEmail = req.user.email;
-            const { code, amount, purchase_datetime, purchaser } = await this.ticketRepository.generateTicket(cid, userEmail);
-            const ticket = { code, amount, purchase_datetime, purchaser };
+            const ticket = await this.ticketRepository.generateTicket(cid, userEmail);
             req.logger.info('Compra finalizada!');
-            res.status(201).render('ticket', {
-                ticket,
-                style: ['styles.css'],
-                titlePage: 'Ticket de compra'
-            });
+            res.status(201).json(ticket);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

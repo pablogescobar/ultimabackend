@@ -11,9 +11,9 @@ class Controller {
     async registerUser(req, res) {
         try {
             const { firstName, lastName, age, email, password } = req.body;
-            await this.#userRepository.registerUser(firstName, lastName, age, email, password);
+            const user = await this.#userRepository.registerUser(firstName, lastName, age, email, password);
             req.logger.info('Usuario registrado correctamente');
-            res.status(201).redirect('/');
+            res.status(201).json(user);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -26,7 +26,7 @@ class Controller {
             const user = await this.#userRepository.loginUser(email, password);
             res.cookie('accessToken', user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
             req.logger.info('Usuario identificado');
-            res.status(200).redirect('/');
+            res.status(200).json(user);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -39,7 +39,7 @@ class Controller {
             const tokenPass = await this.#userRepository.sendMailToResetPassword(email);
             res.cookie('passToken', tokenPass, { maxAge: 60 * 60 * 1000, httpOnly: true });
             req.logger.info('Email enviado');
-            res.redirect('/resetPasswordWarning');
+            res.status(200).json({ message: `Mensaje enviado correctamente a: ${email}` });
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error })
@@ -53,16 +53,16 @@ class Controller {
             const { newPassword, confirmPassword } = req.body;
             if (!token) {
                 req.logger.info('El token ha expirado');
-                return res.redirect('/resetPassword');
+                return res.status(400).json({ message: 'El token de actualización ha exipirado o no es válido' });
             }
             const updatePassword = await this.#userRepository.resetPassword(urlToken, token, newPassword, confirmPassword);
             res.clearCookie('passToken');
             if (!updatePassword) {
                 req.logger.info('No se pudo actualizar la contraseña');
-                return res.redirect('/');
+                return res.status(400).json({ message: 'No se pudo actualizar la contraseña' });
             }
             req.logger.info('Contraseña actualizada');
-            return res.redirect('/login');
+            return res.status(200).json({ message: 'Contraseña actualizada exitosamente' });
         } catch (error) {
             req.logger.error(error);
             return res.status(error.status).json({ error });
@@ -84,7 +84,7 @@ class Controller {
     githubCb(req, res) {
         try {
             res.cookie('accessToken', req.user.accessToken, { maxAge: 24 * 60 * 60 * 1000, httpOnly: true });
-            res.redirect('/');
+            res.redirect('/users');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -99,7 +99,7 @@ class Controller {
             }
             res.clearCookie('accessToken');
             req.logger.info('Sesión finalizada');
-            res.status(200).redirect('/');
+            res.status(200).json({ message: 'Sesión finalizada' });
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -133,10 +133,10 @@ class Controller {
     async changeRole(req, res) {
         try {
             const uid = req.params.uid;
-            await this.#userRepository.changeRole(uid);
+            const user = await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
             res.clearCookie('accessToken');
-            return res.redirect('/');
+            return res.status(200).json(user);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -175,16 +175,9 @@ class Controller {
 
     async getUsers(req, res) {
         try {
-            const isLoggedIn = req.cookies.accessToken !== undefined;
             const users = await this.#userRepository.getUsers();
-            const usersPayload = users.map(user => ({ id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, rol: user.rol }));
             req.logger.info('Usuarios retornados');
-            res.status(200).render('getUsers', {
-                users: usersPayload,
-                style: ['styles.css'],
-                isLoggedIn,
-                isNotLoggedIn: !isLoggedIn
-            });
+            res.status(200).json(users);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

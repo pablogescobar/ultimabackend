@@ -58,7 +58,7 @@ app.use('/api/cart', cartRouter);
 app.use('/cart', cartViewsRouter);
 app.use('/createProduct', createProductRouter);
 app.use('/api/users', sessionRouter);
-app.use('/', sessionViewsRouter);
+app.use('/users', sessionViewsRouter);
 app.use('/mockingproducts', mockingProductRouter);
 app.use('/loggertest', loggerTestRouter);
 
@@ -73,7 +73,7 @@ if (require.main === module) {
         const PORT = process.env.PORT || 8080;
 
         app.listen(PORT, '0.0.0.0', () => {
-            console.log(`\nServidor cargado! \nhttp://localhost:${PORT}\n\nDocumentación ↓\nhttp://localhost:${PORT}/apidocs`);
+            console.log(`\nServidor cargado! \nhttp://localhost:${PORT}/users\n\nDocumentación ↓\nhttp://localhost:${PORT}/apidocs`);
         });
     };
 

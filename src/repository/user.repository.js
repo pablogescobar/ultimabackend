@@ -82,11 +82,10 @@ class UserRepository {
             return user;
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error de registro',
-                cause: 'Ocurrió un error al registrar el usuario en la base de datos',
-                message: 'Algo salió mal al generar un nuevo usuario',
-                error: ErrorCodes.USER_REGISTER_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error de registro',
+                cause: error.cause || 'Ocurrió un error al registrar el usuario en la base de datos',
+                message: error.message || 'Algo salió mal al generar un nuevo usuario',
+                code: error.code || ErrorCodes.USER_REGISTER_ERROR,
                 status: error.status || 500
             })
         }
@@ -151,11 +150,10 @@ class UserRepository {
             return await this.#userDAO.create(user);
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error de registro',
-                cause: 'Algo salió mal al registrar un nuevo usuario.',
-                message: 'No se pudo crear un nuevo usuario',
-                code: ErrorCodes.USER_REGISTER_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error de registro',
+                cause: error.cause || 'Algo salió mal al registrar un nuevo usuario.',
+                message: error.message || 'No se pudo crear un nuevo usuario',
+                code: error.code || ErrorCodes.USER_REGISTER_ERROR,
                 status: error.status || 500
             })
         }
@@ -196,11 +194,10 @@ class UserRepository {
             return { accessToken, userPayload };
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error de logeo',
-                cause: 'Ocurrio validar sus credenciales. Intente nuevamente o cambie su contraseña',
-                message: 'Contraseña incorrecta',
-                code: ErrorCodes.USER_LOGIN_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error de logeo',
+                cause: error.cause || 'Ocurrio validar sus credenciales. Intente nuevamente o cambie su contraseña',
+                message: error.message || 'Contraseña incorrecta',
+                code: error.code || ErrorCodes.USER_LOGIN_ERROR,
                 status: error.status || 500
             })
         }

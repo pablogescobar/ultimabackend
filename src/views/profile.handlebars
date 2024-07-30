@@ -5,9 +5,9 @@
     <p>Email: {{user.email}}</p>
     <p>Rol: {{user.rol}}</p>
     <div>
-        <a href="/">Inicio</a>
+        <a href="/users">Inicio</a>
         {{#if notAdminOptions}}
-        <a href="/documents">Actualizar Documentación</a>
+        <a href="/users/documents">Actualizar Documentación</a>
         {{/if}}
     </div>
     {{#if documents}}
@@ -18,6 +18,6 @@
 
     {{#if adminOptions}}
     <h3>Menú de administrador</h3>
-    <a href="/api/users">Ver todos los usuarios</a>
+    <a href="/users/getUsers">Ver todos los usuarios</a>
     {{/if}}
 </div>
