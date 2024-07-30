@@ -1,18 +1,22 @@
 const TicketDAO = require('../dao/mongo/ticket.dao');
-const { CartRepository } = require('./carts.repository')
 const ProductDAO = require('../dao/mongo/products.dao');
+const UserDAO = require('../dao/mongo/users.dao');
+const { CartRepository } = require('./carts.repository')
 const { CustomError } = require('../utils/errors/customErrors');
 const { ErrorCodes } = require('../utils/errors/errorCodes');
+const { MailingService } = require('../utils/mailingService');
 
 class TicketRepository {
     #ticketDAO
     #productDAO
     #cartRepository
+    #userDAO
 
     constructor() {
         this.#ticketDAO = new TicketDAO();
         this.#productDAO = new ProductDAO();
         this.#cartRepository = new CartRepository();
+        this.#userDAO = new UserDAO();
     }
 
     #generateUniqueCode() {
@@ -69,6 +73,10 @@ class TicketRepository {
                 amount: totalAmount,
                 purchaser: userEmail
             };
+
+            const user = await this.#userDAO.findByEmail(userEmail);
+
+            await new MailingService().buyNotification(user.email, user.firstName, user.lastName, ticketData.code, ticketData.amount);
 
             const ticket = await this.#ticketDAO.addTicket(ticketData);
 

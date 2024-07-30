@@ -113,6 +113,40 @@ class MailingService {
             })
         }
     }
+
+    async buyNotification(email, firstName, lastName, ticketId, amount) {
+        try {
+            const transport = nodemailer.createTransport({
+                service: 'gmail',
+                port: 587,
+                auth: {
+                    user: process.env.GOOGLE_MAIL,
+                    pass: process.env.GOOGLE_PASS
+                }
+            });
+
+            await transport.sendMail({
+                from: 'Servicio Backend App',
+                to: email,
+                subject: 'BackendApp | Compra Realizada',
+                html: `
+            <div>
+                <h2>Cuenta eliminada</h2>
+                <h4>Estimado ${firstName} ${lastName}, por medio de la presente le informamos que su comprá por un total de $${amount} ha sido aprobada. Su código de compra es: ${ticketId}</h4>
+            </div>`,
+                attachments: []
+            });
+            return { email }
+        } catch (error) {
+            throw CustomError.createError({
+                name: 'Error al notificar la compra',
+                cause: 'Ocurrió un error y notificar al usuario de su compra',
+                message: 'No se pudo enviar el email de notificación de la compra',
+                code: ErrorCodes.UNDEFINED_USER,
+                status: 404
+            })
+        }
+    }
 }
 
 module.exports = { MailingService };
