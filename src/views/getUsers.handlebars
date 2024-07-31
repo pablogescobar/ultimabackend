@@ -1,5 +1,8 @@
 <div class="container">
     <h2>Lista de usuarios</h2>
+    <form action="/users" class="margin" method="post" data-method="DELETE">
+        <input type="submit" value="Eliminar Usuarios Inactivos">
+    </form>
     <div class="gridForUser">
         {{#each users}}
         <div class="userCard">
@@ -13,9 +16,6 @@
             <div>
                 <form action="/users/premium/{{this.id}}" method="post" class="margin">
                     <input type="submit" value="Actualizar Rol">
-                </form>
-                <form action="" class="margin">
-                    <input type="submit" value="Eliminar Usuario">
                 </form>
             </div>
         </div>

@@ -23,4 +23,4 @@ document.querySelectorAll('form[data-method="DELETE"]').forEach(form => {
                 console.error('Error:', error);
             });
     });
-});
+}); 

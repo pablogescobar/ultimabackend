@@ -42,4 +42,6 @@ router.get('/getUsers', verifyToken, isAdmin, async (req, res) => new Controller
 
 router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().changeRole(req, res));
 
+router.delete('/', verifyToken, isAdmin, async (req, res) => new Controller().deleteUsers(req, res));
+
 module.exports = router;

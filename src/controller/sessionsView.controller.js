@@ -259,7 +259,9 @@ class Controller {
             req.logger.info('Usuarios retornados');
             res.status(200).render('getUsers', {
                 users: usersPayload,
+                titlePage: 'Menú de Usuarios',
                 style: ['styles.css'],
+                script: ['scripts.js'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn
             });
@@ -275,6 +277,17 @@ class Controller {
             await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
             return res.redirect('/users/getUsers');
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
+    }
+
+    async deleteUsers(req, res) {
+        try {
+            await this.#userRepository.deleteUsers();
+            req.logger.info('Se las cuentas que se encontraban en desuso');
+            res.status(204).redirect('/users/getUsers');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
