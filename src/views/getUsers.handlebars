@@ -1,13 +1,25 @@
 <div class="container">
     <h2>Lista de usuarios</h2>
-    {{#each users}}
-    <div class="margin">
-        <p><span>Nombre: </span>{{this.firstName}}</p>
-        <p><span>Apellido: </span>{{this.lastName}}</p>
-        <p><span>Email: </span>{{this.email}}</p>
-        <p><span>ID: </span>{{this.id}}</p>
-        <p><span>Rol: </span>{{this.rol}}</p>
+    <div class="gridForUser">
+        {{#each users}}
+        <div class="userCard">
+            <div>
+                <p><span>Nombre: </span>{{this.firstName}}</p>
+                <p><span>Apellido: </span>{{this.lastName}}</p>
+                <p><span>Email: </span>{{this.email}}</p>
+                <p><span>ID: </span>{{this.id}}</p>
+                <p><span>Rol: </span>{{this.rol}}</p>
+            </div>
+            <div>
+                <form action="/users/premium/{{this.id}}" method="post" class="margin">
+                    <input type="submit" value="Actualizar Rol">
+                </form>
+                <form action="" class="margin">
+                    <input type="submit" value="Eliminar Usuario">
+                </form>
+            </div>
+        </div>
+        {{/each}}
     </div>
-    {{/each}}
     <a href="/users/profile">Volver</a>
 </div>

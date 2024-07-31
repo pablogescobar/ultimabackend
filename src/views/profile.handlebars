@@ -10,11 +10,6 @@
         <a href="/users/documents">Actualizar Documentación</a>
         {{/if}}
     </div>
-    {{#if documents}}
-    <form action="/api/users/premium/{{user.id}}" method="post">
-        <input type="submit" value="Actualizar Rol">
-    </form>
-    {{/if}}
 
     {{#if adminOptions}}
     <h3>Menú de administrador</h3>

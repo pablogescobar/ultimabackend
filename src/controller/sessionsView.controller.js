@@ -89,7 +89,6 @@ class Controller {
     profile(req, res) {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
-            const documents = req.user.documents.length === 3 || req.user.rol === 'premium';
             const adminOptions = req.user.rol === 'admin' || req.user.rol === 'superAdmins';
             if (isLoggedIn) {
                 const cartId = req.user.cart
@@ -115,7 +114,6 @@ class Controller {
                     },
                     isLoggedIn,
                     cartId,
-                    documents,
                     adminOptions,
                     notAdminOptions: !adminOptions
                 });
@@ -276,8 +274,7 @@ class Controller {
             const uid = req.params.uid;
             await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
-            res.clearCookie('accessToken');
-            return res.redirect('/');
+            return res.redirect('/users/getUsers');
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

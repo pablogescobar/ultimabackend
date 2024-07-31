@@ -102,3 +102,18 @@ h2 {
     margin: 1rem 0;
     align-items: center;
 }
+
+.gridForUser {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.userCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    border: 1px solid gray;
+    padding: 1rem;
+}
