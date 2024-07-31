@@ -356,7 +356,6 @@ class UserRepository {
     }
 
     async getUserById(id) {
-        console.log(id);
         try {
             if (id === 'admin') {
                 return new UserDTO(this.#adminUser);
@@ -500,6 +499,7 @@ class UserRepository {
 
         for (const user of inactiveUsers) {
             await this.deleteUser(user.email);
+            await this.#cartDAO.getCartById(user.cart);
 
             await new MailingService().sendDeletionNotification(user.email, user.firstName, user.lastName);
         }

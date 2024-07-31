@@ -276,7 +276,7 @@ class Controller {
             const uid = req.params.uid;
             await this.#userRepository.changeRole(uid);
             req.logger.info(`Rol del usuario actualizado`);
-            return res.redirect('/users/getUsers');
+            return res.redirect(`/users/${uid}`);
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });
@@ -287,6 +287,51 @@ class Controller {
         try {
             await this.#userRepository.deleteUsers();
             req.logger.info('Se las cuentas que se encontraban en desuso');
+            res.status(204).redirect('/users/getUsers');
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
+    }
+
+    async getUserById(req, res) {
+        try {
+            const isLoggedIn = req.cookies.accessToken !== undefined;
+            const userId = req.params.uid;
+            const user = await this.#userRepository.getUserById(userId);
+            const documentsQuantity = user.documents.length;
+            const userPayload = {
+                id: user.id,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                age: user.age,
+                email: user.email,
+                rol: user.rol,
+                cartId: user.cart,
+                documents: documentsQuantity,
+                picture: user.picture
+            }
+
+            res.status(200).render('userView', {
+                titlePage: 'Menú de Usuarios',
+                style: ['styles.css'],
+                script: ['scripts.js'],
+                isLoggedIn,
+                isNotLoggedIn: !isLoggedIn,
+                user: [userPayload]
+            })
+        } catch (error) {
+            req.logger.error(error);
+            res.status(error.status).json({ error });
+        }
+    }
+
+    async deleteUser(req, res) {
+        try {
+            const userId = req.params.uid;
+            const user = await this.#userRepository.getUserById(userId);
+            await this.#userRepository.deleteUser(user.email);
+            req.logger.info('Usuario eliminado correctamente');
             res.status(204).redirect('/users/getUsers');
         } catch (error) {
             req.logger.error(error);

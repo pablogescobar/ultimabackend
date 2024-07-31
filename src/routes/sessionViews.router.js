@@ -44,4 +44,8 @@ router.post('/premium/:uid', verifyToken, async (req, res) => new Controller().c
 
 router.delete('/', verifyToken, isAdmin, async (req, res) => new Controller().deleteUsers(req, res));
 
+router.get('/:uid', verifyToken, isAdmin, async (req, res) => new Controller().getUserById(req, res));
+
+router.post('/:uid', verifyToken, isAdmin, async (req, res) => new Controller().deleteUser(req, res));
+
 module.exports = router;

@@ -117,3 +117,27 @@ h2 {
     border: 1px solid gray;
     padding: 1rem;
 }
+
+.flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.userFrame {
+    border: 1px solid gray;
+    padding: 1rem;
+}
+
+.userFrame__info h3 {
+    margin: 1rem 0;
+    font-size: 2rem;
+}
+
+.userFrame__info p {
+    margin: .5rem 0;
+}
+
+.userFrame__info span {
+    font-weight: bold;
+}
