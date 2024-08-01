@@ -386,25 +386,35 @@ class UserRepository {
     }
 
     async changeRole(id) {
-        const user = await this.#verifyUser(id);
-
-        if (user.rol === 'user' && user.documents.length === 3) {
-            await this.#userDAO.updateRole(user.email, 'premium');
-            const updatedUser = await this.#userDAO.findById(id);
-            return new UserDTO(updatedUser);
-        } else if (user.rol === 'premium') {
-            await this.#userDAO.updateRole(user.email, 'user');
-            const updatedUser = await this.#userDAO.findById(id);
-            return new UserDTO(updatedUser);
-        } else {
+        try {
+            const user = await this.#verifyUser(id);
+            if (user.rol === 'user' && user.documents.length === 3) {
+                await this.#userDAO.updateRole(user.email, 'premium');
+                const updatedUser = await this.#userDAO.findById(id);
+                return new UserDTO(updatedUser);
+            } else if (user.rol === 'premium') {
+                await this.#userDAO.updateRole(user.email, 'user');
+                const updatedUser = await this.#userDAO.findById(id);
+                return new UserDTO(updatedUser);
+            } else {
+                throw CustomError.createError({
+                    name: 'No se puede actualizar',
+                    cause: 'No se ha podido actualizar el rol del usuario por falta de documentación',
+                    message: 'Falta de documentación',
+                    code: ErrorCodes.UNDEFINED_DATA,
+                    status: 400
+                })
+            }
+        } catch (error) {
             throw CustomError.createError({
-                name: 'No se puede actualizar',
-                cause: 'No se ha podido actualizar el rol del usuario por falta de documentación',
-                message: 'Falta de documentación',
-                code: ErrorCodes.UNDEFINED_DATA,
-                status: 400
+                name: error.name || 'No se puede actualizar el rol',
+                cause: error.cause || 'Algo salió mal con el proceso de actualización y la operación no pudo completarse',
+                message: error.message || 'Ocurrió un error inesperado',
+                code: error.code || ErrorCodes.UNDEFINED_DATA,
+                status: error.status || 400
             })
         }
+
     }
 
     async updateConnection(id) {

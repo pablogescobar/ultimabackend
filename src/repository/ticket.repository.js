@@ -85,11 +85,10 @@ class TicketRepository {
             return ticket;
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error al generar el ticket',
-                cause: 'Ocurrió un error a la hora de generar su ticket de compra',
-                message: 'No se pudo generar su ticket',
-                code: ErrorCodes.TICKET_CREATION_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error al generar el ticket',
+                cause: error.cause || 'Ocurrió un error a la hora de generar su ticket de compra',
+                message: error.message || 'No se pudo generar su ticket',
+                code: error.code || ErrorCodes.TICKET_CREATION_ERROR,
                 status: error.status || 500
             })
         }

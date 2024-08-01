@@ -150,11 +150,10 @@ class ProductRepository {
 
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error al conectar',
-                cause: 'Ocurrió un error al buscar los productos en la base de datos',
-                message: 'No se pudieron obtener los productos de la base de datos',
-                code: ErrorCodes.DATABASE_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error al conectar',
+                cause: error.cause || 'Ocurrió un error al buscar los productos en la base de datos',
+                message: error.message || 'No se pudieron obtener los productos de la base de datos',
+                code: error.code || ErrorCodes.DATABASE_ERROR,
                 status: error.status || 500
             });
         }
@@ -198,11 +197,10 @@ class ProductRepository {
             return new ProductDTO(product);
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error al crear producto',
-                cause: 'No se pudo crear el producto por falta de datos o existe un problema para cargarlo a la base de datos',
-                message: 'No se pudo cargar el producto a la base de datos',
-                code: ErrorCodes.PRODUCT_CREATION_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error al crear producto',
+                cause: error.cause || 'No se pudo crear el producto por falta de datos o existe un problema para cargarlo a la base de datos',
+                message: error.message || 'No se pudo cargar el producto a la base de datos',
+                code: error.code || ErrorCodes.PRODUCT_CREATION_ERROR,
                 status: error.status || 500
             })
         }
@@ -231,7 +229,13 @@ class ProductRepository {
             return new ProductDTO(updatedProduct);
 
         } catch (error) {
-            throw error;
+            throw CustomError.createError({
+                name: error.name || 'Error al actualizar',
+                cause: error.cause || 'Ocurrió un error y la actualización del producto no pudo ser llevada a cabo',
+                message: error.message || 'No se pudo actualizar el producto',
+                code: error.code || ErrorCodes.PRODUCT_UPDATE_ERROR,
+                status: error.status || 500
+            });
         }
     }
 
