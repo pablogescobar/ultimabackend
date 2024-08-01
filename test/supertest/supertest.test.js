@@ -91,7 +91,7 @@ describe('Testing Ecommerce', () => {
             expect(statusCode).to.equal(400);
             expect(ok).to.equal(false);
             expect(body.error).to.have.property('cause');
-            expect(body.error.code).to.equal(1);
+            expect(body.error.code).to.equal(6);
         });
 
         it('El endpoint GET /api/products/:pid debe devolver un producto según su ID', async () => {
@@ -164,8 +164,8 @@ describe('Testing Ecommerce', () => {
             expect(ok).to.equal(false);
             expect(statusCode).to.equal(400);
             expect(body.error).to.have.property('cause');
-            expect(body.error.name).to.equal('Error al crear producto');
-            expect(body.error.code).to.equal(8)
+            expect(body.error.name).to.equal('Error al agregar el producto.');
+            expect(body.error.code).to.equal(7)
         });
 
         it('El endpoint POST /api/products/ debe arrojar un error al intentar cargar un producto sin tener los permisos', async () => {
@@ -203,7 +203,7 @@ describe('Testing Ecommerce', () => {
             expect(ok).to.equal(false);
             expect(statusCode).to.be.equal(409);
             expect(body.error).to.have.property('cause');
-            expect(body.error.otherProblems.code).to.equal(26);
+            expect(body.error.code).to.equal(26);
         });
 
         it('El endpoint PUT /api/product/:pid debe actualizar el producto de forma correcta', async () => {
