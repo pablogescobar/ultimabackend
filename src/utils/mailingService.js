@@ -8,9 +8,9 @@ class MailingService {
 
     async sendMail(email) {
         try {
-
             const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
-
+            const baseUrl = process.env.BASE_URL;
+            const port = process.env.PORT
 
             const transport = nodemailer.createTransport({
                 service: 'gmail',
@@ -29,13 +29,13 @@ class MailingService {
             <div>
                 <h2>Ingrese al link para poder restablecer su contraseña</h2>
                 <h4>Tenga en cuenta que el link de restablecimiento tiene una duración de una hora. Si este plazo se vence deberá generar un nuevo link.</h4>
-                <a href="http://localhost:8080/users/resetPassword/${randomNumber}">Restablecer contraseña</a>
+                <a href="${baseUrl}${port}/users/resetPassword/${randomNumber}">Restablecer contraseña</a>
                 <p>Código: ${randomNumber}</p>
             </div>`,
                 attachments: []
             });
             return { randomNumber, email }
-        } catch (error) {
+        } catch {
             throw CustomError.createError({
                 name: 'Error al restablecer contraseña',
                 cause: 'Ocurrió un error y no se pudo enviar el email al destinatario.',

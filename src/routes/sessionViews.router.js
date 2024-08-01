@@ -20,7 +20,7 @@ router.get('/profile', verifyToken, (req, res) => new Controller().profile(req, 
 
 router.get('/logout', verifyToken, async (req, res) => new Controller().logout(req, res));
 
-router.get('/resetPassword', (_, res) => new Controller().resetPassword(res));
+router.get('/resetPassword', (_, res) => new Controller().resetPasswordGet(res));
 
 router.post('/resetPassword', async (req, res) => new Controller().sendMailToResetPassword(req, res));
 
@@ -28,7 +28,7 @@ router.get('/resetPasswordWarning', (req, res) => new Controller().resetPassword
 
 router.get('/resetPassword/:tid', (req, res) => new Controller().verifyResetPassword(req, res));
 
-router.post('/resetPassword/:tid', verifyPasswordToken, async (req, res) => new Controller().resetPassword(req, res));
+router.post('/resetPassword/:tid', verifyPasswordToken, async (req, res) => new Controller().resetPasswordPost(req, res));
 
 router.get('/documents', verifyToken, isUser, (req, res) => new Controller().documents(req, res));
 

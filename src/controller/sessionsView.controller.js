@@ -140,7 +140,7 @@ class Controller {
         }
     }
 
-    resetPassword(res) {
+    resetPasswordGet(res) {
         try {
             res.render('sendMailToResetPassword', {
                 titlePage: 'Send Token',
@@ -195,7 +195,7 @@ class Controller {
         }
     }
 
-    async resetPassword(req, res) {
+    async resetPasswordPost(req, res) {
         try {
             const urlToken = req.params.tid
             const token = req.passToken;
@@ -213,8 +213,9 @@ class Controller {
             req.logger.info('Contraseña actualizada');
             return res.redirect('/users/login');
         } catch (error) {
-            req.logger.error(error);
-            return res.status(error.status).json({ error });
+            // req.logger.error(error);
+            console.log(error);
+            // return res.status(error.status).json({ error });
         }
     }
 
