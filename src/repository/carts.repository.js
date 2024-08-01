@@ -70,11 +70,10 @@ class CartRepository {
             return cart;
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error con el carrito',
-                cause: 'Al parecer el carrito existe pero no se puede acceder al mismo',
-                message: 'Error al obtener el carrito',
-                code: ErrorCodes.UNDEFINED_CART,
-                otherProblems: error,
+                name: error.name || 'Error con el carrito',
+                cause: error.cause || 'Al parecer el carrito existe pero no se puede acceder al mismo',
+                message: error.message || 'Error al obtener el carrito',
+                code: error.code || ErrorCodes.UNDEFINED_CART,
                 status: error.status || 500
             });
         }

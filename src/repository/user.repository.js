@@ -293,6 +293,17 @@ class UserRepository {
 
     async githubLogin(profile) {
         try {
+
+            if (profile._json.email === null) {
+                throw CustomError.createError({
+                    name: 'Email inválido',
+                    cause: 'No se pudo completar el registro dado a que no se pudo acceder al email de github. Asegurate de compartir esta información desde tu cuenta de github.',
+                    message: 'Hubo un problema con su cuenta de github',
+                    code: ErrorCodes.GITHUB_LOGIN_ERROR,
+                    status: 400
+                })
+            }
+
             const user = await this.#userDAO.findByEmail(profile._json.email);
 
             const currentTime = new Date();
@@ -316,11 +327,10 @@ class UserRepository {
             return { accessToken, user };
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error de logeo',
-                cause: 'Ocurrió un error inesperado y no se pudo emparejar su cuenta de github en la base de datos',
-                message: 'Hubo un problema con su cuenta de github',
-                code: ErrorCodes.GITHUB_LOGIN_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error de logeo',
+                cause: error.cause || 'Ocurrió un error inesperado y no se pudo emparejar su cuenta de github en la base de datos',
+                message: error.message || 'Hubo un problema con su cuenta de github',
+                code: error.code || ErrorCodes.GITHUB_LOGIN_ERROR,
                 status: error.status || 500
             })
         }
@@ -344,11 +354,10 @@ class UserRepository {
             }
         } catch (error) {
             throw CustomError.createError({
-                name: 'Error al eliminar el usuario',
-                cause: 'Su petición no fue procesada de forma correcta y no se pudo eliminar el usuario.',
-                message: 'Hubo un problema y no se pudo elimiar el usuario',
-                code: ErrorCodes.USER_DELETION_ERROR,
-                otherProblems: error,
+                name: error.name || 'Error al eliminar el usuario',
+                cause: error.cause || 'Su petición no fue procesada de forma correcta y no se pudo eliminar el usuario.',
+                message: error.message || 'Hubo un problema y no se pudo elimiar el usuario',
+                code: error.code || ErrorCodes.USER_DELETION_ERROR,
                 status: error.status || 500
             })
         }

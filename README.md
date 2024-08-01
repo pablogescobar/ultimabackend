@@ -1,13 +1,11 @@
-# Desafío Opcional 5 - Coderhouse Backend
+# Entrega Final - Coderhouse Backend
 
 ### Nuevos Cambios
 
-- Se modificaron los endpoints relacionados con los usuarios. Ahora todos se encuentran en `/api/users`.
-- Se modificó el modelo de `users` para poder admitir las propiedades de **documents** y **last_connection**.
-- Se creó el endpoint `/api/users/:uid/documents` para actualizar la documentación del usuario.
-- Se incluyó **multer** para permitir la inclusión de imágenes en el proyecto, diferenciando entre documentos, fotos de productos o fotos de perfil.
-- Se modificó el endpoint `/api/users/premium/:uid` para que solo actualice a **premium** si tiene toda la documentación actualizada.
-- Se incorporó el endpoint `/api/user/picture` para poder actualizar la foto de perfil del usuario.
+- Se agregaron dos endpoints nuevos **GET** y **DELETE** en `/api/users` para poder devolver todos los usuarios y eliminar los usuarios inactivos, respectivamente.
+- Se crearon **routers** y **controllers** específicos para las vistas. Esto se realizó con la idea de dividir las funcionalidades **API** y las vistas.
+- Se actualizó la funcionalidad de mensajería para enviar mails al eliminar productos o usuarios.
+- Se completó el flujo de vistas para simular una compra completa y se crearon vistas con distintas funcionalidades para administradores.
 
 ## Correr de manera local
 ```bash
@@ -40,11 +38,13 @@ npm test
 
 Luego de eso, podrás ver cómo se ejecutan los tests unitarios y los supertests sobre los diferentes endpoints de la aplicación. Es importante que tengas en cuenta que debes tener abierta la carpeta del proyecto en tu Visual Studio Code para que los tests se ejecuten correctamente; de lo contrario, podrías tener errores al intentar correrlos.
 
-## Documentación
+## Consideraciones
+
+Es importante tener en cuenta que el logueo con GitHub puede presentar algunos errores en caso de no tener la cuenta de GitHub correctamente configurada para permitir que el servicio de backend tenga acceso al email.
 
 Para revisar la documentación de los **endpoints**, lo puedes hacer desde [aquí](http://localhost:8080/apidocs/).
 ## División en Capas
-- `Config`: En esta capa se desarrollaron todas las estrategias de passport que tienen que ver con login y registro de usuarios.
+- `Config`: En esta capa se desarrollaron todas las estrategias de Passport que tienen que ver con login y registro de usuarios.
 - `Controller`: En esta capa se lleva a cabo todo el manejo relacionado a los request y response que vienen desde la capa de **router**.
 - `DAO`: En esta capa se implementó todo lo relacionado con la persistencia en la base de datos.
 - `DTO`: Esta capa se ocupa de formatear datos como, por ejemplo, los usuarios.
