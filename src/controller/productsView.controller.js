@@ -48,7 +48,8 @@ class Controller {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const productId = req.params.pid;
             const product = await this.productRepository.getProductById(productId);
-            const user = req.user
+            const user = req.user;
+            const cartId = req.user.cart;
 
             const productData = {
                 title: product.title,
@@ -68,6 +69,7 @@ class Controller {
                 style: ['styles.css'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
+                cartId
             });
         } catch (error) {
             req.logger.error(error);

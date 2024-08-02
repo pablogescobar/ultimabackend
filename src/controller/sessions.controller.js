@@ -149,11 +149,7 @@ class Controller {
             const files = req.files;
             const user = await this.#userRepository.updateUserDocuments(userId, files);
             req.logger.info('Documentación actualizada exitosamente');
-            if (user.documents.length === 3) {
-                res.clearCookie('accessToken');
-                return res.status(201).redirect('/')
-            }
-            res.status(201).redirect('/profile');
+            res.status(201).json({ message: 'Documentación actualizada exitosamente' });
         } catch (error) {
             req.logger.error(error);
             res.status(error.status).json({ error });

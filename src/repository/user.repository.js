@@ -146,8 +146,11 @@ class UserRepository {
 
             const cart = await this.#cartDAO.addCart({ products: [] });
             const user = await this.#generateNewUser(firstName, lastName, age, email, password, cart);
-
-            return await this.#userDAO.create(user);
+            await this.#userDAO.create(user)
+            const updateConnection = await this.#userDAO.findByEmail(email);
+            console.log(updateConnection);
+            await this.updateConnection(updateConnection._id);
+            return user;
         } catch (error) {
             throw CustomError.createError({
                 name: error.name || 'Error de registro',

@@ -257,6 +257,7 @@ class Controller {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const users = await this.#userRepository.getUsers();
             const usersPayload = users.map(user => ({ id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, rol: user.rol }));
+            const cartId = req.user.cart
             req.logger.info('Usuarios retornados');
             res.status(200).render('getUsers', {
                 users: usersPayload,
@@ -264,7 +265,8 @@ class Controller {
                 style: ['styles.css'],
                 script: ['scripts.js'],
                 isLoggedIn,
-                isNotLoggedIn: !isLoggedIn
+                isNotLoggedIn: !isLoggedIn,
+                cartId
             });
         } catch (error) {
             req.logger.error(error);
@@ -301,6 +303,7 @@ class Controller {
             const userId = req.params.uid;
             const user = await this.#userRepository.getUserById(userId);
             const documentsQuantity = user.documents.length;
+            const cartId = req.user.cart;
             const userPayload = {
                 id: user.id,
                 firstName: user.firstName,
@@ -319,7 +322,8 @@ class Controller {
                 script: ['scripts.js'],
                 isLoggedIn,
                 isNotLoggedIn: !isLoggedIn,
-                user: [userPayload]
+                user: [userPayload],
+                cartId
             })
         } catch (error) {
             req.logger.error(error);

@@ -11,12 +11,14 @@ class Controller {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
             const adminUser = req.user.rol;
+            const cartId = req.user.cart;
             if (adminUser === 'user') {
                 return res.render('error', {
                     titlePage: 'Error',
                     message: 'No tiene permisos de acceso.',
                     style: ['styles.css'],
-                    isLoggedIn
+                    isLoggedIn,
+                    cartId
                 });
             }
 
@@ -24,7 +26,8 @@ class Controller {
                 titlePage: 'Agregar Producto',
                 style: ['styles.css'],
                 script: ['createProduct.js'],
-                isLoggedIn
+                isLoggedIn,
+                cartId
             });
         } catch (error) {
             req.logger.error(error);
