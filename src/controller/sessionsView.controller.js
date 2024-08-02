@@ -89,7 +89,7 @@ class Controller {
     profile(req, res) {
         try {
             const isLoggedIn = req.cookies.accessToken !== undefined;
-            const adminOptions = req.user.rol === 'admin' || req.user.rol === 'superAdmins';
+            const adminOptions = req.user.rol === 'admin' || req.user.rol === 'superAdmin';
             if (isLoggedIn) {
                 const cartId = req.user.cart
                 const user = {

@@ -503,7 +503,7 @@ class UserRepository {
     async deleteUsers() {
         const users = await this.#userDAO.findAll();
         const currentTime = new Date();
-        const thirtyMinutesInMs = 30 * 60 * 1000;
+        const thirtyMinutesInMs = 60 * 60 * 48 * 1000;
         const inactiveUsers = [];
 
         users.forEach(user => {
