@@ -41,9 +41,12 @@ class Controller {
 
     login(res) {
         try {
+            const isProduction = process.env.LOGGER_ENV === 'production';
+            console.log(isProduction);
             res.render('login', {
                 style: ['styles.css'],
-                title: 'Login'
+                title: 'Login',
+                isProduction: !isProduction
             });
         } catch (e) {
             res.status(500).json({ error: e.messange });

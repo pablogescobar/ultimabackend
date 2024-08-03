@@ -28,6 +28,10 @@ nodemon src/app
 
 Una vez ejecutados estos comandos, en la consola de tu editor de texto aparecerá una URL con la que podrás ver los productos y acceder a la documentación y a los test.
 
+## Documentación
+
+Para revisar la documentación de los **endpoints**, lo puedes hacer desde [aquí](http://localhost:8080/apidocs/).
+
 ## Testing
 
 Para poder correr los tests de la aplicación, deberás haber levantado el servidor en primer lugar. Una vez hecho esto, deberás abrir una nueva consola y ejecutar:
@@ -38,11 +42,14 @@ npm test
 
 Luego de eso, podrás ver cómo se ejecutan los tests unitarios y los supertests sobre los diferentes endpoints de la aplicación. Es importante que tengas en cuenta que debes tener abierta la carpeta del proyecto en tu Visual Studio Code para que los tests se ejecuten correctamente; de lo contrario, podrías tener errores al intentar correrlos.
 
+## Deploy
+
+Se realizó el deploy de la aplicación en la plataforma de Railway. Puedes acceder al mismo ingresando [aquí](https://backendentregasdi-iorio-production.up.railway.app/users)
+
 ## Consideraciones
 
-Es importante tener en cuenta que el logueo con GitHub puede presentar algunos errores en caso de no tener la cuenta de GitHub correctamente configurada para permitir que el servicio de backend tenga acceso al email.
+Es importante tener en cuenta que el logueo con GitHub puede presentar algunos errores en caso de no tener la cuenta de GitHub correctamente configurada para permitir que el servicio de backend tenga acceso al email. De momento, la opción de loguearse con GitHub está deshabilitada para el entorno productivo en Railway.
 
-Para revisar la documentación de los **endpoints**, lo puedes hacer desde [aquí](http://localhost:8080/apidocs/).
 ## División en Capas
 - `Config`: En esta capa se desarrollaron todas las estrategias de Passport que tienen que ver con login y registro de usuarios.
 - `Controller`: En esta capa se lleva a cabo todo el manejo relacionado a los request y response que vienen desde la capa de **router**.

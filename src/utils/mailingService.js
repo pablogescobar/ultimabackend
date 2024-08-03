@@ -11,6 +11,10 @@ class MailingService {
             const randomNumber = Math.floor(1000000000 + Math.random() * 9000000000);
             const baseUrl = process.env.BASE_URL;
             const port = process.env.PORT
+            const prodUrl = process.env.PROD_URL
+            const devLink = `${baseUrl}${port}/users/resetPassword/${randomNumber}`;
+            const prodLink = `${prodUrl}users/resetPassword/${randomNumber}`
+            const currentUrl = process.env.LOGGER_ENV === 'production' ? prodLink : devLink;
 
             const transport = nodemailer.createTransport({
                 service: 'gmail',
@@ -29,7 +33,7 @@ class MailingService {
             <div>
                 <h2>Ingrese al link para poder restablecer su contraseña</h2>
                 <h4>Tenga en cuenta que el link de restablecimiento tiene una duración de una hora. Si este plazo se vence deberá generar un nuevo link.</h4>
-                <a href="${baseUrl}${port}/users/resetPassword/${randomNumber}">Restablecer contraseña</a>
+                <a href="${currentUrl}">Restablecer contraseña</a>
                 <p>Código: ${randomNumber}</p>
             </div>`,
                 attachments: []
