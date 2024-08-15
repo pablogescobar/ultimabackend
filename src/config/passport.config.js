@@ -1,23 +1,23 @@
 const passport = require('passport');
-const { UserRepository } = require('../repository/user.repository');
-const { localStrategy, githubStrategy, jwtStrategy } = require('./strategies');
+const GitHubStrategy = require('passport-github2').Strategy;
 
-const initializeStrategy = () => {
+module.exports = function() {
+    passport.use(new GitHubStrategy({
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
+        callbackURL: "http://localhost:3000/auth/github/callback"
+    },
+    function(accessToken, refreshToken, profile, done) {
+        // Lógica para manejar el usuario aquí
+        return done(null, profile);
+    }));
 
-    localStrategy();
-    githubStrategy();
-    jwtStrategy();
+    passport.serializeUser(function(user, done) {
+        done(null, user);
+    });
 
-    passport.serializeUser((user, done) => {
-        console.log('Serailized: ', user);
-        done(null, user._id);
-    })
+    passport.deserializeUser(function(obj, done) {
+        done(null, obj);
+    });
+};
 
-    passport.deserializeUser(async (id, done) => {
-        console.log('Deserialized: ', id)
-        const user = await new UserRepository().getUserById(id);
-        done(null, user)
-    })
-}
-
-module.exports = initializeStrategy;

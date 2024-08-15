@@ -1,15 +1,9 @@
-const session = require('express-session');
-const defaultOptions = require('./defaultOptions');
 const MongoStore = require('connect-mongo');
-const { dbName, mongoUrl } = require('../dbconfig');
+const { mongoUrl } = require('../dbconfig'); // Asegúrate de que esta ruta sea correcta
 
-const storage = MongoStore.create({
-    dbName,
-    mongoUrl,
-    ttl: 60 * 10
-})
+const store = MongoStore.create({
+  mongoUrl: mongoUrl, // Usa la URL de MongoDB definida en dbconfig.js
+  collectionName: 'sessions', // Nombre de la colección para almacenar sesiones
+});
 
-module.exports = session({
-    store: storage,
-    ...defaultOptions
-})
+module.exports = store;

@@ -1,15 +1,19 @@
 {
-  "name": "backend_preentrega1_di-iorio",
+  "name": "backend_preentrega1_pablo_garcia",
   "version": "1.0.0",
-  "description": "",
+  "description": "Proyecto backend personalizado",
   "main": "index.js",
   "scripts": {
     "test": "npx mocha test --recursive",
     "start": "node src/app",
     "dev": "nodemon src/app"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "backend",
+    "ecommerce",
+    "api"
+  ],
+  "author": "Pablo Garcia",
   "license": "ISC",
   "dependencies": {
     "@faker-js/faker": "^8.4.1",

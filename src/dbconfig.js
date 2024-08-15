@@ -1,5 +1,5 @@
-require('dotenv').config(); // Carga las variables de entorno desde .env
-module.exports = {
-    dbName: process.env.MONGO_DBNAME,
-    mongoUrl: process.env.MONGO_URL
-}
+require('dotenv').config();
+
+const mongoUrl = process.env.MONGO_URL || 'mongodb://localhost:27017/mydatabase'; // Asegúrate de que la URL sea correcta
+
+module.exports = { mongoUrl };
