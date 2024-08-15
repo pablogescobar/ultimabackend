@@ -1,46 +1,51 @@
-<div class="form">
+<div class="form-container">
     <form action="/products" id="productForm" method="post">
         <legend>Agregar Producto</legend>
 
-        <div>
-            <label>Titulo: </label>
-            <input type="text" id="productTitle" name="title">
+        <div class="form-group">
+            <label for="productTitle">Título:</label>
+            <input type="text" id="productTitle" name="title" required>
         </div>
-        <div>
-            <label>Descripción: </label>
-            <input type="text" id="productDescription" name="description">
+
+        <div class="form-group">
+            <label for="productDescription">Descripción:</label>
+            <input type="text" id="productDescription" name="description" required>
         </div>
-        <div>
-            <label>Precio: </label>
-            <input type="number" id="productPrice" name="price" min="1">
+
+        <div class="form-group">
+            <label for="productPrice">Precio:</label>
+            <input type="number" id="productPrice" name="price" min="1" required>
         </div>
-        <div>
-            <label>Imagen: </label>
+
+        <div class="form-group">
+            <label for="productThumbnail">Imagen:</label>
             <input type="text" id="productThumbnail" name="thumbnail">
         </div>
-        <div>
-            <label>Código: </label>
-            <input type="text" id="productCode" name="code">
+
+        <div class="form-group">
+            <label for="productCode">Código:</label>
+            <input type="text" id="productCode" name="code" required>
         </div>
-        <div>
-            <label>Stock: </label>
-            <input type="number" id="productStock" name="stock" min="0">
+
+        <div class="form-group">
+            <label for="productStock">Stock:</label>
+            <input type="number" id="productStock" name="stock" min="0" required>
         </div>
-        <div>
-            <label>Categoria: </label>
-            <label>
-                <select name="category">
-                    <option value="">Todas las categorías</option>
-                    <option value="almacenamiento">Almacenamiento</option>
-                    <option value="fuente">Fuentes</option>
-                    <option value="ram">Memorias</option>
-                    <option value="accesorio">Accesorios</option>
-                    <option value="motherboard">Placas Madre</option>
-                    <option value="procesador">Procesador</option>
-                    <option value="grafica">Placas de Video</option>
-                </select>
-            </label>
+
+        <div class="form-group">
+            <label for="productCategory">Categoría:</label>
+            <select id="productCategory" name="category">
+                <option value="">Selecciona una categoría</option>
+                <option value="deporte">Deporte</option>
+                <option value="casual">Casual</option>
+                <option value="formal">Formal</option>
+                <option value="aventura">Aventura</option>
+                <option value="moda">Moda</option>
+                <option value="trabajo">Trabajo</option>
+                <option value="otros">Otros</option>
+            </select>
         </div>
-        <input type="submit" id="addProduct" value="Agregar">
+
+        <button type="submit" id="addProduct">Agregar</button>
     </form>
 </div>
